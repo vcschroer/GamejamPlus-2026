@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 85991544}
   - component: {fileID: 85991543}
   - component: {fileID: 85991542}
+  - component: {fileID: 85991545}
   m_Layer: 5
   m_Name: Voltar
   m_TagString: Untagged
@@ -151,7 +152,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 722710125}
-  - {fileID: 335449717}
   m_Father: {fileID: 1608031195}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -253,6 +253,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 85991540}
   m_CullTransparentMesh: 1
+--- !u!114 &85991545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85991540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08d2c0297d997241964f6d0d1e038f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIElementEffects
+  usarWobble: 0
+  velocidadeWobble: 4
+  anguloMaximo: 8
+  usarHoverScale: 1
+  escalaHover: 1.12
+  duracaoTransicaoScale: 0.1
+  usarSquashNoClique: 1
+  squashX: 1.25
+  squashY: 0.75
+  usarTextWave: 0
+  velocidadeWave: 5
+  alturaOnda: 6
+  frequenciaOnda: 0.35
 --- !u!1 &335449716
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,6 +288,7 @@ GameObject:
   m_Component:
   - component: {fileID: 335449717}
   - component: {fileID: 335449718}
+  - component: {fileID: 335449719}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
@@ -277,7 +303,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 335449716}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -285,11 +311,11 @@ RectTransform:
   - {fileID: 2139511026}
   - {fileID: 2041247469}
   - {fileID: 611913145}
-  m_Father: {fileID: 85991541}
+  m_Father: {fileID: 1608031195}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 118}
+  m_AnchoredPosition: {x: -7.4745, y: 29.228226}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &335449718
@@ -343,6 +369,31 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &335449719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 335449716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08d2c0297d997241964f6d0d1e038f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIElementEffects
+  usarWobble: 0
+  velocidadeWobble: 4
+  anguloMaximo: 8
+  usarHoverScale: 1
+  escalaHover: 1.12
+  duracaoTransicaoScale: 0.1
+  usarSquashNoClique: 1
+  squashX: 1.25
+  squashY: 0.75
+  usarTextWave: 0
+  velocidadeWave: 5
+  alturaOnda: 6
+  frequenciaOnda: 0.35
 --- !u!1 &428908772
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,8 +577,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000027657, y: -0.000034332}
-  m_SizeDelta: {x: 800, y: 450.07}
+  m_AnchoredPosition: {x: 0.0050926, y: 0.0011101}
+  m_SizeDelta: {x: 1004.7, y: 565.61}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &585595811
 MonoBehaviour:
@@ -1043,6 +1094,7 @@ GameObject:
   - component: {fileID: 1058564614}
   - component: {fileID: 1058564613}
   - component: {fileID: 1058564612}
+  - component: {fileID: 1058564615}
   m_Layer: 5
   m_Name: Sair
   m_TagString: Untagged
@@ -1164,6 +1216,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058564610}
   m_CullTransparentMesh: 1
+--- !u!114 &1058564615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1058564610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08d2c0297d997241964f6d0d1e038f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimator
+  usarWobble: 0
+  velocidadeWobble: 4
+  anguloMaximo: 8
+  usarHoverScale: 1
+  escalaHover: 1.12
+  duracaoTransicaoScale: 0.1
+  usarSquashNoClique: 1
+  squashX: 1.25
+  squashY: 0.75
+  usarTextWave: 0
+  velocidadeWave: 5
+  alturaOnda: 6
+  frequenciaOnda: 0.35
 --- !u!1 &1116056775
 GameObject:
   m_ObjectHideFlags: 0
@@ -1496,7 +1573,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SceneTransition
   transitionImage: {fileID: 585595811}
   frameRate: 0.01
-  playIntroOnStart: 0
+  resourcesFolderName: Transitions
 --- !u!1 &1364607480
 GameObject:
   m_ObjectHideFlags: 0
@@ -1783,6 +1860,7 @@ GameObject:
   - component: {fileID: 1429995099}
   - component: {fileID: 1429995098}
   - component: {fileID: 1429995097}
+  - component: {fileID: 1429995100}
   m_Layer: 5
   m_Name: Jogar
   m_TagString: Untagged
@@ -1904,6 +1982,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1429995095}
   m_CullTransparentMesh: 1
+--- !u!114 &1429995100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429995095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08d2c0297d997241964f6d0d1e038f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimator
+  usarWobble: 0
+  velocidadeWobble: 2
+  anguloMaximo: 1
+  usarHoverScale: 1
+  escalaHover: 1.12
+  duracaoTransicaoScale: 0.1
+  usarSquashNoClique: 1
+  squashX: 1.25
+  squashY: 0.75
+  usarTextWave: 0
+  velocidadeWave: 5
+  alturaOnda: 6
+  frequenciaOnda: 0.35
 --- !u!1 &1494808852
 GameObject:
   m_ObjectHideFlags: 0
@@ -1916,6 +2019,7 @@ GameObject:
   - component: {fileID: 1494808856}
   - component: {fileID: 1494808855}
   - component: {fileID: 1494808854}
+  - component: {fileID: 1494808857}
   m_Layer: 5
   m_Name: "Op\xE7oes"
   m_TagString: Untagged
@@ -2037,6 +2141,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1494808852}
   m_CullTransparentMesh: 1
+--- !u!114 &1494808857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494808852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a08d2c0297d997241964f6d0d1e038f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonAnimator
+  usarWobble: 0
+  velocidadeWobble: 2
+  anguloMaximo: 1
+  usarHoverScale: 1
+  escalaHover: 1.12
+  duracaoTransicaoScale: 0.1
+  usarSquashNoClique: 1
+  squashX: 1.25
+  squashY: 0.75
+  usarTextWave: 0
+  velocidadeWave: 5
+  alturaOnda: 6
+  frequenciaOnda: 0.35
 --- !u!1 &1608031192
 GameObject:
   m_ObjectHideFlags: 0
@@ -2105,6 +2234,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 335449717}
   - {fileID: 85991541}
   m_Father: {fileID: 428908773}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
