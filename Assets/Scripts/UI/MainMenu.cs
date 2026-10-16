@@ -8,7 +8,17 @@ public class MainMenu : MonoBehaviour
 
     public void PlayGame(string levelName)
     {
-        SceneManager.LoadScene(levelName);
+        SceneTransition transition = FindObjectOfType<SceneTransition>();
+        if (transition != null)
+        {
+            StartCoroutine(transition.PlayOutroAndDoAction(() => {
+                SceneManager.LoadScene(levelName);
+            }));
+        }
+        else
+        {
+            SceneManager.LoadScene(levelName);
+        }
     }
 
     public void OpenOptions()

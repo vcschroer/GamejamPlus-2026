@@ -47,10 +47,21 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
     }
 
-    public void LoadMenu(string menuSceneName)
+    public void LoadMenuWithTransition(string menuSceneName)
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(menuSceneName);
+
+        SceneTransition transition = FindObjectOfType<SceneTransition>();
+        if (transition != null)
+        {
+            StartCoroutine(transition.PlayOutroAndDoAction(() => {
+                SceneManager.LoadScene(menuSceneName);
+            }));
+        }
+        else
+        {
+            SceneManager.LoadScene(menuSceneName);
+        }
     }
 
     public void QuitGame()
