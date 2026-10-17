@@ -597,7 +597,7 @@ public class PlayerMovement : MonoBehaviour
             spriteRenderer.sortingOrder = 0;
         }
 
-        currentHealth = 1;
+        currentHealth = 3;
         UpdateLifeUI();
 
         if (PlayerUI.Instance != null)

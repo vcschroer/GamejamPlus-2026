@@ -5,6 +5,21 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class BossController : MonoBehaviour
 {
+    public enum BossAttackType
+    {
+        ArcProjectile = 0,
+        TargetedBurst = 1,
+        CircleRing = 2,
+        ArcWave = 3,
+        CircleWave = 4
+    }
+
+    public enum BossStaggerAttackType
+    {
+        QueenBeeDash = 0,
+        FivePointJump = 1
+    }
+
     [Header("Introdução / Início do Jogo")]
     [SerializeField] private float introDelay = 2f;
     [SerializeField] private Vector2 startIntroPosition = new Vector2(0f, 10f);
@@ -15,6 +30,59 @@ public class BossController : MonoBehaviour
 
     private bool isIntroFinished = false;
     public bool IsIntroFinished => isIntroFinished;
+
+    [Header("Estágios de Ataques Normais por Vida")]
+    [SerializeField]
+    private List<BossAttackType> attacksStage3Of3 = new List<BossAttackType>
+    {
+        BossAttackType.ArcProjectile,
+        BossAttackType.TargetedBurst,
+        BossAttackType.CircleRing,
+        BossAttackType.ArcWave,
+        BossAttackType.CircleWave
+    };
+
+    [SerializeField]
+    private List<BossAttackType> attacksStage2Of3 = new List<BossAttackType>
+    {
+        BossAttackType.ArcProjectile,
+        BossAttackType.TargetedBurst,
+        BossAttackType.CircleRing,
+        BossAttackType.ArcWave,
+        BossAttackType.CircleWave
+    };
+
+    [SerializeField]
+    private List<BossAttackType> attacksStage1Of3 = new List<BossAttackType>
+    {
+        BossAttackType.ArcProjectile,
+        BossAttackType.TargetedBurst,
+        BossAttackType.CircleRing,
+        BossAttackType.ArcWave,
+        BossAttackType.CircleWave
+    };
+
+    [Header("Estágios de Ataques de Stagger por Vida")]
+    [SerializeField]
+    private List<BossStaggerAttackType> staggerAttacksStage3Of3 = new List<BossStaggerAttackType>
+    {
+        BossStaggerAttackType.QueenBeeDash,
+        BossStaggerAttackType.FivePointJump
+    };
+
+    [SerializeField]
+    private List<BossStaggerAttackType> staggerAttacksStage2Of3 = new List<BossStaggerAttackType>
+    {
+        BossStaggerAttackType.QueenBeeDash,
+        BossStaggerAttackType.FivePointJump
+    };
+
+    [SerializeField]
+    private List<BossStaggerAttackType> staggerAttacksStage1Of3 = new List<BossStaggerAttackType>
+    {
+        BossStaggerAttackType.QueenBeeDash,
+        BossStaggerAttackType.FivePointJump
+    };
 
     [Header("Movimentação & Área de Voo")]
     [SerializeField] private Collider2D flightAreaCollider;
@@ -503,6 +571,30 @@ public class BossController : MonoBehaviour
         Destroy(gameObject);
     }
 
+    private List<BossAttackType> GetCurrentStageAttacks()
+    {
+        float healthRatio = (float)currentHealth / Mathf.Max(1, maxHealth);
+
+        if (healthRatio > 0.66f)
+            return attacksStage3Of3;
+        else if (healthRatio > 0.33f)
+            return attacksStage2Of3;
+        else
+            return attacksStage1Of3;
+    }
+
+    private List<BossStaggerAttackType> GetCurrentStageStaggerAttacks()
+    {
+        float healthRatio = (float)currentHealth / Mathf.Max(1, maxHealth);
+
+        if (healthRatio > 0.66f)
+            return staggerAttacksStage3Of3;
+        else if (healthRatio > 0.33f)
+            return staggerAttacksStage2Of3;
+        else
+            return staggerAttacksStage1Of3;
+    }
+
     private IEnumerator BossBehaviorLoop()
     {
         yield return new WaitForSeconds(1f);
@@ -524,38 +616,52 @@ public class BossController : MonoBehaviour
 
                 yield return StartCoroutine(StaggerChargeRoutine());
 
-                int staggerAttack = Random.Range(0, 2);
+                List<BossStaggerAttackType> availableStaggerAttacks = GetCurrentStageStaggerAttacks();
+
+                if (availableStaggerAttacks == null || availableStaggerAttacks.Count == 0)
+                {
+                    availableStaggerAttacks = new List<BossStaggerAttackType> { BossStaggerAttackType.QueenBeeDash };
+                }
+
+                BossStaggerAttackType chosenStaggerAttack = availableStaggerAttacks[Random.Range(0, availableStaggerAttacks.Count)];
 
                 if (bossEffects != null)
                     bossEffects.TriggerAttack();
 
-                if (staggerAttack == 0)
+                if (chosenStaggerAttack == BossStaggerAttackType.QueenBeeDash)
                     yield return StartCoroutine(QueenBeeDashAttack());
                 else
                     yield return StartCoroutine(FivePointJumpAttack());
             }
             else
             {
-                int chosenAttack = Random.Range(0, 5);
+                List<BossAttackType> availableAttacks = GetCurrentStageAttacks();
+
+                if (availableAttacks == null || availableAttacks.Count == 0)
+                {
+                    availableAttacks = new List<BossAttackType> { BossAttackType.ArcProjectile };
+                }
+
+                BossAttackType chosenAttack = availableAttacks[Random.Range(0, availableAttacks.Count)];
 
                 if (bossEffects != null)
                     bossEffects.TriggerAttack();
 
                 switch (chosenAttack)
                 {
-                    case 0:
+                    case BossAttackType.ArcProjectile:
                         yield return StartCoroutine(ArcProjectileAttack());
                         break;
-                    case 1:
+                    case BossAttackType.TargetedBurst:
                         yield return StartCoroutine(TargetedBurstAttack());
                         break;
-                    case 2:
+                    case BossAttackType.CircleRing:
                         yield return StartCoroutine(CircleRingAttack());
                         break;
-                    case 3:
+                    case BossAttackType.ArcWave:
                         yield return StartCoroutine(ArcWaveAttack());
                         break;
-                    case 4:
+                    case BossAttackType.CircleWave:
                         yield return StartCoroutine(CircleWaveAttack());
                         break;
                 }

@@ -560,37 +560,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 149064191}
   m_CullTransparentMesh: 1
---- !u!1 &198335939
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 198335940}
-  m_Layer: 0
-  m_Name: IntroBoss2
-  m_TagString: Untagged
-  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &198335940
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 198335939}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.23305, y: -0.94, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &226919323
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,8 +686,8 @@ MonoBehaviour:
   bombGravityScale: 4
   headOffset: {x: 0, y: 1.2, z: 0}
   groundSlowdownFactor: 0.6
-  shuffleCount: 10
-  shuffleInterval: 0.5
+  shuffleCount: 1
+  shuffleInterval: 0
   decelerateShuffle: 1
   respawnDelay: 3
   spriteRenderer: {fileID: 1274724615}
@@ -784,7 +753,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -1168,8 +1137,14 @@ MonoBehaviour:
   startIntroPosition: {x: 0, y: 20}
   endIntroPosition: {x: 0, y: 0}
   introMoveDuration: 1.5
-  introShakeDuration: 0.5
+  introShakeDuration: 1.5
   introShakeIntensity: 0.2
+  attacksStage3Of3: 0000000001000000
+  attacksStage2Of3: 00000000010000000200000003000000
+  attacksStage1Of3: 0000000001000000020000000300000004000000
+  staggerAttacksStage3Of3: 00000000
+  staggerAttacksStage2Of3: 00000000
+  staggerAttacksStage1Of3: 0000000001000000
   flightAreaCollider: {fileID: 1881601372}
   minFlySpeed: 0.5
   maxFlySpeed: 0.5
@@ -2046,7 +2021,7 @@ GameObject:
   - component: {fileID: 462018689}
   - component: {fileID: 462018690}
   m_Layer: 5
-  m_Name: Life_1 (2)
+  m_Name: 2a
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2505,7 +2480,7 @@ Transform:
   m_GameObject: {fileID: 541515835}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.98, y: -6.92, z: 0}
+  m_LocalPosition: {x: -9.66, y: -6.92, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2677,7 +2652,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 364, y: -191}
+  m_AnchoredPosition: {x: 315.1, y: 175.3}
   m_SizeDelta: {x: -456.11, y: -356.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &567205521
@@ -2940,6 +2915,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &623998959
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 623998960}
+  m_Layer: 0
+  m_Name: bombaspawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &623998960
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623998959}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -11.42, y: -4.38, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &638663996
 GameObject:
   m_ObjectHideFlags: 0
@@ -3031,6 +3037,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &649701360
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 649701361}
+  m_Layer: 0
+  m_Name: bombaspawnpoint (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &649701361
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649701360}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.2, y: -2.94, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &776693207
 GameObject:
   m_ObjectHideFlags: 0
@@ -3043,7 +3080,7 @@ GameObject:
   - component: {fileID: 776693209}
   - component: {fileID: 776693210}
   m_Layer: 5
-  m_Name: Life_1 (2)
+  m_Name: 1a
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3388,7 +3425,7 @@ GameObject:
   - component: {fileID: 890292710}
   - component: {fileID: 890292711}
   m_Layer: 5
-  m_Name: Life_1 (2)
+  m_Name: 2v
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3588,6 +3625,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1003396791}
   m_CullTransparentMesh: 1
+--- !u!1 &1006342604
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1006342605}
+  m_Layer: 0
+  m_Name: bombaspawnpoint (3)
+  m_TagString: Untagged
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1006342605
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006342604}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.96, y: -5.52, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1023399425
 GameObject:
   m_ObjectHideFlags: 0
@@ -4560,7 +4628,7 @@ GameObject:
   - component: {fileID: 1451830275}
   - component: {fileID: 1451830276}
   m_Layer: 5
-  m_Name: Life_1 (2)
+  m_Name: 3a
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4830,7 +4898,7 @@ Transform:
   m_GameObject: {fileID: 1521415363}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.94, y: -7.08, z: 0}
+  m_LocalPosition: {x: 9.41, y: -7.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5065,7 +5133,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1 &1595722502
+--- !u!1 &1612030542
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5073,24 +5141,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1595722503}
+  - component: {fileID: 1612030543}
   m_Layer: 0
-  m_Name: IntroBoss1
+  m_Name: bombaspawnpoint (1)
   m_TagString: Untagged
-  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1595722503
+--- !u!4 &1612030543
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1595722502}
+  m_GameObject: {fileID: 1612030542}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.23305, y: 18.42, z: 0}
+  m_LocalPosition: {x: -5.07, y: -4.89, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5464,7 +5532,7 @@ GameObject:
   - component: {fileID: 1660190804}
   - component: {fileID: 1660190805}
   m_Layer: 5
-  m_Name: Life_1 (2)
+  m_Name: 3v
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5758,7 +5826,7 @@ GameObject:
   - component: {fileID: 1757618569}
   - component: {fileID: 1757618568}
   m_Layer: 5
-  m_Name: Life_1 (2)
+  m_Name: 1 v
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6214,9 +6282,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
   p1LifeIcons:
-  - {fileID: 1451830276}
-  - {fileID: 462018690}
   - {fileID: 776693210}
+  - {fileID: 462018690}
+  - {fileID: 1451830276}
   p1Color: {r: 1, g: 1, b: 1, a: 1}
   p2LifeIcons:
   - {fileID: 1660190805}
@@ -6682,7 +6750,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -233.90002, y: -191}
+  m_AnchoredPosition: {x: -193.40002, y: 173.4}
   m_SizeDelta: {x: -456.11, y: -356.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2039333964
@@ -7137,5 +7205,7 @@ SceneRoots:
   - {fileID: 1061829812}
   - {fileID: 1911815554}
   - {fileID: 542892578}
-  - {fileID: 1595722503}
-  - {fileID: 198335940}
+  - {fileID: 623998960}
+  - {fileID: 1612030543}
+  - {fileID: 649701361}
+  - {fileID: 1006342605}
