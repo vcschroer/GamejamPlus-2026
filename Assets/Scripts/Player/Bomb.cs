@@ -406,6 +406,11 @@ public class Bomb : MonoBehaviour
         if (isExploded) return;
         isExploded = true;
 
+        if (GameEffectsManager.Instance != null)
+        {
+            GameEffectsManager.Instance.TriggerBombExplosionEffects(transform.position);
+        }
+
         bool hitBoss = false;
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1.5f);
 
