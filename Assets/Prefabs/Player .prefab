@@ -184,7 +184,7 @@ MonoBehaviour:
   player2AnimatorController: {fileID: 22100000, guid: 4ce64b2f8a3d6fd448873f4cfa19f88d, type: 2}
   maxHealth: 3
   lifeIcons: []
-  ghostDuration: 10
+  ghostDuration: 20
   ghostFloatSpeed: 0.8
   ghostWobbleFrequency: 3
   ghostWobbleAmount: 0.4
@@ -223,7 +223,7 @@ MonoBehaviour:
   minThrowSpeed: 18
   maxThrowSpeed: 38
   throwKnockbackForce: 24
-  knockbackDuration: 0.5
+  knockbackDuration: 0
   scaleKnockbackWithCharge: 1
   playerKnockbackForce: 40
   playerKnockbackDuration: 0.4
@@ -349,13 +349,50 @@ MonoBehaviour:
   m_ApplyToSortingLayers: 00000000
   m_ShapePath:
   - {x: -0.42867154, y: -0.10270719, z: 0}
-  - {x: -0.28468344, y: 0.34112468, z: 0}
-  - {x: 0.3459185, y: 0.34232795, z: 0}
+  - {x: -0.3226877, y: 0.1497713, z: 0}
+  - {x: -0.3682959, y: 0.17482764, z: 0}
+  - {x: -0.50343126, y: 0.07794309, z: 0}
+  - {x: -0.48822856, y: -0.112485215, z: 0}
+  - {x: -0.5929585, y: -0.112485215, z: 0}
+  - {x: -0.6959992, y: -0.027293613, z: 0}
+  - {x: -0.7061344, y: 0.1080107, z: 0}
+  - {x: -0.6554586, y: 0.19654316, z: 0}
+  - {x: -0.48822856, y: 0.1781685, z: 0}
+  - {x: -0.30453828, y: 0.33977935, z: 0}
+  - {x: -0.471744, y: 0.41059968, z: 0}
+  - {x: -0.59167886, y: 0.6867091, z: 0}
+  - {x: -0.51466197, y: 0.83571994, z: 0}
+  - {x: -0.4041595, y: 0.733068, z: 0}
+  - {x: -0.43764508, y: 0.5774343, z: 0}
+  - {x: -0.1362746, y: 0.4416688, z: 0}
+  - {x: -0.015726421, y: 0.312526, z: 0}
+  - {x: 0.114867456, y: 0.40855527, z: 0}
+  - {x: 0.3660095, y: 0.47478235, z: 0}
+  - {x: 0.45642063, y: 0.6138593, z: 0}
+  - {x: 0.38944945, y: 0.7131999, z: 0}
+  - {x: 0.4698149, y: 0.8622109, z: 0}
+  - {x: 0.5903631, y: 0.75955886, z: 0}
+  - {x: 0.5033005, y: 0.48471648, z: 0}
+  - {x: 0.36935842, y: 0.3688188, z: 0}
+  - {x: 0.3078262, y: 0.31896695, z: 0}
+  - {x: 0.45286253, y: 0.23530243, z: 0}
+  - {x: 0.53746706, y: 0.15363, z: 0}
+  - {x: 0.5837981, y: 0.19546223, z: 0}
+  - {x: 0.6563163, y: 0.18550216, z: 0}
+  - {x: 0.7006329, y: 0.101837695, z: 0}
+  - {x: 0.6865322, y: -0.051547185, z: 0}
+  - {x: 0.5455246, y: -0.11529155, z: 0}
+  - {x: 0.45084813, y: -0.019674994, z: 0}
+  - {x: 0.5132943, y: 0.0859016, z: 0}
+  - {x: 0.38638753, y: 0.15761402, z: 0}
+  - {x: 0.28566787, y: 0.119765796, z: 0}
   - {x: 0.3985345, y: -0.07610601, z: 0}
-  - {x: 0.1952333, y: -0.15106387, z: 0}
-  - {x: 0.34160897, y: -0.48020154, z: 0}
-  - {x: -0.18650265, y: -0.4987562, z: 0}
-  m_ShapePathHash: 59444475
+  - {x: 0.2832813, y: -0.13997331, z: 0}
+  - {x: 0.17836612, y: -0.13619027, z: 0}
+  - {x: 0.11569012, y: -0.14944059, z: 0}
+  - {x: 0.0023880336, y: -0.14308986, z: 0}
+  - {x: -0.21881446, y: -0.15014914, z: 0}
+  m_ShapePathHash: -317227173
   m_InstanceId: 0
   m_ShadowShape2DComponent: {fileID: 0}
   m_ShadowShape2DProvider:
@@ -364,14 +401,14 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: -0.015068531, y: -0.07821414, z: 0}
-      m_Extent: {x: 0.413603, y: 0.42054206, z: 0}
+      m_Center: {x: -0.0027506948, y: 0.3560309, z: 0}
+      m_Extent: {x: 0.7033837, y: 0.50618005, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0
     m_FlipX: 0
     m_FlipY: 0
     m_InitialTrim: 0
-  m_CastingOption: 1
+  m_CastingOption: 2
   m_PreviousTrimEdge: 0
   m_PreviousEdgeProcessing: 1
   m_PreviousShadowCastingSource: 1

@@ -6,22 +6,22 @@ public class GameEffectsManager : MonoBehaviour
 {
     public static GameEffectsManager Instance { get; private set; }
 
-    [Header("Configuração de Nuvens (Vaivém)")]
+    [Header("Configuração de Nuvens")]
     [SerializeField] private List<Transform> backgroundClouds = new List<Transform>();
     [SerializeField] private float cloudOscillationSpeed = 0.5f;
     [SerializeField] private float cloudOscillationDistance = 3f;
 
-    [Header("Configuração das Árvores (Efeito Vento)")]
+    [Header("Configuração das Árvores")]
     [SerializeField] private List<Transform> trees = new List<Transform>();
     [SerializeField] private float treeWindSpeed = 2f;
     [SerializeField] private float treeWindAngle = 3f; 
 
-    [Header("Configuração das Cortinas (Efeito Vento Constante)")]
+    [Header("Configuração das Cortinas ")]
     [SerializeField] private List<Transform> curtains = new List<Transform>();
     [SerializeField] private float curtainWindSpeed = 1.5f;
     [SerializeField] private float curtainWindAngle = 2.5f; 
 
-    [Header("Configuração das Lápides (Afundar na Explosão)")]
+    [Header("Configuração das Lápides")]
     [SerializeField] private List<Transform> tombstones = new List<Transform>();
     [SerializeField] private float tombstoneSinkDepth = 1.5f; 
     [SerializeField] private float tombstoneSinkDuration = 0.15f;

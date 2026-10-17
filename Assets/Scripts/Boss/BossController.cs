@@ -5,6 +5,17 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class BossController : MonoBehaviour
 {
+    [Header("Introdução / Início do Jogo")]
+    [SerializeField] private float introDelay = 2f;
+    [SerializeField] private Vector2 startIntroPosition = new Vector2(0f, 10f);
+    [SerializeField] private Vector2 endIntroPosition = new Vector2(0f, 5f);
+    [SerializeField] private float introMoveDuration = 1.5f;
+    [SerializeField] private float introShakeDuration = 0.4f;
+    [SerializeField] private float introShakeIntensity = 0.2f;
+
+    private bool isIntroFinished = false;
+    public bool IsIntroFinished => isIntroFinished;
+
     [Header("Movimentação & Área de Voo")]
     [SerializeField] private Collider2D flightAreaCollider;
     [SerializeField] private float minFlySpeed = 3f;
@@ -150,6 +161,45 @@ public class BossController : MonoBehaviour
     private void Start()
     {
         currentHealth = maxHealth;
+        isIntroFinished = false;
+
+        transform.position = startIntroPosition;
+
+        StartCoroutine(BossIntroRoutine());
+    }
+
+    private IEnumerator BossIntroRoutine()
+    {
+        yield return new WaitForSeconds(introDelay);
+
+        float elapsed = 0f;
+        while (elapsed < introMoveDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / introMoveDuration);
+            float smoothT = Mathf.SmoothStep(0f, 1f, t);
+            transform.position = Vector2.Lerp(startIntroPosition, endIntroPosition, smoothT);
+            yield return null;
+        }
+        transform.position = endIntroPosition;
+
+        if (bossEffects != null)
+        {
+            bossEffects.TriggerImpact();
+        }
+
+        Vector3 originalPos = transform.position;
+        float shakeElapsed = 0f;
+        while (shakeElapsed < introShakeDuration)
+        {
+            shakeElapsed += Time.deltaTime;
+            Vector2 shakeOffset = Random.insideUnitCircle * introShakeIntensity;
+            transform.position = (Vector2)originalPos + shakeOffset;
+            yield return null;
+        }
+        transform.position = originalPos;
+
+        isIntroFinished = true;
 
         if (flightAreaCollider != null)
             ChooseNextFlightTarget();
@@ -168,6 +218,9 @@ public class BossController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!isIntroFinished)
+            return;
+
         hoverTimer += Time.fixedDeltaTime;
 
         if (isStaggered)
@@ -190,6 +243,42 @@ public class BossController : MonoBehaviour
     {
         if (bossEffects != null)
             bossEffects.TriggerImpact();
+    }
+
+    public void TriggerSpawnPopUp()
+    {
+        StartCoroutine(SpawnPopUpRoutine());
+    }
+
+    private IEnumerator SpawnPopUpRoutine()
+    {
+        float duration = 0.25f;
+        float elapsed = 0f;
+
+        Vector3 startScale = Vector3.zero;
+        Vector3 peakScale = Vector3.one * 1.25f;
+        Vector3 targetScale = Vector3.one;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            if (t < 0.7f)
+            {
+                float subT = t / 0.7f;
+                transform.localScale = Vector3.Lerp(startScale, peakScale, Mathf.Sin(subT * Mathf.PI * 0.5f));
+            }
+            else
+            {
+                float subT = (t - 0.7f) / 0.3f;
+                transform.localScale = Vector3.Lerp(peakScale, targetScale, subT);
+            }
+
+            yield return null;
+        }
+
+        transform.localScale = targetScale;
     }
 
     private Vector2 GetCurrentHoverOffset(
@@ -416,7 +505,7 @@ public class BossController : MonoBehaviour
 
     private IEnumerator BossBehaviorLoop()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         while (true)
         {

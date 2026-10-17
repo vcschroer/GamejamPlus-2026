@@ -385,6 +385,9 @@ public class PlayerMovement : MonoBehaviour
         isWallSliding = false;
         isKnockbacked = false;
 
+        if (animator != null)
+            animator.SetBool("IsWallSliding", false);
+
         if (knockbackCoroutine != null)
         {
             StopCoroutine(knockbackCoroutine);
@@ -401,17 +404,32 @@ public class PlayerMovement : MonoBehaviour
 
         if (heldBomb != null)
         {
-            heldBomb.DropByDeadPlayer();
+            Vector2 throwDir = facingRight ? Vector2.right : Vector2.left;
+            PlayerMovement[] allPlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+            foreach (PlayerMovement p in allPlayers)
+            {
+                if (p != this && !p.IsDead)
+                {
+                    Vector2 dirToOther = (p.transform.position - transform.position);
+                    if (dirToOther.sqrMagnitude > 0.001f)
+                    {
+                        throwDir = dirToOther.normalized;
+                    }
+                    break;
+                }
+            }
+
+            heldBomb.DropByDeadPlayerToward(throwDir, 12f);
             heldBomb = null;
         }
 
         if (aimArrow != null)
             aimArrow.SetActive(false);
 
-        PlayerMovement[] allPlayers =
+        PlayerMovement[] existingPlayers =
             FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
-        foreach (PlayerMovement p in allPlayers)
+        foreach (PlayerMovement p in existingPlayers)
         {
             Collider2D otherCollider = p.GetComponent<Collider2D>();
 
@@ -433,6 +451,11 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator DeathAndGhostRoutine()
     {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sortingOrder = 50;
+        }
+
         float squashDuration = 0.25f;
         float elapsedSquash = 0f;
 
@@ -484,6 +507,19 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 startPosition = transform.position;
 
+        BossController boss = FindFirstObjectByType<BossController>();
+        if (boss != null)
+        {
+            Collider2D bossCol = boss.GetComponent<Collider2D>();
+            if (bossCol != null && bossCol.bounds.Contains(startPosition))
+            {
+                float pushDistance = bossCol.bounds.extents.x + 1.5f;
+                float dir = startPosition.x < boss.transform.position.x ? -1f : 1f;
+                startPosition.x = boss.transform.position.x + (dir * pushDistance);
+                transform.position = startPosition;
+            }
+        }
+
         while (isDead)
         {
             elapsedGhost += Time.deltaTime;
@@ -498,11 +534,25 @@ public class PlayerMovement : MonoBehaviour
                 + Mathf.Cos(elapsedGhost * ghostWobbleFrequency * 0.5f)
                 * 0.1f;
 
-            transform.position = new Vector3(
+            Vector3 currentGhostPos = new Vector3(
                 startPosition.x + horizontalWobble,
                 startPosition.y + verticalOffset,
                 startPosition.z
             );
+
+            if (boss != null)
+            {
+                Collider2D bossCol = boss.GetComponent<Collider2D>();
+                if (bossCol != null && bossCol.bounds.Contains(currentGhostPos))
+                {
+                    float pushDistance = bossCol.bounds.extents.x + 1.5f;
+                    float dir = currentGhostPos.x < boss.transform.position.x ? -1f : 1f;
+                    startPosition.x = boss.transform.position.x + (dir * pushDistance);
+                    currentGhostPos.x = startPosition.x + horizontalWobble;
+                }
+            }
+
+            transform.position = currentGhostPos;
 
             float currentAlpha = Mathf.Lerp(0.8f, 0f, progress);
 
@@ -532,6 +582,9 @@ public class PlayerMovement : MonoBehaviour
         isWallSliding = false;
         isKnockbacked = false;
 
+        if (animator != null)
+            animator.SetBool("IsWallSliding", false);
+
         if (knockbackCoroutine != null)
         {
             StopCoroutine(knockbackCoroutine);
@@ -539,9 +592,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (spriteRenderer != null)
+        {
             spriteRenderer.enabled = true;
+            spriteRenderer.sortingOrder = 0;
+        }
 
-        currentHealth = 3;
+        currentHealth = 1;
         UpdateLifeUI();
 
         if (PlayerUI.Instance != null)
@@ -857,6 +913,9 @@ public class PlayerMovement : MonoBehaviour
         isKnockbacked = true;
         isWallSliding = false;
 
+        if (animator != null)
+            animator.SetBool("IsWallSliding", false);
+
         rb.linearVelocity = knockbackDir.normalized * force;
 
         yield return new WaitForSeconds(duration);
@@ -998,6 +1057,9 @@ public class PlayerMovement : MonoBehaviour
 
             isWallSliding = false;
 
+            if (animator != null)
+                animator.SetBool("IsWallSliding", false);
+
             SetFacing(!facingRight);
 
             if (playerEffects != null)
@@ -1054,6 +1116,11 @@ public class PlayerMovement : MonoBehaviour
         {
             isWallSliding = false;
         }
+
+        if (animator != null)
+        {
+            animator.SetBool("IsWallSliding", isWallSliding);
+        }
     }
 
     private void OnDashPerformed(InputAction.CallbackContext context)
@@ -1070,6 +1137,9 @@ public class PlayerMovement : MonoBehaviour
         canDash = false;
         isDashing = true;
         isWallSliding = false;
+
+        if (animator != null)
+            animator.SetBool("IsWallSliding", false);
 
         float originalGrav = rb.gravityScale;
         rb.gravityScale = 0f;

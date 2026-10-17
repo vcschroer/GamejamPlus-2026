@@ -1,0 +1,637 @@
+fileFormatVersion: 2
+guid: 61b5c629d65c83542ba4b382489d7fb1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -3059694466904866384
+    second: layernuvens (1)_0
+  - first:
+      213: 590051425537549669
+    second: layernuvens (1)_1
+  - first:
+      213: 1368153608089981948
+    second: layernuvens (1)_2
+  - first:
+      213: 217098427405166262
+    second: layernuvens (1)_3
+  - first:
+      213: 1736502767136269013
+    second: layernuvens (1)_4
+  - first:
+      213: 7788999651913748984
+    second: layernuvens (1)_5
+  - first:
+      213: -689203068632389035
+    second: layernuvens (1)_6
+  - first:
+      213: -141000861291964683
+    second: layernuvens (1)_7
+  - first:
+      213: -4341786396092993229
+    second: layernuvens (1)_8
+  - first:
+      213: 5861909664112910604
+    second: layernuvens (1)_9
+  - first:
+      213: 1219694339712819490
+    second: layernuvens (1)_10
+  - first:
+      213: -7557073401412001424
+    second: layernuvens (1)_11
+  - first:
+      213: 8103824995476535622
+    second: layernuvens (1)_12
+  - first:
+      213: 8126667455457446544
+    second: layernuvens (1)_13
+  - first:
+      213: 6203823976125168298
+    second: layernuvens (1)_14
+  - first:
+      213: 2696773920815813884
+    second: layernuvens (1)_15
+  - first:
+      213: -5953992944426094858
+    second: layernuvens (1)_16
+  - first:
+      213: -1475686627471379769
+    second: layernuvens (1)_17
+  - first:
+      213: -7868585663104464934
+    second: layernuvens (1)_18
+  - first:
+      213: -8971106163898087684
+    second: layernuvens (1)_19
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 0
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: layernuvens (1)_0
+      rect:
+        serializedVersion: 2
+        x: 676
+        y: 781
+        width: 13
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b148e2e718c985d0800000000000000
+      internalID: -3059694466904866384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_1
+      rect:
+        serializedVersion: 2
+        x: 685
+        y: 700
+        width: 470
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 565e06235a8403800800000000000000
+      internalID: 590051425537549669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_2
+      rect:
+        serializedVersion: 2
+        x: 1388
+        y: 779
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf35f503578acf210800000000000000
+      internalID: 1368153608089981948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_3
+      rect:
+        serializedVersion: 2
+        x: 1396
+        y: 784
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b6e7c69ed9430300800000000000000
+      internalID: 217098427405166262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_4
+      rect:
+        serializedVersion: 2
+        x: 1403
+        y: 781
+        width: 40
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d2e3aaf01c491810800000000000000
+      internalID: 1736502767136269013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_5
+      rect:
+        serializedVersion: 2
+        x: 1423
+        y: 744
+        width: 103
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f1d5ff5ae5181c60800000000000000
+      internalID: 7788999651913748984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_6
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 775
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55aae0ce5757f66f0800000000000000
+      internalID: -689203068632389035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_7
+      rect:
+        serializedVersion: 2
+        x: 1372
+        y: 775
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f61ba5b6701b0ef0800000000000000
+      internalID: -141000861291964683
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_8
+      rect:
+        serializedVersion: 2
+        x: 1400
+        y: 767
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 331f04ac640eeb3c0800000000000000
+      internalID: -4341786396092993229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_9
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 598
+        width: 547
+        height: 164
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0121e228cfa95150800000000000000
+      internalID: 5861909664112910604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_10
+      rect:
+        serializedVersion: 2
+        x: 1354
+        y: 758
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 221232d2a893de010800000000000000
+      internalID: 1219694339712819490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_11
+      rect:
+        serializedVersion: 2
+        x: 162
+        y: 744
+        width: 18
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 071e84fc7c1ef1790800000000000000
+      internalID: -7557073401412001424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_12
+      rect:
+        serializedVersion: 2
+        x: 1413
+        y: 742
+        width: 18
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6497f41c5e1967070800000000000000
+      internalID: 8103824995476535622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_13
+      rect:
+        serializedVersion: 2
+        x: 1442
+        y: 742
+        width: 10
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09ac44a6ef8b7c070800000000000000
+      internalID: 8126667455457446544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_14
+      rect:
+        serializedVersion: 2
+        x: 244
+        y: 711
+        width: 62
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaafdf97909681650800000000000000
+      internalID: 6203823976125168298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_15
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 522
+        width: 592
+        height: 137
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf493c5c79ddc6520800000000000000
+      internalID: 2696773920815813884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_16
+      rect:
+        serializedVersion: 2
+        x: 626
+        y: 659
+        width: 15
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6feec4076fa2f5da0800000000000000
+      internalID: -5953992944426094858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_17
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 648
+        width: 27
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c236c1b4de458be0800000000000000
+      internalID: -1475686627471379769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_18
+      rect:
+        serializedVersion: 2
+        x: 661
+        y: 635
+        width: 29
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad74de9670b2dc290800000000000000
+      internalID: -7868585663104464934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: layernuvens (1)_19
+      rect:
+        serializedVersion: 2
+        x: 924
+        y: 552
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf68982997a308380800000000000000
+      internalID: -8971106163898087684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      layernuvens (1)_0: -3059694466904866384
+      layernuvens (1)_1: 590051425537549669
+      layernuvens (1)_10: 1219694339712819490
+      layernuvens (1)_11: -7557073401412001424
+      layernuvens (1)_12: 8103824995476535622
+      layernuvens (1)_13: 8126667455457446544
+      layernuvens (1)_14: 6203823976125168298
+      layernuvens (1)_15: 2696773920815813884
+      layernuvens (1)_16: -5953992944426094858
+      layernuvens (1)_17: -1475686627471379769
+      layernuvens (1)_18: -7868585663104464934
+      layernuvens (1)_19: -8971106163898087684
+      layernuvens (1)_2: 1368153608089981948
+      layernuvens (1)_3: 217098427405166262
+      layernuvens (1)_4: 1736502767136269013
+      layernuvens (1)_5: 7788999651913748984
+      layernuvens (1)_6: -689203068632389035
+      layernuvens (1)_7: -141000861291964683
+      layernuvens (1)_8: -4341786396092993229
+      layernuvens (1)_9: 5861909664112910604
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

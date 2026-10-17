@@ -26,6 +26,9 @@ public class Bomb : MonoBehaviour
     [SerializeField] private Color flashColor = Color.red;
     [SerializeField] private int bombSortingOrder = 10;
 
+    [Header("Efeitos de Explosão")]
+    [SerializeField] private GameObject explosionParticlesPrefab;
+
     private float currentTimer;
     private bool isHeld = false;
     private bool isThrown = false;
@@ -384,6 +387,28 @@ public class Bomb : MonoBehaviour
         if (spriteRenderer != null) spriteRenderer.enabled = false;
     }
 
+    public void DropByDeadPlayerToward(Vector2 throwDirection, float speed)
+    {
+        isHeld = false;
+        isThrown = true;
+        currentHolder = null;
+
+        transform.position = (Vector2)transform.position + new Vector2(0f, 0.5f);
+
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = true;
+
+        rb.simulated = true;
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = bombGravityScale;
+        col.isTrigger = false;
+
+        if (throwDirection == Vector2.zero)
+            throwDirection = Vector2.right;
+
+        rb.linearVelocity = throwDirection.normalized * speed;
+    }
+
     public void Throw(Vector2 direction, Collider2D throwerCol, float customSpeed)
     {
         if (!isHeld || isRandomizing || isExploded) return;
@@ -426,6 +451,11 @@ public class Bomb : MonoBehaviour
         if (bombLightObject != null)
         {
             bombLightObject.SetActive(false);
+        }
+
+        if (explosionParticlesPrefab != null)
+        {
+            Instantiate(explosionParticlesPrefab, transform.position, Quaternion.identity);
         }
 
         if (SoundManager.Instance != null)
