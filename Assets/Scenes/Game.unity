@@ -692,8 +692,9 @@ MonoBehaviour:
   respawnDelay: 3
   spriteRenderer: {fileID: 1274724615}
   bombLightObject: {fileID: 1146270364}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  flashColor: {r: 1, g: 0, b: 0, a: 1}
+  startColor: {r: 0, g: 1, b: 0, a: 1}
+  middleColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  endColor: {r: 1, g: 0, b: 0, a: 1}
   bombSortingOrder: 10
   explosionParticlesPrefab: {fileID: 0}
 --- !u!50 &266196749
@@ -2652,7 +2653,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 315.1, y: 175.3}
+  m_AnchoredPosition: {x: 143.6, y: 175.3}
   m_SizeDelta: {x: -456.11, y: -356.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &567205521
@@ -6282,14 +6283,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerUI
   p1LifeIcons:
-  - {fileID: 776693210}
-  - {fileID: 462018690}
   - {fileID: 1451830276}
+  - {fileID: 462018690}
+  - {fileID: 776693210}
   p1Color: {r: 1, g: 1, b: 1, a: 1}
   p2LifeIcons:
-  - {fileID: 1660190805}
-  - {fileID: 890292711}
   - {fileID: 1757618568}
+  - {fileID: 890292711}
+  - {fileID: 1660190805}
   p2Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!4 &1852247207
 Transform:
@@ -6750,7 +6751,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -193.40002, y: 173.4}
+  m_AnchoredPosition: {x: -14.400024, y: 173.4}
   m_SizeDelta: {x: -456.11, y: -356.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2039333964

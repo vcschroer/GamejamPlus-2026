@@ -19,11 +19,12 @@ public class Bomb : MonoBehaviour
     [SerializeField] private bool decelerateShuffle = true;
     [SerializeField] private float respawnDelay = 1f;
 
-    [Header("Efeitos Visuais & Iluminação")]
+    [Header("Efeitos Visuais & Cores do Temporizador")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject bombLightObject;
-    [SerializeField] private Color normalColor = Color.white;
-    [SerializeField] private Color flashColor = Color.red;
+    [SerializeField] private Color startColor = Color.green;  
+    [SerializeField] private Color middleColor = Color.yellow;
+    [SerializeField] private Color endColor = Color.red;     
     [SerializeField] private int bombSortingOrder = 10;
 
     [Header("Efeitos de Explosão")]
@@ -98,7 +99,7 @@ public class Bomb : MonoBehaviour
         if (spriteRenderer != null)
         {
             spriteRenderer.enabled = true;
-            spriteRenderer.color = normalColor;
+            spriteRenderer.color = startColor;
         }
 
         if (bombLightObject != null)
@@ -232,9 +233,21 @@ public class Bomb : MonoBehaviour
             transform.localScale = Vector3.one * scaleAmount;
         }
 
+        Color targetFlashColor;
+        if (timeRatio > 0.5f)
+        {
+            float t = (timeRatio - 0.5f) * 2f;
+            targetFlashColor = Color.Lerp(middleColor, startColor, t);
+        }
+        else
+        {
+            float t = timeRatio * 2f;
+            targetFlashColor = Color.Lerp(endColor, middleColor, t);
+        }
+
         float pingPong = Mathf.PingPong(Time.time * speed, 1f);
         if (spriteRenderer != null)
-            spriteRenderer.color = Color.Lerp(normalColor, flashColor, pingPong);
+            spriteRenderer.color = Color.Lerp(Color.white, targetFlashColor, pingPong);
 
         if (currentTimer <= 0f && !isExploded)
         {
@@ -267,7 +280,10 @@ public class Bomb : MonoBehaviour
                 if (collision.contactCount > 0)
                 {
                     Vector2 normal = collision.contacts[0].normal;
-                    rb.linearVelocity = Vector2.Reflect(rb.linearVelocity, normal) * 0.8f;
+                    Vector2 pushAwayDir = (transform.position - boss.transform.position).normalized;
+                    if (pushAwayDir.sqrMagnitude < 0.1f) pushAwayDir = Vector2.up;
+
+                    rb.linearVelocity = (Vector2.Reflect(rb.linearVelocity, normal) + pushAwayDir * 5f) * 1.2f;
                 }
             }
             return;
