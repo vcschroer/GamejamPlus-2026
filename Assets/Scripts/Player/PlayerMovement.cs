@@ -3,11 +3,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Componentes")]
     private Rigidbody2D rb;
-    private Camera mainCamera;
+    private PlayerInput playerInput;
 
     [Header("Efeitos Visuais")]
     [SerializeField] private PlayerEffects playerEffects;
@@ -50,46 +51,41 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     private bool isGrounded;
 
-    [Header("Input System")]
-    [SerializeField] private InputAction moveAction;
-    [SerializeField] private InputAction jumpAction;
-    [SerializeField] private InputAction dashAction;
-    [SerializeField] private InputAction mousePositionAction;
+    private InputAction moveAction;
+    private InputAction jumpAction;
+    private InputAction dashAction;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = baseGravity;
-        mainCamera = Camera.main;
+        playerInput = GetComponent<PlayerInput>();
+
+        if (playerInput != null && playerInput.actions != null)
+        {
+            moveAction = playerInput.actions["Move"];
+            jumpAction = playerInput.actions["Jump"];
+            dashAction = playerInput.actions["Dash"];
+        }
     }
 
     private void OnEnable()
     {
-        moveAction.Enable();
-        jumpAction.Enable();
-        dashAction.Enable();
-        mousePositionAction.Enable();
-
-        jumpAction.performed += OnJumpPerformed;
-        dashAction.performed += OnDashPerformed;
+        if (jumpAction != null) jumpAction.performed += OnJumpPerformed;
+        if (dashAction != null) dashAction.performed += OnDashPerformed;
     }
 
     private void OnDisable()
     {
-        moveAction.Disable();
-        jumpAction.Disable();
-        dashAction.Disable();
-        mousePositionAction.Disable();
-
-        jumpAction.performed -= OnJumpPerformed;
-        dashAction.performed -= OnDashPerformed;
+        if (jumpAction != null) jumpAction.performed -= OnJumpPerformed;
+        if (dashAction != null) dashAction.performed -= OnDashPerformed;
     }
 
     private void Update()
     {
         if (isDashing) return;
 
-        Vector2 moveInput = moveAction.ReadValue<Vector2>();
+        Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
         horizontalInput = Mathf.Round(moveInput.x);
 
         if (horizontalInput > 0 && !facingRight) Flip();
@@ -126,7 +122,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
         }
-        else if (rb.linearVelocity.y > 0 && !jumpAction.IsPressed() && !isWallSliding)
+        else if (rb.linearVelocity.y > 0 && jumpAction != null && !jumpAction.IsPressed() && !isWallSliding)
         {
             rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
         }
@@ -140,7 +136,7 @@ public class PlayerMovement : MonoBehaviour
         if (!wasGrounded && isGrounded)
         {
             if (playerEffects != null) playerEffects.TriggerLand();
-            PlayDust(); 
+            PlayDust();
         }
 
         if (isGrounded)
@@ -167,7 +163,7 @@ public class PlayerMovement : MonoBehaviour
             Flip();
 
             if (playerEffects != null) playerEffects.TriggerJump();
-            PlayDust(); 
+            PlayDust();
             return;
         }
 
@@ -175,14 +171,14 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             if (playerEffects != null) playerEffects.TriggerJump();
-            PlayDust(); 
+            PlayDust();
         }
         else if (extraJumps > 0)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             extraJumps--;
             if (playerEffects != null) playerEffects.TriggerJump();
-            PlayDust(); 
+            PlayDust();
         }
     }
 
@@ -222,18 +218,16 @@ public class PlayerMovement : MonoBehaviour
 
         PlayDust();
 
-        Vector2 mouseScreenPosition = mousePositionAction.ReadValue<Vector2>();
-        Vector3 mouseWorldPosition = mainCamera.ScreenToWorldPoint(new Vector3(mouseScreenPosition.x, mouseScreenPosition.y, mainCamera.nearClipPlane));
+        Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
+        Vector2 dashDir;
 
-        Vector2 dashDir = (Vector2)mouseWorldPosition - (Vector2)transform.position;
-
-        if (dashDir.sqrMagnitude < 0.01f)
+        if (moveInput.sqrMagnitude > 0.01f)
         {
-            dashDir = new Vector2(facingRight ? 1f : -1f, 0f);
+            dashDir = moveInput.normalized;
         }
         else
         {
-            dashDir.Normalize();
+            dashDir = new Vector2(facingRight ? 1f : -1f, 0f);
         }
 
         if (dashDir.x > 0 && !facingRight) Flip();
