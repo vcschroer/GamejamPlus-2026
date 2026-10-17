@@ -19,10 +19,11 @@ public class Bomb : MonoBehaviour
     [SerializeField] private bool decelerateShuffle = true;
     [SerializeField] private float respawnDelay = 1f;
 
-    [Header("Efeitos Visuais")]
+    [Header("Efeitos Visuais & Ordem na Camada")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color flashColor = Color.red;
+    [SerializeField] private int bombSortingOrder = 10;
 
     private float currentTimer;
     private bool isHeld = false;
@@ -40,6 +41,11 @@ public class Bomb : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sortingOrder = bombSortingOrder;
+        }
 
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = bombGravityScale;
@@ -212,7 +218,8 @@ public class Bomb : MonoBehaviour
         }
 
         float pingPong = Mathf.PingPong(Time.time * speed, 1f);
-        spriteRenderer.color = Color.Lerp(normalColor, flashColor, pingPong);
+        if (spriteRenderer != null)
+            spriteRenderer.color = Color.Lerp(normalColor, flashColor, pingPong);
 
         if (currentTimer <= 0f && !isExploded)
         {
@@ -222,33 +229,52 @@ public class Bomb : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isThrown || isRandomizing || isExploded) return;
+        if (isRandomizing || isExploded) return;
 
-        if (collision.gameObject.CompareTag("Player"))
+        BossController boss = collision.collider.GetComponent<BossController>();
+        if (boss == null) boss = collision.collider.GetComponentInParent<BossController>();
+
+        if (boss != null)
         {
-            PlayerMovement hitPlayer = collision.gameObject.GetComponent<PlayerMovement>();
+            Explode(boss);
+            return;
+        }
 
-            if (hitPlayer != null && hitPlayer.IsDead)
+        if (!isThrown) return;
+
+        PlayerMovement hitPlayer = collision.collider.GetComponent<PlayerMovement>();
+        if (hitPlayer == null) hitPlayer = collision.collider.GetComponentInParent<PlayerMovement>();
+
+        if (hitPlayer != null)
+        {
+            if (hitPlayer.IsDead)
             {
                 hitPlayer.Revive();
-                PickUp(collision.transform);
+                PickUp(hitPlayer.transform);
                 return;
             }
-            else if (hitPlayer != null && !hitPlayer.IsDead)
-            {
-                PickUp(collision.transform);
-                return;
-            }
+
+            PickUp(hitPlayer.transform);
+            return;
         }
 
         if (collision.contactCount > 0)
         {
             ContactPoint2D contact = collision.contacts[0];
             if (contact.normal.y > 0.5f)
-            {
                 rb.linearVelocity *= groundSlowdownFactor;
-            }
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (isRandomizing || isExploded) return;
+
+        BossController boss = collision.GetComponent<BossController>();
+        if (boss == null) boss = collision.GetComponentInParent<BossController>();
+
+        if (boss != null)
+            Explode(boss);
     }
 
     public void PickUp(Transform playerTransform)
@@ -347,28 +373,65 @@ public class Bomb : MonoBehaviour
         }
     }
 
-    private void Explode()
+    private void Explode(BossController directBoss = null)
     {
         if (isExploded) return;
         isExploded = true;
 
-        if (currentHolder != null)
+        bool hitBoss = false;
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1.5f);
+
+        if (directBoss != null)
         {
-            PlayerMovement unluckyPlayer = currentHolder.GetComponent<PlayerMovement>();
-            if (unluckyPlayer != null)
+            directBoss.TakeDamage(1);
+            hitBoss = true;
+        }
+        else
+        {
+            foreach (Collider2D hit in hits)
             {
-                unluckyPlayer.DropBomb();
-                unluckyPlayer.TakeDamage(1);
+                if (!hit.CompareTag("Boss")) continue;
+
+                BossController boss = hit.GetComponent<BossController>();
+                if (boss == null) boss = hit.GetComponentInParent<BossController>();
+
+                if (boss != null)
+                {
+                    boss.TakeDamage(1);
+                    hitBoss = true;
+                    break;
+                }
+            }
+        }
+
+        if (hitBoss)
+        {
+            if (currentHolder != null)
+            {
+                PlayerMovement holder = currentHolder.GetComponent<PlayerMovement>();
+                if (holder != null) holder.DropBomb();
             }
         }
         else
         {
-            PlayerMovement[] allPlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
-            foreach (PlayerMovement player in allPlayers)
+            if (currentHolder != null)
             {
-                if (player != null && !player.IsDead)
+                PlayerMovement holder = currentHolder.GetComponent<PlayerMovement>();
+                if (holder != null)
                 {
-                    player.TakeDamage(1);
+                    holder.DropBomb();
+                    holder.TakeDamage(1);
+                }
+            }
+            else
+            {
+                foreach (Collider2D hit in hits)
+                {
+                    if (!hit.CompareTag("Player")) continue;
+
+                    PlayerMovement player = hit.GetComponent<PlayerMovement>();
+                    if (player != null && !player.IsDead)
+                        player.TakeDamage(1);
                 }
             }
         }

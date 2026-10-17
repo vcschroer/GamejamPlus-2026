@@ -105,6 +105,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float playerKnockbackForce = 10f;
     [SerializeField] private float playerKnockbackDuration = 0.15f;
 
+    [Header("Dano do Boss: Knockback e Invulnerabilidade")]
+    [SerializeField] private float bossKnockbackForce = 26f;
+    [SerializeField] private float bossKnockbackDuration = 0.3f;
+    [SerializeField] private float bossKnockbackUpward = 0.75f;
+    [SerializeField] private float invulnerabilityDuration = 1f;
+    [SerializeField] private float invulnerabilityBlinkInterval = 0.08f;
+    private bool isInvulnerable = false;
+    private Coroutine invulnerabilityCoroutine;
+    private Coroutine knockbackCoroutine;
+
     private InputAction moveAction;
     private InputAction jumpAction;
     private InputAction dashAction;
@@ -185,20 +195,84 @@ public class PlayerMovement : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
-        if (isDead) return;
+        if (isDead || isInvulnerable) return;
 
+        ApplyDamage(damageAmount);
+        if (!isDead)
+            StartInvulnerability();
+    }
+
+    public void TakeBossDamage(int damageAmount, Vector2 bossOrProjectilePosition)
+    {
+        if (isDead || isInvulnerable) return;
+
+        ApplyDamage(damageAmount);
+
+        if (!isDead)
+        {
+            Vector2 direction = (Vector2)transform.position - bossOrProjectilePosition;
+            if (direction.sqrMagnitude < 0.001f)
+                direction = Vector2.right;
+
+            direction.Normalize();
+            direction.y = Mathf.Max(direction.y, bossKnockbackUpward);
+            direction.Normalize();
+
+            if (knockbackCoroutine != null)
+                StopCoroutine(knockbackCoroutine);
+
+            knockbackCoroutine = StartCoroutine(
+                KnockbackRoutine(direction, bossKnockbackForce, bossKnockbackDuration));
+
+            StartInvulnerability();
+        }
+    }
+
+    private void ApplyDamage(int damageAmount)
+    {
         currentHealth -= damageAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         if (PlayerUI.Instance != null)
-        {
             PlayerUI.Instance.UpdateHealth(playerID, currentHealth);
-        }
+
+        UpdateLifeUI();
 
         if (currentHealth <= 0)
-        {
             Die();
+    }
+
+    private void StartInvulnerability()
+    {
+        if (invulnerabilityCoroutine != null)
+            StopCoroutine(invulnerabilityCoroutine);
+
+        invulnerabilityCoroutine = StartCoroutine(InvulnerabilityRoutine());
+    }
+
+    private IEnumerator InvulnerabilityRoutine()
+    {
+        isInvulnerable = true;
+        float elapsed = 0f;
+        bool showSprite = true;
+
+        while (elapsed < invulnerabilityDuration && !isDead)
+        {
+            if (spriteRenderer != null)
+            {
+                showSprite = !showSprite;
+                spriteRenderer.enabled = showSprite;
+            }
+
+            yield return new WaitForSeconds(invulnerabilityBlinkInterval);
+            elapsed += invulnerabilityBlinkInterval;
         }
+
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = true;
+
+        isInvulnerable = false;
+        invulnerabilityCoroutine = null;
     }
 
     private void UpdateLifeUI()
@@ -306,6 +380,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isDead) return;
         isDead = false;
+        isInvulnerable = false;
+        if (invulnerabilityCoroutine != null)
+        {
+            StopCoroutine(invulnerabilityCoroutine);
+            invulnerabilityCoroutine = null;
+        }
+        if (spriteRenderer != null) spriteRenderer.enabled = true;
 
         currentHealth = 1;
         UpdateLifeUI();
@@ -339,18 +420,41 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDead) return;
 
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            PlayerMovement otherPlayer = collision.gameObject.GetComponent<PlayerMovement>();
-            if (otherPlayer != null && !otherPlayer.IsDead)
-            {
-                Vector2 pushDir = (transform.position - collision.transform.position).normalized;
-                if (pushDir == Vector2.zero) pushDir = Vector2.right;
-                pushDir.y = 0.2f;
+        PlayerMovement otherPlayer = collision.collider.GetComponent<PlayerMovement>();
+        if (otherPlayer == null)
+            otherPlayer = collision.collider.GetComponentInParent<PlayerMovement>();
 
-                StartCoroutine(KnockbackRoutine(pushDir, playerKnockbackForce, playerKnockbackDuration));
-            }
+        if (otherPlayer != null && otherPlayer != this)
+        {
+            if (!otherPlayer.IsDead)
+                ApplyContactKnockback(otherPlayer.transform);
+            return;
         }
+
+        BossController boss = collision.collider.GetComponent<BossController>();
+        if (boss == null)
+            boss = collision.collider.GetComponentInParent<BossController>();
+
+        if (boss != null)
+            TakeBossDamage(1, boss.transform.position);
+    }
+
+    private void ApplyContactKnockback(Transform otherTransform)
+    {
+        Vector2 pushDir = (Vector2)transform.position - (Vector2)otherTransform.position;
+
+        if (pushDir.sqrMagnitude < 0.001f)
+            pushDir = Vector2.right;
+
+        pushDir.Normalize();
+        pushDir.y = 0.4f;
+        pushDir.Normalize();
+
+        if (knockbackCoroutine != null)
+            StopCoroutine(knockbackCoroutine);
+
+        knockbackCoroutine = StartCoroutine(
+            KnockbackRoutine(pushDir, playerKnockbackForce, playerKnockbackDuration));
     }
 
     private void OnEnable()
@@ -517,12 +621,12 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator KnockbackRoutine(Vector2 knockbackDir, float force, float duration)
     {
         isKnockbacked = true;
-
-        rb.linearVelocity = knockbackDir * force;
+        rb.linearVelocity = knockbackDir.normalized * force;
 
         yield return new WaitForSeconds(duration);
 
         isKnockbacked = false;
+        knockbackCoroutine = null;
     }
 
     private void FixedUpdate()
