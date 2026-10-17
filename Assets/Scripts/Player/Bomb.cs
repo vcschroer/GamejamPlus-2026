@@ -231,12 +231,30 @@ public class Bomb : MonoBehaviour
     {
         if (isRandomizing || isExploded) return;
 
+        if (collision.collider.CompareTag("Projectile") || collision.collider.GetComponent("Projectile") != null)
+        {
+            return;
+        }
+
         BossController boss = collision.collider.GetComponent<BossController>();
         if (boss == null) boss = collision.collider.GetComponentInParent<BossController>();
 
         if (boss != null)
         {
-            Explode(boss);
+            if (boss.IsStaggered)
+            {
+                Explode(boss);
+            }
+            else
+            {
+                boss.OnBombBounce();
+
+                if (collision.contactCount > 0)
+                {
+                    Vector2 normal = collision.contacts[0].normal;
+                    rb.linearVelocity = Vector2.Reflect(rb.linearVelocity, normal) * 0.8f;
+                }
+            }
             return;
         }
 
@@ -270,11 +288,21 @@ public class Bomb : MonoBehaviour
     {
         if (isRandomizing || isExploded) return;
 
+        if (collision.CompareTag("Projectile") || collision.GetComponent("Projectile") != null)
+        {
+            return;
+        }
+
         BossController boss = collision.GetComponent<BossController>();
         if (boss == null) boss = collision.GetComponentInParent<BossController>();
 
         if (boss != null)
-            Explode(boss);
+        {
+            if (boss.IsStaggered)
+            {
+                Explode(boss);
+            }
+        }
     }
 
     public void PickUp(Transform playerTransform)
@@ -383,8 +411,11 @@ public class Bomb : MonoBehaviour
 
         if (directBoss != null)
         {
-            directBoss.TakeDamage(1);
-            hitBoss = true;
+            if (directBoss.IsStaggered)
+            {
+                directBoss.TakeDamage(1);
+                hitBoss = true;
+            }
         }
         else
         {
@@ -395,7 +426,7 @@ public class Bomb : MonoBehaviour
                 BossController boss = hit.GetComponent<BossController>();
                 if (boss == null) boss = hit.GetComponentInParent<BossController>();
 
-                if (boss != null)
+                if (boss != null && boss.IsStaggered)
                 {
                     boss.TakeDamage(1);
                     hitBoss = true;
@@ -411,6 +442,9 @@ public class Bomb : MonoBehaviour
                 PlayerMovement holder = currentHolder.GetComponent<PlayerMovement>();
                 if (holder != null) holder.DropBomb();
             }
+
+            StartCoroutine(RespawnAndShuffleRoutine());
+            return;
         }
         else
         {
@@ -437,6 +471,21 @@ public class Bomb : MonoBehaviour
         }
 
         StartCoroutine(RespawnRoutine());
+    }
+
+    private IEnumerator RespawnAndShuffleRoutine()
+    {
+        isHeld = false;
+        isThrown = false;
+        currentHolder = null;
+        rb.simulated = false;
+        col.isTrigger = true;
+
+        if (spriteRenderer != null) spriteRenderer.enabled = false;
+
+        yield return new WaitForSeconds(respawnDelay);
+
+        StartCoroutine(RandomizeTargetRoutine());
     }
 
     private IEnumerator RespawnRoutine()
