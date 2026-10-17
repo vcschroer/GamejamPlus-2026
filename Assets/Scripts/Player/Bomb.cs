@@ -13,6 +13,12 @@ public class Bomb : MonoBehaviour
     [Header("Comportamento ao Bater no Chão")]
     [SerializeField] private float groundSlowdownFactor = 0.35f;
 
+    [Header("Configurações da Roleta / Sorteio")]
+    [SerializeField] private int shuffleCount = 10;
+    [SerializeField] private float shuffleInterval = 0.3f;
+    [SerializeField] private bool decelerateShuffle = true;
+    [SerializeField] private float respawnDelay = 1f;
+
     [Header("Efeitos Visuais")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Color normalColor = Color.white;
@@ -21,10 +27,13 @@ public class Bomb : MonoBehaviour
     private float currentTimer;
     private bool isHeld = false;
     private bool isThrown = false;
+    private bool isRandomizing = false;
+    private bool isExploded = false;
     private Transform currentHolder;
     private Transform lastHolder = null;
     private Rigidbody2D rb;
     private Collider2D col;
+    private Coroutine popUpCoroutine;
 
     private void Awake()
     {
@@ -32,19 +41,23 @@ public class Bomb : MonoBehaviour
         col = GetComponent<Collider2D>();
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
 
-        currentTimer = bombDuration;
-
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = bombGravityScale;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         col.isTrigger = false;
-        isThrown = true;
+    }
+
+    private void Start()
+    {
+        StartCoroutine(RandomizeTargetRoutine());
     }
 
     private void Update()
     {
+        if (isRandomizing || isExploded) return;
+
         if (isHeld)
         {
             if (currentHolder != null)
@@ -56,6 +69,133 @@ public class Bomb : MonoBehaviour
         HandleTimerAndVisuals();
     }
 
+    private IEnumerator RandomizeTargetRoutine()
+    {
+        isRandomizing = true;
+        isExploded = false;
+        isHeld = false;
+        isThrown = false;
+        rb.simulated = false;
+        col.isTrigger = true;
+
+        transform.localScale = Vector3.one;
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = true;
+            spriteRenderer.color = normalColor;
+        }
+
+        PlayerMovement[] players = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        while (players == null || players.Length < 2)
+        {
+            yield return new WaitForSeconds(0.1f);
+            players = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        }
+
+        PlayerMovement[] alivePlayers = GetAlivePlayers();
+
+        if (alivePlayers.Length == 1)
+        {
+            currentTimer = bombDuration;
+            isRandomizing = false;
+            PickUp(alivePlayers[0].transform);
+            yield break;
+        }
+
+        int lastIndex = -1;
+        float currentInterval = shuffleInterval;
+
+        for (int i = 0; i < shuffleCount; i++)
+        {
+            PlayerMovement[] activePlayers = GetAlivePlayers();
+            if (activePlayers == null || activePlayers.Length == 0)
+            {
+                activePlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+            }
+
+            if (activePlayers == null || activePlayers.Length == 0)
+            {
+                yield return null;
+                continue;
+            }
+
+            int randomIndex = Random.Range(0, activePlayers.Length);
+            if (activePlayers.Length > 1 && randomIndex == lastIndex)
+            {
+                randomIndex = (randomIndex + 1) % activePlayers.Length;
+            }
+            lastIndex = randomIndex;
+            Transform targetTransform = activePlayers[randomIndex].transform;
+
+            TriggerPopUp();
+
+            float elapsed = 0f;
+            while (elapsed < currentInterval)
+            {
+                if (targetTransform != null)
+                {
+                    transform.position = targetTransform.position + headOffset;
+                }
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            if (decelerateShuffle)
+            {
+                currentInterval = Mathf.Lerp(shuffleInterval, shuffleInterval * 2f, (float)i / shuffleCount);
+            }
+        }
+
+        PlayerMovement[] finalAlivePlayers = GetAlivePlayers();
+        if (finalAlivePlayers == null || finalAlivePlayers.Length == 0)
+        {
+            finalAlivePlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        }
+
+        if (finalAlivePlayers == null || finalAlivePlayers.Length == 0)
+        {
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(RandomizeTargetRoutine());
+            yield break;
+        }
+
+        int finalIndex = Random.Range(0, finalAlivePlayers.Length);
+        Transform finalTarget = finalAlivePlayers[finalIndex].transform;
+
+        TriggerPopUp();
+
+        float finalElapsed = 0f;
+        while (finalElapsed < currentInterval)
+        {
+            if (finalTarget != null)
+            {
+                transform.position = finalTarget.position + headOffset;
+            }
+            finalElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        currentTimer = bombDuration;
+        isRandomizing = false;
+
+        PickUp(finalTarget);
+    }
+
+    private PlayerMovement[] GetAlivePlayers()
+    {
+        PlayerMovement[] allPlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        System.Collections.Generic.List<PlayerMovement> aliveList = new System.Collections.Generic.List<PlayerMovement>();
+
+        foreach (PlayerMovement p in allPlayers)
+        {
+            if (p != null && !p.IsDead)
+            {
+                aliveList.Add(p);
+            }
+        }
+        return aliveList.ToArray();
+    }
+
     private void HandleTimerAndVisuals()
     {
         currentTimer -= Time.deltaTime;
@@ -65,12 +205,16 @@ public class Bomb : MonoBehaviour
         float speed = 1f / currentPeriod;
 
         float scaleAmount = Mathf.Sin(Time.time * (speed * Mathf.PI * 2f)) * 0.15f + 1f;
-        transform.localScale = Vector3.one * scaleAmount;
+
+        if (popUpCoroutine == null)
+        {
+            transform.localScale = Vector3.one * scaleAmount;
+        }
 
         float pingPong = Mathf.PingPong(Time.time * speed, 1f);
         spriteRenderer.color = Color.Lerp(normalColor, flashColor, pingPong);
 
-        if (currentTimer <= 0f)
+        if (currentTimer <= 0f && !isExploded)
         {
             Explode();
         }
@@ -78,18 +222,29 @@ public class Bomb : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isThrown) return;
+        if (!isThrown || isRandomizing || isExploded) return;
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            PickUp(collision.transform);
-            return;
+            PlayerMovement hitPlayer = collision.gameObject.GetComponent<PlayerMovement>();
+
+            if (hitPlayer != null && hitPlayer.IsDead)
+            {
+                hitPlayer.Revive();
+                PickUp(collision.transform);
+                return;
+            }
+            else if (hitPlayer != null && !hitPlayer.IsDead)
+            {
+                PickUp(collision.transform);
+                return;
+            }
         }
 
         if (collision.contactCount > 0)
         {
             ContactPoint2D contact = collision.contacts[0];
-            if (contact.normal.y > 0.5f) 
+            if (contact.normal.y > 0.5f)
             {
                 rb.linearVelocity *= groundSlowdownFactor;
             }
@@ -119,11 +274,48 @@ public class Bomb : MonoBehaviour
 
         rb.simulated = false;
         col.isTrigger = true;
+
+        TriggerPopUp();
+    }
+
+    private void TriggerPopUp()
+    {
+        if (popUpCoroutine != null) StopCoroutine(popUpCoroutine);
+        popUpCoroutine = StartCoroutine(AnimatePopUp());
+    }
+
+    private IEnumerator AnimatePopUp()
+    {
+        float duration = 0.18f;
+        float elapsed = 0f;
+
+        Vector3 startScale = Vector3.one * 0.7f;
+        Vector3 maxScale = Vector3.one * 1.35f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            transform.localScale = Vector3.Lerp(startScale, maxScale, Mathf.Sin(t * Mathf.PI));
+            yield return null;
+        }
+
+        transform.localScale = Vector3.one;
+        popUpCoroutine = null;
+    }
+
+    public void DropByDeadPlayer()
+    {
+        isHeld = false;
+        currentHolder = null;
+        rb.simulated = false;
+        col.isTrigger = true;
+        if (spriteRenderer != null) spriteRenderer.enabled = false;
     }
 
     public void Throw(Vector2 direction, Collider2D throwerCol, float customSpeed)
     {
-        if (!isHeld) return;
+        if (!isHeld || isRandomizing || isExploded) return;
 
         isHeld = false;
         isThrown = true;
@@ -157,14 +349,45 @@ public class Bomb : MonoBehaviour
 
     private void Explode()
     {
-        Debug.Log("A bomba explodiu");
+        if (isExploded) return;
+        isExploded = true;
 
         if (currentHolder != null)
         {
-            PlayerMovement player = currentHolder.GetComponent<PlayerMovement>();
-            if (player != null) player.DropBomb();
+            PlayerMovement unluckyPlayer = currentHolder.GetComponent<PlayerMovement>();
+            if (unluckyPlayer != null)
+            {
+                unluckyPlayer.DropBomb();
+                unluckyPlayer.TakeDamage(1);
+            }
+        }
+        else
+        {
+            PlayerMovement[] allPlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+            foreach (PlayerMovement player in allPlayers)
+            {
+                if (player != null && !player.IsDead)
+                {
+                    player.TakeDamage(1);
+                }
+            }
         }
 
-        Destroy(gameObject);
+        StartCoroutine(RespawnRoutine());
+    }
+
+    private IEnumerator RespawnRoutine()
+    {
+        isHeld = false;
+        isThrown = false;
+        currentHolder = null;
+        rb.simulated = false;
+        col.isTrigger = true;
+
+        if (spriteRenderer != null) spriteRenderer.enabled = false;
+
+        yield return new WaitForSeconds(respawnDelay);
+
+        StartCoroutine(RandomizeTargetRoutine());
     }
 }
