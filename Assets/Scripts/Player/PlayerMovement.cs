@@ -10,9 +10,11 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private PlayerInput playerInput;
 
-    [Header("Efeitos Visuais")]
+    [Header("Efeitos Visuais & Mira")]
     [SerializeField] private PlayerEffects playerEffects;
     [SerializeField] public ParticleSystem Dust;
+    [SerializeField] private GameObject aimArrow; 
+    [SerializeField] private float aimOrbitRadius = 1.2f; 
 
     [Header("Movimentação Básica")]
     [SerializeField] private float moveSpeed = 12f;
@@ -51,14 +53,29 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     private bool isGrounded;
 
+    [Header("Mecânica da Bomba & Mira")]
+    private Bomb heldBomb = null;
+    public bool IsHoldingBomb => heldBomb != null;
+    private bool isAiming = false;
+    private float aimTimer = 0f;
+    private float maxAimTime = 3f;
+    private float originalGravity;
+    private Vector2 currentAimDir; 
+
+    [Header("Configurações de Arremesso")]
+    [SerializeField] private float minThrowSpeed = 6f;   
+    [SerializeField] private float maxThrowSpeed = 22f;  
+
     private InputAction moveAction;
     private InputAction jumpAction;
     private InputAction dashAction;
+    private InputAction attackAction;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = baseGravity;
+        originalGravity = baseGravity;
         playerInput = GetComponent<PlayerInput>();
 
         if (playerInput != null && playerInput.actions != null)
@@ -66,7 +83,10 @@ public class PlayerMovement : MonoBehaviour
             moveAction = playerInput.actions["Move"];
             jumpAction = playerInput.actions["Jump"];
             dashAction = playerInput.actions["Dash"];
+            attackAction = playerInput.actions["Attack"];
         }
+
+        if (aimArrow != null) aimArrow.SetActive(false);
     }
 
     private void OnEnable()
@@ -85,6 +105,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing) return;
 
+        HandleBombAiming();
+
+        if (isAiming) return; 
+
         Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
         horizontalInput = Mathf.Round(moveInput.x);
 
@@ -95,9 +119,96 @@ public class PlayerMovement : MonoBehaviour
         HandleWallSlide();
     }
 
+    private void HandleBombAiming()
+    {
+        if (!IsHoldingBomb || attackAction == null) return;
+
+        if (attackAction.IsPressed())
+        {
+            if (!isAiming)
+            {
+                StartAiming();
+            }
+
+            UpdateAiming();
+        }
+        else if (isAiming)
+        {
+            ReleaseAim();
+        }
+    }
+
+    private void StartAiming()
+    {
+        isAiming = true;
+        aimTimer = 0f;
+        originalGravity = rb.gravityScale;
+
+        currentAimDir = new Vector2(facingRight ? 1f : -1f, 0f);
+
+        if (aimArrow != null)
+        {
+            aimArrow.SetActive(true);
+            aimArrow.transform.position = transform.position + (Vector3)(currentAimDir * aimOrbitRadius);
+        }
+    }
+
+    private void UpdateAiming()
+    {
+        aimTimer += Time.deltaTime;
+
+        if (!isGrounded)
+        {
+            rb.gravityScale = 0f;
+            rb.linearVelocity = Vector2.zero;
+        }
+
+        Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
+
+        if (moveInput.sqrMagnitude > 0.01f)
+        {
+            currentAimDir = moveInput.normalized;
+        }
+
+        Vector3 targetPosition = transform.position + (Vector3)(currentAimDir * aimOrbitRadius);
+
+        if (aimArrow != null)
+        {
+            aimArrow.transform.position = Vector3.Lerp(aimArrow.transform.position, targetPosition, Time.deltaTime * 20f);
+
+            float angle = Mathf.Atan2(currentAimDir.y, currentAimDir.x) * Mathf.Rad2Deg;
+            aimArrow.transform.rotation = Quaternion.Euler(0, 0, angle);
+        }
+
+        if (aimTimer >= maxAimTime)
+        {
+            ReleaseAim();
+        }
+    }
+
+    private void ReleaseAim()
+    {
+        if (!isAiming) return;
+
+        isAiming = false;
+        rb.gravityScale = originalGravity; 
+        if (aimArrow != null) aimArrow.SetActive(false);
+
+        if (heldBomb != null)
+        {
+            float chargeRatio = Mathf.Clamp01(aimTimer / maxAimTime);
+            float finalThrowSpeed = Mathf.Lerp(minThrowSpeed, maxThrowSpeed, chargeRatio);
+
+            Collider2D playerCol = GetComponent<Collider2D>();
+
+            heldBomb.Throw(currentAimDir, playerCol, finalThrowSpeed);
+            heldBomb = null;
+        }
+    }
+
     private void FixedUpdate()
     {
-        if (isDashing) return;
+        if (isDashing || isAiming) return;
 
         if (isWallSliding)
         {
@@ -150,7 +261,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnJumpPerformed(InputAction.CallbackContext context)
     {
-        if (isDashing) return;
+        if (isDashing || isAiming) return;
         Jump();
     }
 
@@ -202,7 +313,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDashPerformed(InputAction.CallbackContext context)
     {
-        if (canDash && !isDashing)
+        if (canDash && !isDashing && !isAiming)
         {
             StartCoroutine(PerformDash());
         }
@@ -213,7 +324,7 @@ public class PlayerMovement : MonoBehaviour
         canDash = false;
         isDashing = true;
 
-        float originalGravity = rb.gravityScale;
+        float originalGrav = rb.gravityScale;
         rb.gravityScale = 0f;
 
         PlayDust();
@@ -237,11 +348,22 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForSeconds(dashTime);
 
-        rb.gravityScale = originalGravity;
+        rb.gravityScale = originalGrav;
         isDashing = false;
 
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
+    }
+
+    public void HoldBomb(Bomb bomb)
+    {
+        heldBomb = bomb;
+    }
+
+    public void DropBomb()
+    {
+        heldBomb = null;
+        if (isAiming) ReleaseAim();
     }
 
     private void PlayDust()
