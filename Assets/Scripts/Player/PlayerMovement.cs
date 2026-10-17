@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Efeitos Visuais & Mira")]
     [SerializeField] private PlayerEffects playerEffects;
     [SerializeField] public ParticleSystem Dust;
-    [SerializeField] private GameObject aimArrow; 
+    [SerializeField] private GameObject aimArrow;
     [SerializeField] private float aimOrbitRadius = 1.2f; 
 
     [Header("Movimentação Básica")]
@@ -58,13 +58,23 @@ public class PlayerMovement : MonoBehaviour
     public bool IsHoldingBomb => heldBomb != null;
     private bool isAiming = false;
     private float aimTimer = 0f;
-    private float maxAimTime = 3f;
+    [SerializeField] private float maxAimTime = 3f; 
     private float originalGravity;
     private Vector2 currentAimDir; 
 
+    [Header("Configurações de Planagem ao Mirar")]
+    [SerializeField] private float aimGravityScale = 0.2f; 
+    [SerializeField] private float maxAimFallSpeed = 0.6f;
+
     [Header("Configurações de Arremesso")]
-    [SerializeField] private float minThrowSpeed = 6f;   
-    [SerializeField] private float maxThrowSpeed = 22f;  
+    [SerializeField] private float minThrowSpeed = 18f;
+    [SerializeField] private float maxThrowSpeed = 36f;
+
+    [Header("Knockback do Arremesso")]
+    [SerializeField] private float throwKnockbackForce = 12f;
+    [SerializeField] private float knockbackDuration = 0.2f; 
+    [SerializeField] private bool scaleKnockbackWithCharge = true; 
+    private bool isKnockbacked = false; 
 
     private InputAction moveAction;
     private InputAction jumpAction;
@@ -112,8 +122,11 @@ public class PlayerMovement : MonoBehaviour
         Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
         horizontalInput = Mathf.Round(moveInput.x);
 
-        if (horizontalInput > 0 && !facingRight) Flip();
-        else if (horizontalInput < 0 && facingRight) Flip();
+        if (!isKnockbacked)
+        {
+            if (horizontalInput > 0 && !facingRight) Flip();
+            else if (horizontalInput < 0 && facingRight) Flip();
+        }
 
         CheckSurroundings();
         HandleWallSlide();
@@ -159,15 +172,36 @@ public class PlayerMovement : MonoBehaviour
 
         if (!isGrounded)
         {
-            rb.gravityScale = 0f;
-            rb.linearVelocity = Vector2.zero;
+            rb.gravityScale = aimGravityScale;
+
+            float yVel = rb.linearVelocity.y > 0 ? 0f : rb.linearVelocity.y;
+            float clampedY = Mathf.Max(yVel, -maxAimFallSpeed);
+            rb.linearVelocity = new Vector2(0f, clampedY);
         }
 
-        Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
+        bool isKeyboardScheme = playerInput != null && playerInput.currentControlScheme != null &&
+                                (playerInput.currentControlScheme.ToLower().Contains("keyboard") ||
+                                 playerInput.currentControlScheme.ToLower().Contains("mouse"));
 
-        if (moveInput.sqrMagnitude > 0.01f)
+        if (isKeyboardScheme && Mouse.current != null && Camera.main != null)
         {
-            currentAimDir = moveInput.normalized;
+            Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, -Camera.main.transform.position.z));
+            Vector2 dirToMouse = (Vector2)mouseWorldPos - (Vector2)transform.position;
+
+            if (dirToMouse.sqrMagnitude > 0.01f)
+            {
+                currentAimDir = dirToMouse.normalized;
+            }
+        }
+        else
+        {
+            Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
+
+            if (moveInput.sqrMagnitude > 0.01f)
+            {
+                currentAimDir = moveInput.normalized;
+            }
         }
 
         Vector3 targetPosition = transform.position + (Vector3)(currentAimDir * aimOrbitRadius);
@@ -203,12 +237,49 @@ public class PlayerMovement : MonoBehaviour
 
             heldBomb.Throw(currentAimDir, playerCol, finalThrowSpeed);
             heldBomb = null;
+
+            ApplyThrowKnockback(currentAimDir, chargeRatio);
         }
+    }
+
+    private void ApplyThrowKnockback(Vector2 throwDirection, float chargeRatio)
+    {
+        if (throwKnockbackForce <= 0f) return;
+
+        Vector2 knockbackDir = -throwDirection.normalized;
+
+        float currentKnockbackForce = scaleKnockbackWithCharge
+            ? throwKnockbackForce * Mathf.Lerp(0.5f, 1f, chargeRatio)
+            : throwKnockbackForce;
+
+        if (playerEffects != null)
+        {
+            playerEffects.TriggerThrow();
+        }
+
+        StartCoroutine(KnockbackRoutine(knockbackDir, currentKnockbackForce));
+    }
+
+    private IEnumerator KnockbackRoutine(Vector2 knockbackDir, float force)
+    {
+        isKnockbacked = true;
+
+        rb.linearVelocity = knockbackDir * force;
+
+        yield return new WaitForSeconds(knockbackDuration);
+
+        isKnockbacked = false;
     }
 
     private void FixedUpdate()
     {
         if (isDashing || isAiming) return;
+
+        if (isKnockbacked)
+        {
+            ApplyCustomGravity();
+            return;
+        }
 
         if (isWallSliding)
         {
@@ -261,7 +332,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnJumpPerformed(InputAction.CallbackContext context)
     {
-        if (isDashing || isAiming) return;
+        if (isDashing || isAiming || isKnockbacked) return;
         Jump();
     }
 
@@ -295,7 +366,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleWallSlide()
     {
-        if (isTouchingWall && !isGrounded && horizontalInput != 0)
+        if (isTouchingWall && !isGrounded && horizontalInput != 0 && !isKnockbacked)
         {
             if (!isWallSliding && playerEffects != null)
             {
@@ -313,7 +384,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDashPerformed(InputAction.CallbackContext context)
     {
-        if (canDash && !isDashing && !isAiming)
+        if (canDash && !isDashing && !isAiming && !isKnockbacked)
         {
             StartCoroutine(PerformDash());
         }

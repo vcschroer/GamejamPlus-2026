@@ -8,9 +8,10 @@ public class PlayerEffects : MonoBehaviour
 
     [Header("Configurações de Squash & Stretch")]
     [SerializeField] private float squashDuration = 0.1f;
-    [SerializeField] private Vector2 jumpSquashScale = new Vector2(0.7f, 1.3f);     
-    [SerializeField] private Vector2 landSquashScale = new Vector2(1.3f, 0.7f);     
-    [SerializeField] private Vector2 wallSquashScale = new Vector2(0.8f, 1.2f);     
+    [SerializeField] private Vector2 jumpSquashScale = new Vector2(0.7f, 1.3f);
+    [SerializeField] private Vector2 landSquashScale = new Vector2(1.3f, 0.7f);
+    [SerializeField] private Vector2 wallSquashScale = new Vector2(0.8f, 1.2f);
+    [SerializeField] private Vector2 throwSquashScale = new Vector2(1.3f, 0.7f);  
 
     private Vector3 originalScale;
     private Coroutine currentRoutine;
@@ -18,7 +19,7 @@ public class PlayerEffects : MonoBehaviour
     private void Awake()
     {
         if (spriteTransform == null)
-            spriteTransform = transform; 
+            spriteTransform = transform;
 
         originalScale = spriteTransform.localScale;
     }
@@ -36,6 +37,11 @@ public class PlayerEffects : MonoBehaviour
     public void TriggerWallSlide()
     {
         PlayEffect(wallSquashScale);
+    }
+
+    public void TriggerThrow() 
+    {
+        PlayEffect(throwSquashScale);
     }
 
     private void PlayEffect(Vector2 targetScale)

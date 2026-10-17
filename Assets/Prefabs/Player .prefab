@@ -198,6 +198,14 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
+  maxAimTime: 3
+  aimGravityScale: 0.4
+  maxAimFallSpeed: 0.8
+  minThrowSpeed: 18
+  maxThrowSpeed: 38
+  throwKnockbackForce: 24
+  knockbackDuration: 0.5
+  scaleKnockbackWithCharge: 1
 --- !u!61 &8596883016011477456
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -261,6 +269,7 @@ MonoBehaviour:
   jumpSquashScale: {x: 0.7, y: 1.3}
   landSquashScale: {x: 1.3, y: 0.7}
   wallSquashScale: {x: 0.8, y: 1.2}
+  throwSquashScale: {x: 1.3, y: 0.7}
 --- !u!114 &7801703579377416504
 MonoBehaviour:
   m_ObjectHideFlags: 0

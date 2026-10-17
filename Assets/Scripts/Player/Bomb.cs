@@ -6,9 +6,12 @@ using UnityEngine;
 public class Bomb : MonoBehaviour
 {
     [Header("Configurações da Bomba")]
-    [SerializeField] private float bombDuration = 6f; 
-    [SerializeField] private float throwSpeed = 40f;
-    [SerializeField] private Vector3 headOffset = new Vector3(0f, 1.2f, 0f); 
+    [SerializeField] private float bombDuration = 8f;
+    [SerializeField] private float bombGravityScale = 4f;
+    [SerializeField] private Vector3 headOffset = new Vector3(0f, 1.2f, 0f);
+
+    [Header("Comportamento ao Bater no Chão")]
+    [SerializeField] private float groundSlowdownFactor = 0.35f;
 
     [Header("Efeitos Visuais")]
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -19,7 +22,7 @@ public class Bomb : MonoBehaviour
     private bool isHeld = false;
     private bool isThrown = false;
     private Transform currentHolder;
-    private Transform lastHolder = null; 
+    private Transform lastHolder = null;
     private Rigidbody2D rb;
     private Collider2D col;
 
@@ -32,6 +35,10 @@ public class Bomb : MonoBehaviour
         currentTimer = bombDuration;
 
         rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.gravityScale = bombGravityScale;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
         col.isTrigger = false;
         isThrown = true;
     }
@@ -54,7 +61,6 @@ public class Bomb : MonoBehaviour
         currentTimer -= Time.deltaTime;
 
         float timeRatio = Mathf.Clamp01(currentTimer / bombDuration);
-
         float currentPeriod = Mathf.Lerp(0.2f, 1.0f, timeRatio);
         float speed = 1f / currentPeriod;
 
@@ -77,14 +83,16 @@ public class Bomb : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             PickUp(collision.transform);
+            return;
         }
-        else if (collision.gameObject.CompareTag("Ground"))
+
+        if (collision.contactCount > 0)
         {
-            rb.linearVelocity *= 0.3f;
-        }
-        else if (collision.gameObject.CompareTag("Wall"))
-        {
-            rb.linearVelocity *= 0.7f;
+            ContactPoint2D contact = collision.contacts[0];
+            if (contact.normal.y > 0.5f) 
+            {
+                rb.linearVelocity *= groundSlowdownFactor;
+            }
         }
     }
 
@@ -104,13 +112,13 @@ public class Bomb : MonoBehaviour
         isHeld = true;
         isThrown = false;
         currentHolder = playerTransform;
-        lastHolder = playerTransform; 
+        lastHolder = playerTransform;
 
         PlayerMovement newPlayer = playerTransform.GetComponent<PlayerMovement>();
         if (newPlayer != null) newPlayer.HoldBomb(this);
 
-        rb.simulated = false; 
-        col.isTrigger = true; 
+        rb.simulated = false;
+        col.isTrigger = true;
     }
 
     public void Throw(Vector2 direction, Collider2D throwerCol, float customSpeed)
@@ -123,7 +131,8 @@ public class Bomb : MonoBehaviour
 
         rb.simulated = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
-        col.isTrigger = false; 
+        rb.gravityScale = bombGravityScale;
+        col.isTrigger = false;
 
         if (direction == Vector2.zero)
             direction = Vector2.right;
@@ -136,15 +145,10 @@ public class Bomb : MonoBehaviour
         }
     }
 
-    public void Throw(Vector2 direction, Collider2D throwerCol)
-    {
-        Throw(direction, throwerCol, throwSpeed);
-    }
-
     private IEnumerator IgnoreThrowerTemporarily(Collider2D throwerCol)
     {
         Physics2D.IgnoreCollision(col, throwerCol, true);
-        yield return new WaitForSeconds(0.25f); 
+        yield return new WaitForSeconds(0.25f);
         if (throwerCol != null)
         {
             Physics2D.IgnoreCollision(col, throwerCol, false);
@@ -153,7 +157,7 @@ public class Bomb : MonoBehaviour
 
     private void Explode()
     {
-        Debug.Log("BOOM! A bomba explodiu!");
+        Debug.Log("A bomba explodiu");
 
         if (currentHolder != null)
         {
