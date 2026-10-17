@@ -541,7 +541,7 @@ public class PlayerMovement : MonoBehaviour
         if (spriteRenderer != null)
             spriteRenderer.enabled = true;
 
-        currentHealth = 1;
+        currentHealth = 3;
         UpdateLifeUI();
 
         if (PlayerUI.Instance != null)

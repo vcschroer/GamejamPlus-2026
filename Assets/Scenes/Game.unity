@@ -878,7 +878,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &339243437
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -908,7 +908,7 @@ MonoBehaviour:
   hoverAmountX: 0.5
   hoverAmountY: 0.5
   chasePlayerChance: 0.5
-  maxHealth: 10
+  maxHealth: 33
   normalAttacksBeforeDash: 5
   isStaggered: 0
   staggerChargeDuration: 1.2
