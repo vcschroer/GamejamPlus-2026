@@ -179,6 +179,9 @@ MonoBehaviour:
   lifeIcons: []
   ghostDuration: 10
   ghostFloatSpeed: 0.8
+  ghostWobbleFrequency: 3
+  ghostWobbleAmount: 0.4
+  mainMenuSceneName: Menu
   playerEffects: {fileID: 3147281079116911758}
   Dust: {fileID: 2253887310452113078}
   aimArrow: {fileID: 766972700458084274}

@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(PlayerInput))]
@@ -21,8 +22,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private int maxHealth = 3;
     private int currentHealth;
     [SerializeField] private UnityEngine.UI.Image[] lifeIcons;
-    [SerializeField] private float ghostDuration = 15f;
+    [SerializeField] private float ghostDuration = 12f;
     [SerializeField] private float ghostFloatSpeed = 0.8f;
+    [SerializeField] private float ghostWobbleFrequency = 3f;
+    [SerializeField] private float ghostWobbleAmount = 0.4f;
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
     private bool isDead = false;
     public bool IsDead => isDead;
 
@@ -235,27 +239,63 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = Vector2.zero;
         rb.gravityScale = 0f;
 
-        StartCoroutine(GhostFloatRoutine());
+        StartCoroutine(DeathAndGhostRoutine());
     }
 
-    private IEnumerator GhostFloatRoutine()
+    private IEnumerator DeathAndGhostRoutine()
     {
-        float elapsed = 0f;
+        float squashDuration = 0.25f;
+        float elapsedSquash = 0f;
+        Vector3 originalScale = transform.localScale;
+        Vector3 squashedScale = new Vector3(originalScale.x * 1.4f, originalScale.y * 0.5f, originalScale.z);
+        Vector3 stretchedScale = new Vector3(originalScale.x * 0.7f, originalScale.y * 1.3f, originalScale.z);
+
+        while (elapsedSquash < squashDuration)
+        {
+            elapsedSquash += Time.deltaTime;
+            float t = elapsedSquash / squashDuration;
+
+            if (t < 0.5f)
+            {
+                transform.localScale = Vector3.Lerp(originalScale, squashedScale, t * 2f);
+            }
+            else
+            {
+                transform.localScale = Vector3.Lerp(squashedScale, stretchedScale, (t - 0.5f) * 2f);
+            }
+
+            yield return null;
+        }
+
+        transform.localScale = originalScale;
+
+        float elapsedGhost = 0f;
         Color startColor = spriteRenderer.color;
-        float alpha = startColor.a;
+        Vector3 startPosition = transform.position;
 
         while (isDead)
         {
-            elapsed += Time.deltaTime;
-            transform.Translate(Vector3.up * ghostFloatSpeed * Time.deltaTime);
+            elapsedGhost += Time.deltaTime;
+            float progress = elapsedGhost / ghostDuration;
+
+            float horizontalWobble = Mathf.Sin(elapsedGhost * ghostWobbleFrequency) * ghostWobbleAmount;
+            float verticalOffset = elapsedGhost * ghostFloatSpeed + Mathf.Cos(elapsedGhost * ghostWobbleFrequency * 0.5f) * 0.1f;
+
+            transform.position = new Vector3(startPosition.x + horizontalWobble, startPosition.y + verticalOffset, startPosition.z);
+
+            float currentAlpha = Mathf.Lerp(0.8f, 0f, progress);
 
             if (spriteRenderer != null)
             {
-                alpha -= Time.deltaTime / ghostDuration;
-                alpha = Mathf.Clamp(alpha, 0.05f, 1f);
-                Color c = spriteRenderer.color;
-                c.a = alpha;
+                Color c = startColor;
+                c.a = currentAlpha;
                 spriteRenderer.color = c;
+            }
+
+            if (progress >= 1f || currentAlpha <= 0f)
+            {
+                SceneManager.LoadScene(mainMenuSceneName);
+                yield break;
             }
 
             yield return null;
@@ -267,7 +307,7 @@ public class PlayerMovement : MonoBehaviour
         if (!isDead) return;
         isDead = false;
 
-        currentHealth = maxHealth;
+        currentHealth = 1;
         UpdateLifeUI();
 
         if (PlayerUI.Instance != null)
@@ -285,6 +325,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         rb.gravityScale = baseGravity;
+        transform.localScale = Vector3.one;
 
         if (spriteRenderer != null)
         {
@@ -305,7 +346,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 Vector2 pushDir = (transform.position - collision.transform.position).normalized;
                 if (pushDir == Vector2.zero) pushDir = Vector2.right;
-                pushDir.y = 0.2f; // Dá um leve impulso para cima também para soltar do chão
+                pushDir.y = 0.2f;
 
                 StartCoroutine(KnockbackRoutine(pushDir, playerKnockbackForce, playerKnockbackDuration));
             }
