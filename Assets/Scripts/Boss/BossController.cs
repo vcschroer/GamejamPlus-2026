@@ -12,19 +12,14 @@ public class BossController : MonoBehaviour
     [SerializeField] private float waypointReachDistance = 0.8f;
 
     [Header("Referência do Chão")]
-    [Tooltip("Opcional: Transform posicionado na superfície do chão.")]
     [SerializeField] private Transform groundPoint;
 
-    [Tooltip("Layers que representam o chão e as plataformas.")]
     [SerializeField] private LayerMask groundLayers = ~0;
 
-    [Tooltip("Tag utilizada para identificar o chão.")]
     [SerializeField] private string groundTag = "Ground";
 
-    [Tooltip("Distância máxima da busca pelo chão.")]
     [SerializeField] private float groundRaycastDistance = 100f;
 
-    [Tooltip("Distância entre a superfície do chão e o pivô do Boss.")]
     [SerializeField] private float groundImpactHeight = 0.8f;
 
     [Header("Cooldown de Movimento")]

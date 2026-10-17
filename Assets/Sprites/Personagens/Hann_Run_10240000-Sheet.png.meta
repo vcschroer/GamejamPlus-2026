@@ -1,0 +1,455 @@
+fileFormatVersion: 2
+guid: 0263caea3d0ab584d8053bdd019dda58
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3548872881055521952
+    second: Hann_Run_10240000-Sheet_0
+  - first:
+      213: -6444910406055893610
+    second: Hann_Run_10240000-Sheet_1
+  - first:
+      213: -760553747121862979
+    second: Hann_Run_10240000-Sheet_2
+  - first:
+      213: 6350333983080131487
+    second: Hann_Run_10240000-Sheet_3
+  - first:
+      213: 908064727455791487
+    second: Hann_Run_10240000-Sheet_4
+  - first:
+      213: -9060131740915958460
+    second: Hann_Run_10240000-Sheet_5
+  - first:
+      213: -5950549966725209150
+    second: Hann_Run_10240000-Sheet_6
+  - first:
+      213: -6259211016258663707
+    second: Hann_Run_10240000-Sheet_7
+  - first:
+      213: 5411522823406583736
+    second: Hann_Run_10240000-Sheet_8
+  - first:
+      213: 8156472122876957407
+    second: Hann_Run_10240000-Sheet_9
+  - first:
+      213: -1398058844154958266
+    second: Hann_Run_10240000-Sheet_10
+  - first:
+      213: 7470295651985118753
+    second: Hann_Run_10240000-Sheet_11
+  - first:
+      213: 8233732853424163047
+    second: Hann_Run_10240000-Sheet_12
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 0
+        width: 722
+        height: 505
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0acd4542511204130800000000000000
+      internalID: 3548872881055521952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 1180
+        y: 0
+        width: 721
+        height: 510
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 695e1ddd1241f86a0800000000000000
+      internalID: -6444910406055893610
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 2226
+        y: 1
+        width: 664
+        height: 514
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db685368568f175f0800000000000000
+      internalID: -760553747121862979
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 2620
+        y: 0
+        width: 128
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9b2592bc1be02850800000000000000
+      internalID: 6350333983080131487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 3255
+        y: 2
+        width: 658
+        height: 508
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f797019fe081a9c00800000000000000
+      internalID: 908064727455791487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 3644
+        y: 0
+        width: 128
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44d767c2f22f34280800000000000000
+      internalID: -9060131740915958460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 4247
+        y: 0
+        width: 722
+        height: 505
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c3a12725566b6da0800000000000000
+      internalID: -5950549966725209150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 5268
+        y: 0
+        width: 722
+        height: 506
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5eac0b15eb0d229a0800000000000000
+      internalID: -6259211016258663707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 6323
+        y: 0
+        width: 663
+        height: 507
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bf711f1657991b40800000000000000
+      internalID: 5411522823406583736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 6612
+        y: 0
+        width: 18
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd215705e2c913170800000000000000
+      internalID: 8156472122876957407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 6642
+        y: 0
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64eec0373e8199ce0800000000000000
+      internalID: -1398058844154958266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 7347
+        y: 0
+        width: 658
+        height: 506
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 126d7bfe052dba760800000000000000
+      internalID: 7470295651985118753
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Hann_Run_10240000-Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 7665
+        y: 0
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e88fcfe768144270800000000000000
+      internalID: 8233732853424163047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Hann_Run_10240000-Sheet_0: 3548872881055521952
+      Hann_Run_10240000-Sheet_1: -6444910406055893610
+      Hann_Run_10240000-Sheet_10: -1398058844154958266
+      Hann_Run_10240000-Sheet_11: 7470295651985118753
+      Hann_Run_10240000-Sheet_12: 8233732853424163047
+      Hann_Run_10240000-Sheet_2: -760553747121862979
+      Hann_Run_10240000-Sheet_3: 6350333983080131487
+      Hann_Run_10240000-Sheet_4: 908064727455791487
+      Hann_Run_10240000-Sheet_5: -9060131740915958460
+      Hann_Run_10240000-Sheet_6: -5950549966725209150
+      Hann_Run_10240000-Sheet_7: -6259211016258663707
+      Hann_Run_10240000-Sheet_8: 5411522823406583736
+      Hann_Run_10240000-Sheet_9: 8156472122876957407
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

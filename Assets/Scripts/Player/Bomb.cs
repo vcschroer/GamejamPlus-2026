@@ -19,8 +19,9 @@ public class Bomb : MonoBehaviour
     [SerializeField] private bool decelerateShuffle = true;
     [SerializeField] private float respawnDelay = 1f;
 
-    [Header("Efeitos Visuais & Ordem na Camada")]
+    [Header("Efeitos Visuais & Iluminação")]
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private GameObject bombLightObject;
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color flashColor = Color.red;
     [SerializeField] private int bombSortingOrder = 10;
@@ -41,6 +42,12 @@ public class Bomb : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (bombLightObject == null && transform.childCount > 0)
+        {
+            Transform lightChild = transform.GetChild(0);
+            if (lightChild != null) bombLightObject = lightChild.gameObject;
+        }
 
         if (spriteRenderer != null)
         {
@@ -89,6 +96,11 @@ public class Bomb : MonoBehaviour
         {
             spriteRenderer.enabled = true;
             spriteRenderer.color = normalColor;
+        }
+
+        if (bombLightObject != null)
+        {
+            bombLightObject.SetActive(true);
         }
 
         PlayerMovement[] players = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
@@ -260,6 +272,18 @@ public class Bomb : MonoBehaviour
 
         if (!isThrown) return;
 
+        if (collision.contactCount > 0)
+        {
+            ContactPoint2D contact = collision.contacts[0];
+            if (contact.normal.y > 0.5f)
+            {
+                if (SoundManager.Instance != null)
+                    SoundManager.Instance.PlaySound("Bomba cai no cho");
+
+                rb.linearVelocity *= groundSlowdownFactor;
+            }
+        }
+
         PlayerMovement hitPlayer = collision.collider.GetComponent<PlayerMovement>();
         if (hitPlayer == null) hitPlayer = collision.collider.GetComponentInParent<PlayerMovement>();
 
@@ -274,13 +298,6 @@ public class Bomb : MonoBehaviour
 
             PickUp(hitPlayer.transform);
             return;
-        }
-
-        if (collision.contactCount > 0)
-        {
-            ContactPoint2D contact = collision.contacts[0];
-            if (contact.normal.y > 0.5f)
-                rb.linearVelocity *= groundSlowdownFactor;
         }
     }
 
@@ -405,6 +422,14 @@ public class Bomb : MonoBehaviour
     {
         if (isExploded) return;
         isExploded = true;
+
+        if (bombLightObject != null)
+        {
+            bombLightObject.SetActive(false);
+        }
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("Bomba explode");
 
         if (GameEffectsManager.Instance != null)
         {

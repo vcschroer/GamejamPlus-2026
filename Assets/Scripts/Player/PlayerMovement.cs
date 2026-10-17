@@ -1,4 +1,3 @@
-
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,6 +14,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Color player1Color = new Color(0.2f, 0.6f, 1f);
     [SerializeField] private Color player2Color = new Color(1f, 0.2f, 0.3f);
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Animator animator;
+
+    [Header("Customização Visual por Jogador")]
+    [SerializeField] private Sprite player1Sprite;
+    [SerializeField] private RuntimeAnimatorController player1AnimatorController;
+
+    [SerializeField] private Sprite player2Sprite;
+    [SerializeField] private RuntimeAnimatorController player2AnimatorController;
 
     public PlayerID ID => playerID;
     public Color PlayerColor =>
@@ -154,6 +161,9 @@ public class PlayerMovement : MonoBehaviour
         if (spriteRenderer == null)
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+
         if (wallCheck != null)
             wallCheckInitialLocalPosition = wallCheck.localPosition;
 
@@ -204,12 +214,40 @@ public class PlayerMovement : MonoBehaviour
         }
 
         playerID = hasPlayer1 ? PlayerID.Player2 : PlayerID.Player1;
-        UpdatePlayerColor();
+        ApplyPlayerVisuals();
     }
 
     public void SetPlayerID(PlayerID newID)
     {
         playerID = newID;
+        ApplyPlayerVisuals();
+    }
+
+    public void ApplyPlayerVisuals()
+    {
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+
+        if (playerID == PlayerID.Player1)
+        {
+            if (player1Sprite != null && animator == null)
+                spriteRenderer.sprite = player1Sprite;
+
+            if (player1AnimatorController != null && animator != null)
+                animator.runtimeAnimatorController = player1AnimatorController;
+        }
+        else
+        {
+            if (player2Sprite != null && animator == null)
+                spriteRenderer.sprite = player2Sprite;
+
+            if (player2AnimatorController != null && animator != null)
+                animator.runtimeAnimatorController = player2AnimatorController;
+        }
+
         UpdatePlayerColor();
     }
 
@@ -234,7 +272,7 @@ public class PlayerMovement : MonoBehaviour
         ApplyDamage(damageAmount);
 
         if (!isDead)
-            StartInvulnerability();
+            StartInvulnerability(invulnerabilityDuration);
     }
 
     public void TakeBossDamage(
@@ -265,13 +303,16 @@ public class PlayerMovement : MonoBehaviour
             bossKnockbackDuration
         );
 
-        StartInvulnerability();
+        StartInvulnerability(invulnerabilityDuration);
     }
 
     private void ApplyDamage(int damageAmount)
     {
         currentHealth -= damageAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("Player dano");
 
         if (PlayerUI.Instance != null)
             PlayerUI.Instance.UpdateHealth(playerID, currentHealth);
@@ -282,28 +323,30 @@ public class PlayerMovement : MonoBehaviour
             Die();
     }
 
-    private void StartInvulnerability()
+    private void StartInvulnerability(float duration)
     {
         if (invulnerabilityCoroutine != null)
             StopCoroutine(invulnerabilityCoroutine);
 
         invulnerabilityCoroutine =
-            StartCoroutine(InvulnerabilityRoutine());
+            StartCoroutine(InvulnerabilityRoutine(duration));
     }
 
-    private IEnumerator InvulnerabilityRoutine()
+    private IEnumerator InvulnerabilityRoutine(float duration)
     {
         isInvulnerable = true;
 
         float elapsed = 0f;
-        bool showSprite = true;
+        bool dimAlpha = false;
 
-        while (elapsed < invulnerabilityDuration && !isDead)
+        while (elapsed < duration && !isDead)
         {
             if (spriteRenderer != null)
             {
-                showSprite = !showSprite;
-                spriteRenderer.enabled = showSprite;
+                dimAlpha = !dimAlpha;
+                Color c = PlayerColor;
+                c.a = dimAlpha ? 0.5f : 1f;
+                spriteRenderer.color = c;
             }
 
             yield return new WaitForSeconds(invulnerabilityBlinkInterval);
@@ -311,7 +354,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (spriteRenderer != null)
-            spriteRenderer.enabled = true;
+        {
+            Color c = PlayerColor;
+            c.a = 1f;
+            spriteRenderer.color = c;
+        }
 
         isInvulnerable = false;
         invulnerabilityCoroutine = null;
@@ -482,15 +529,8 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         isDead = false;
-        isInvulnerable = false;
-        isKnockbacked = false;
         isWallSliding = false;
-
-        if (invulnerabilityCoroutine != null)
-        {
-            StopCoroutine(invulnerabilityCoroutine);
-            invulnerabilityCoroutine = null;
-        }
+        isKnockbacked = false;
 
         if (knockbackCoroutine != null)
         {
@@ -530,12 +570,7 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = initialScale;
         ApplyFacingDirection();
 
-        if (spriteRenderer != null)
-        {
-            Color c = PlayerColor;
-            c.a = 1f;
-            spriteRenderer.color = c;
-        }
+        StartInvulnerability(3.5f);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -781,6 +816,9 @@ public class PlayerMovement : MonoBehaviour
 
             Collider2D playerCol = GetComponent<Collider2D>();
 
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("Arremesar bomba");
+
             heldBomb.Throw(currentAimDir, playerCol, finalThrowSpeed);
             heldBomb = null;
 
@@ -856,6 +894,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         ApplyCustomGravity();
+
+        if (animator != null)
+        {
+            float currentSpeed = Mathf.Abs(rb.linearVelocity.x);
+            animator.SetFloat("Speed", currentSpeed);
+        }
     }
 
     private void ApplyCustomGravity()
@@ -899,6 +943,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (!wasGrounded && isGrounded)
         {
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("Pouso");
+
             if (playerEffects != null)
                 playerEffects.TriggerLand();
 
@@ -937,6 +984,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("Pulo");
+
         if (isWallSliding || (isTouchingWall && !isGrounded))
         {
             int wallDir = facingRight ? -1 : 1;
@@ -1061,6 +1111,9 @@ public class PlayerMovement : MonoBehaviour
     public void HoldBomb(Bomb bomb)
     {
         heldBomb = bomb;
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("Pegar bomba");
     }
 
     public void DropBomb()

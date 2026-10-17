@@ -7,17 +7,26 @@ public class GameEffectsManager : MonoBehaviour
     public static GameEffectsManager Instance { get; private set; }
 
     [Header("Configuração de Nuvens (Vaivém)")]
-    [Tooltip("Arraste os Transforms das nuvens do fundo aqui.")]
     [SerializeField] private List<Transform> backgroundClouds = new List<Transform>();
-    [Tooltip("Velocidade da oscilação de vaivém.")]
     [SerializeField] private float cloudOscillationSpeed = 0.5f;
-    [Tooltip("Distância máxima que a nuvem se desloca para cada lado.")]
     [SerializeField] private float cloudOscillationDistance = 3f;
 
-    [Header("Árvores e Lápides (Impacto de Explosão)")]
-    [SerializeField] private List<Transform> environmentalProps = new List<Transform>();
-    [SerializeField] private float propShakeIntensity = 0.2f;
-    [SerializeField] private float propShakeDuration = 0.3f;
+    [Header("Configuração das Árvores (Efeito Vento)")]
+    [SerializeField] private List<Transform> trees = new List<Transform>();
+    [SerializeField] private float treeWindSpeed = 2f;
+    [SerializeField] private float treeWindAngle = 3f; 
+
+    [Header("Configuração das Cortinas (Efeito Vento Constante)")]
+    [SerializeField] private List<Transform> curtains = new List<Transform>();
+    [SerializeField] private float curtainWindSpeed = 1.5f;
+    [SerializeField] private float curtainWindAngle = 2.5f; 
+
+    [Header("Configuração das Lápides (Afundar na Explosão)")]
+    [SerializeField] private List<Transform> tombstones = new List<Transform>();
+    [SerializeField] private float tombstoneSinkDepth = 1.5f; 
+    [SerializeField] private float tombstoneSinkDuration = 0.15f;
+    [SerializeField] private float tombstoneUndergroundWaitTime = 2f; 
+    [SerializeField] private float tombstoneRiseDuration = 0.5f; 
     [SerializeField] private float bombEffectRadius = 4f;
 
     [Header("Configuração de Camera Shake")]
@@ -25,6 +34,9 @@ public class GameEffectsManager : MonoBehaviour
     private Vector3 cameraInitialPosition;
 
     private Dictionary<Transform, float> cloudInitialXPositions = new Dictionary<Transform, float>();
+    private Dictionary<Transform, Quaternion> treeInitialRotations = new Dictionary<Transform, Quaternion>();
+    private Dictionary<Transform, Quaternion> curtainInitialRotations = new Dictionary<Transform, Quaternion>();
+    private Dictionary<Transform, Vector3> tombstoneInitialPositions = new Dictionary<Transform, Vector3>();
 
     private void Awake()
     {
@@ -45,15 +57,33 @@ public class GameEffectsManager : MonoBehaviour
         foreach (Transform cloud in backgroundClouds)
         {
             if (cloud != null && !cloudInitialXPositions.ContainsKey(cloud))
-            {
                 cloudInitialXPositions.Add(cloud, cloud.position.x);
-            }
+        }
+
+        foreach (Transform tree in trees)
+        {
+            if (tree != null && !treeInitialRotations.ContainsKey(tree))
+                treeInitialRotations.Add(tree, tree.rotation);
+        }
+
+        foreach (Transform curtain in curtains)
+        {
+            if (curtain != null && !curtainInitialRotations.ContainsKey(curtain))
+                curtainInitialRotations.Add(curtain, curtain.rotation);
+        }
+
+        foreach (Transform tombstone in tombstones)
+        {
+            if (tombstone != null && !tombstoneInitialPositions.ContainsKey(tombstone))
+                tombstoneInitialPositions.Add(tombstone, tombstone.position);
         }
     }
 
     private void Update()
     {
         MoveCloudsBackAndForth();
+        AnimateTreesWind();
+        AnimateCurtainsWind();
     }
 
     private void MoveCloudsBackAndForth()
@@ -64,12 +94,9 @@ public class GameEffectsManager : MonoBehaviour
             if (cloud == null) continue;
 
             if (!cloudInitialXPositions.ContainsKey(cloud))
-            {
                 cloudInitialXPositions[cloud] = cloud.position.x;
-            }
 
             float startX = cloudInitialXPositions[cloud];
-
             float offsetX = Mathf.Sin((Time.time + (i * 1.5f)) * cloudOscillationSpeed) * cloudOscillationDistance;
 
             Vector3 pos = cloud.position;
@@ -78,40 +105,87 @@ public class GameEffectsManager : MonoBehaviour
         }
     }
 
+    private void AnimateTreesWind()
+    {
+        for (int i = 0; i < trees.Count; i++)
+        {
+            Transform tree = trees[i];
+            if (tree == null) continue;
+
+            if (!treeInitialRotations.ContainsKey(tree))
+                treeInitialRotations[tree] = tree.rotation;
+
+            Quaternion baseRot = treeInitialRotations[tree];
+            float zRotation = Mathf.Sin((Time.time + (i * 2.0f)) * treeWindSpeed) * treeWindAngle;
+
+            tree.rotation = baseRot * Quaternion.Euler(0f, 0f, zRotation);
+        }
+    }
+
+    private void AnimateCurtainsWind()
+    {
+        for (int i = 0; i < curtains.Count; i++)
+        {
+            Transform curtain = curtains[i];
+            if (curtain == null) continue;
+
+            if (!curtainInitialRotations.ContainsKey(curtain))
+                curtainInitialRotations[curtain] = curtain.rotation;
+
+            Quaternion baseRot = curtainInitialRotations[curtain];
+            float zRotation = Mathf.Sin((Time.time + (i * 1.2f)) * curtainWindSpeed) * curtainWindAngle;
+
+            curtain.rotation = baseRot * Quaternion.Euler(0f, 0f, zRotation);
+        }
+    }
+
     public void TriggerBombExplosionEffects(Vector2 explosionPosition)
     {
-        TriggerCameraShake(0.25f, 0.2f);
+        TriggerCameraShake(0.35f, 0.25f);
 
-        foreach (Transform prop in environmentalProps)
+        foreach (Transform tombstone in tombstones)
         {
-            if (prop == null) continue;
+            if (tombstone == null) continue;
 
-            float distance = Vector2.Distance(explosionPosition, prop.position);
+            float distance = Vector2.Distance(explosionPosition, tombstone.position);
             if (distance <= bombEffectRadius)
             {
-                StartCoroutine(ShakePropRoutine(prop));
+                StartCoroutine(TombstoneExplosionRoutine(tombstone));
             }
         }
     }
 
-    private IEnumerator ShakePropRoutine(Transform prop)
+    private IEnumerator TombstoneExplosionRoutine(Transform tombstone)
     {
-        Vector3 originalPos = prop.localPosition;
+        if (!tombstoneInitialPositions.ContainsKey(tombstone)) yield break;
+
+        Vector3 startPos = tombstoneInitialPositions[tombstone];
+        Vector3 targetPos = startPos - new Vector3(0f, tombstoneSinkDepth, 0f);
+
         float elapsed = 0f;
-
-        while (elapsed < propShakeDuration)
+        while (elapsed < tombstoneSinkDuration)
         {
-            if (prop == null) yield break;
-
+            if (tombstone == null) yield break;
             elapsed += Time.deltaTime;
-            Vector2 randomOffset = Random.insideUnitCircle * propShakeIntensity;
-            prop.localPosition = (Vector2)originalPos + randomOffset;
-
+            float t = elapsed / tombstoneSinkDuration;
+            tombstone.position = Vector3.Lerp(startPos, targetPos, t);
             yield return null;
         }
+        tombstone.position = targetPos;
 
-        if (prop != null)
-            prop.localPosition = originalPos;
+        yield return new WaitForSeconds(tombstoneUndergroundWaitTime);
+
+        elapsed = 0f;
+        while (elapsed < tombstoneRiseDuration)
+        {
+            if (tombstone == null) yield break;
+            elapsed += Time.deltaTime;
+            float t = elapsed / tombstoneRiseDuration;
+            t = Mathf.SmoothStep(0f, 1f, t);
+            tombstone.position = Vector3.Lerp(targetPos, startPos, t);
+            yield return null;
+        }
+        tombstone.position = startPos;
     }
 
     public void TriggerCameraShake(float duration, float magnitude)
