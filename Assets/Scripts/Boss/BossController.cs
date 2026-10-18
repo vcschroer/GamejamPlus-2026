@@ -25,6 +25,7 @@ public class BossController : MonoBehaviour
     [SerializeField] private Vector2 startIntroPosition = new Vector2(0f, 10f);
     [SerializeField] private Vector2 endIntroPosition = new Vector2(0f, 5f);
     [SerializeField] private float introMoveDuration = 1.5f;
+    [SerializeField] private float introScreamDuration = 1.5f;
     [SerializeField] private float introShakeDuration = 0.4f;
     [SerializeField] private float introShakeIntensity = 0.2f;
 
@@ -63,6 +64,7 @@ public class BossController : MonoBehaviour
     };
 
     [Header("Estágios de Ataques de Stagger por Vida")]
+
     [SerializeField]
     private List<BossStaggerAttackType> staggerAttacksStage3Of3 = new List<BossStaggerAttackType>
     {
@@ -92,13 +94,9 @@ public class BossController : MonoBehaviour
 
     [Header("Referência do Chão")]
     [SerializeField] private Transform groundPoint;
-
     [SerializeField] private LayerMask groundLayers = ~0;
-
     [SerializeField] private string groundTag = "Ground";
-
     [SerializeField] private float groundRaycastDistance = 100f;
-
     [SerializeField] private float groundImpactHeight = 0.8f;
 
     [Header("Cooldown de Movimento")]
@@ -132,9 +130,7 @@ public class BossController : MonoBehaviour
     public bool IsStaggered => isStaggered;
 
     [SerializeField] private float staggerChargeDuration = 1.2f;
-
     [SerializeField] private float staggerChargeShakeIntensity = 0.15f;
-
     [SerializeField] private float staggerDuration = 3.5f;
     [SerializeField] private float staggerKnockbackForce = 1.5f;
     [SerializeField] private float staggerKnockbackDuration = 0.35f;
@@ -192,25 +188,19 @@ public class BossController : MonoBehaviour
 
     [Header("Ataque de Stagger 2: Saltos e Mergulho")]
     [SerializeField] private int jumpPointCount = 5;
-
     [SerializeField] private float jumpDuration = 0.45f;
-
     [SerializeField] private float jumpHeight = 2.5f;
-
     [SerializeField] private float jumpPause = 0.12f;
-
     [SerializeField] private float finalDivePreparationHeight = 2.5f;
-
     [SerializeField] private float finalDivePreparationDuration = 0.3f;
-
     [SerializeField] private float finalDiveDuration = 0.18f;
-
     [SerializeField] private float groundImpactShakeDuration = 0.35f;
 
     [Header("Referências Visuais & Partículas de Dano")]
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Animator animator;
     [SerializeField] private BossEffects bossEffects;
-    [SerializeField] private ParticleSystem damageParticleSystemPrefab; 
+    [SerializeField] private ParticleSystem damageParticleSystemPrefab;
 
     [Header("Piscar Conforme a Vida")]
     [SerializeField] private Color lowHealthBlinkColor = Color.red;
@@ -245,6 +235,9 @@ public class BossController : MonoBehaviour
         if (spriteRenderer == null)
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+
         if (spriteRenderer != null)
         {
             originalSpriteColor = spriteRenderer.color;
@@ -269,6 +262,9 @@ public class BossController : MonoBehaviour
 
     private IEnumerator BossIntroRoutine()
     {
+        if (animator != null)
+            animator.SetBool("IsIdle", true);
+
         yield return new WaitForSeconds(introDelay);
 
         float elapsed = 0f;
@@ -282,14 +278,23 @@ public class BossController : MonoBehaviour
         }
         transform.position = endIntroPosition;
 
-        if (bossEffects != null)
+        if (animator != null)
         {
-            bossEffects.TriggerImpact();
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsRangedAttacking", true);
         }
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("boss morte");
 
         if (GameEffectsManager.Instance != null)
         {
             GameEffectsManager.Instance.TriggerCameraShake(introShakeDuration, introShakeIntensity);
+        }
+
+        if (bossEffects != null)
+        {
+            bossEffects.TriggerImpact();
         }
 
         Vector3 originalPos = transform.position;
@@ -302,6 +307,14 @@ public class BossController : MonoBehaviour
             yield return null;
         }
         transform.position = originalPos;
+
+        yield return new WaitForSeconds(introScreamDuration - introShakeDuration);
+
+        if (animator != null)
+        {
+            animator.SetBool("IsRangedAttacking", false);
+            animator.SetBool("IsIdle", true);
+        }
 
         isIntroFinished = true;
 
@@ -333,9 +346,19 @@ public class BossController : MonoBehaviour
             return;
 
         if (!isActing)
+        {
+            if (animator != null)
+                animator.SetBool("IsIdle", true);
+
             FlyInArea();
+        }
         else
+        {
+            if (animator != null)
+                animator.SetBool("IsIdle", false);
+
             ApplyHoverOnly();
+        }
     }
 
     public void OnBombBounce()
@@ -480,6 +503,9 @@ public class BossController : MonoBehaviour
 
         currentHealth = Mathf.Clamp(currentHealth - damageAmount, 0, maxHealth);
 
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("boss dano");
+
         if (bossEffects != null)
             bossEffects.TriggerDamage();
 
@@ -584,6 +610,18 @@ public class BossController : MonoBehaviour
 
     private void Die()
     {
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("boss morte");
+
+        if (animator != null)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsRangedAttacking", false);
+            animator.SetBool("IsDashAttacking", false);
+            animator.SetBool("IsJumpAttacking", false);
+            animator.SetBool("IsStaggered", false);
+        }
+
         if (healthBlinkCoroutine != null)
         {
             StopCoroutine(healthBlinkCoroutine);
@@ -647,6 +685,9 @@ public class BossController : MonoBehaviour
 
                 if (bossEffects != null)
                     bossEffects.TriggerAttack();
+
+                if (SoundManager.Instance != null)
+                    SoundManager.Instance.PlaySound("boss meelee");
 
                 if (chosenStaggerAttack == BossStaggerAttackType.QueenBeeDash)
                     yield return StartCoroutine(QueenBeeDashAttack());
@@ -719,29 +760,66 @@ public class BossController : MonoBehaviour
 
     private IEnumerator ArcProjectileAttack()
     {
+        if (animator != null)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsRangedAttacking", true);
+        }
+
         yield return new WaitForSeconds(0.2f);
         FireArcWave(0f);
+
+        if (animator != null)
+        {
+            animator.SetBool("IsRangedAttacking", false);
+            animator.SetBool("IsIdle", true);
+        }
+
         yield return new WaitForSeconds(arcAttackDuration);
     }
 
     private IEnumerator ArcWaveAttack()
     {
+        if (animator != null)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsRangedAttacking", true);
+        }
+
         yield return new WaitForSeconds(0.2f);
         int waves = Mathf.Max(1, arcWaveCount);
 
         for (int wave = 0; wave < waves; wave++)
         {
-            if (isStaggered || currentHealth <= 0) yield break;
+            if (isStaggered || currentHealth <= 0)
+            {
+                if (animator != null)
+                {
+                    animator.SetBool("IsRangedAttacking", false);
+                    animator.SetBool("IsIdle", true);
+                }
+                yield break;
+            }
             float angleOffset = wave * arcWaveAngleOffset - ((waves - 1) * arcWaveAngleOffset * 0.5f);
             FireArcWave(angleOffset);
             if (wave < waves - 1) yield return new WaitForSeconds(arcWaveInterval);
         }
+
+        if (animator != null)
+        {
+            animator.SetBool("IsRangedAttacking", false);
+            animator.SetBool("IsIdle", true);
+        }
+
         yield return new WaitForSeconds(arcAttackDuration);
     }
 
     private void FireArcWave(float extraAngle)
     {
         if (projectilePrefab == null || firePoint == null) return;
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("projetil boss");
 
         float healthRatio = (float)currentHealth / Mathf.Max(1, maxHealth);
         int count = Mathf.Max(1, Mathf.RoundToInt(Mathf.Lerp(minArcProjectileCount, maxArcProjectileCount, 1f - healthRatio)));
@@ -766,17 +844,34 @@ public class BossController : MonoBehaviour
 
     private IEnumerator TargetedBurstAttack()
     {
+        if (animator != null)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsRangedAttacking", true);
+        }
+
         yield return new WaitForSeconds(0.2f);
         float healthRatio = (float)currentHealth / Mathf.Max(1, maxHealth);
         int burstCount = Mathf.Max(1, Mathf.RoundToInt(Mathf.Lerp(minBurstShotCount, maxBurstShotCount, 1f - healthRatio)));
 
         for (int i = 0; i < burstCount; i++)
         {
-            if (isStaggered || currentHealth <= 0) yield break;
+            if (isStaggered || currentHealth <= 0)
+            {
+                if (animator != null)
+                {
+                    animator.SetBool("IsRangedAttacking", false);
+                    animator.SetBool("IsIdle", true);
+                }
+                yield break;
+            }
             Transform nearestPlayer = GetNearestPlayerTransform();
 
             if (nearestPlayer != null && firePoint != null && projectilePrefab != null)
             {
+                if (SoundManager.Instance != null)
+                    SoundManager.Instance.PlaySound("projetil boss");
+
                 Vector2 dirToPlayer = ((Vector2)nearestPlayer.position - (Vector2)firePoint.position).normalized;
                 GameObject proj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
                 Rigidbody2D rbProj = proj.GetComponent<Rigidbody2D>();
@@ -784,33 +879,78 @@ public class BossController : MonoBehaviour
             }
             yield return new WaitForSeconds(timeBetweenBurstShots);
         }
+
+        if (animator != null)
+        {
+            animator.SetBool("IsRangedAttacking", false);
+            animator.SetBool("IsIdle", true);
+        }
+
         yield return new WaitForSeconds(burstAttackDuration);
     }
 
     private IEnumerator CircleRingAttack()
     {
+        if (animator != null)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsRangedAttacking", true);
+        }
+
         yield return new WaitForSeconds(0.2f);
         FireCircleWave(0f);
+
+        if (animator != null)
+        {
+            animator.SetBool("IsRangedAttacking", false);
+            animator.SetBool("IsIdle", true);
+        }
+
         yield return new WaitForSeconds(circleAttackDuration);
     }
 
     private IEnumerator CircleWaveAttack()
     {
+        if (animator != null)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsRangedAttacking", true);
+        }
+
         yield return new WaitForSeconds(0.2f);
         int waves = Mathf.Max(1, circleWaveCount);
 
         for (int wave = 0; wave < waves; wave++)
         {
-            if (isStaggered || currentHealth <= 0) yield break;
+            if (isStaggered || currentHealth <= 0)
+            {
+                if (animator != null)
+                {
+                    animator.SetBool("IsRangedAttacking", false);
+                    animator.SetBool("IsIdle", true);
+                }
+                yield break;
+            }
             FireCircleWave(wave * circleWaveRotationOffset);
             if (wave < waves - 1) yield return new WaitForSeconds(circleWaveInterval);
         }
+
+        if (animator != null)
+        {
+            animator.SetBool("IsRangedAttacking", false);
+            animator.SetBool("IsIdle", true);
+        }
+
         yield return new WaitForSeconds(circleAttackDuration);
     }
 
     private void FireCircleWave(float rotationOffset)
     {
         if (projectilePrefab == null || firePoint == null) return;
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("projetil boss");
+
         float healthRatio = (float)currentHealth / Mathf.Max(1, maxHealth);
         int count = Mathf.Max(1, Mathf.RoundToInt(Mathf.Lerp(minCircleProjectileCount, maxCircleProjectileCount, 1f - healthRatio)));
         float angleStep = 360f / count;
@@ -837,6 +977,12 @@ public class BossController : MonoBehaviour
         float healthRatio = (float)currentHealth / Mathf.Max(1, maxHealth);
         float baseDashSpeed = Mathf.Lerp(minQueenBeeDashSpeed, maxQueenBeeDashSpeed, 1f - healthRatio);
 
+        if (animator != null)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsDashAttacking", true);
+        }
+
         for (int i = 0; i < yHeights.Length; i++)
         {
             if (isStaggered || currentHealth <= 0) yield break;
@@ -855,6 +1001,12 @@ public class BossController : MonoBehaviour
             yield return MoveSmoothlyToPositionWithSpeed(new Vector2(targetX, currentY), currentDashSpeed);
 
             startFromLeft = !startFromLeft;
+        }
+
+        if (animator != null)
+        {
+            animator.SetBool("IsDashAttacking", false);
+            animator.SetBool("IsIdle", true);
         }
 
         if (bossEffects != null) bossEffects.TriggerImpact();
@@ -885,6 +1037,12 @@ public class BossController : MonoBehaviour
     {
         int totalPoints = Mathf.Max(1, jumpPointCount);
         yield return new WaitForSeconds(0.35f);
+
+        if (animator != null)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsJumpAttacking", true);
+        }
 
         for (int i = 0; i < totalPoints; i++)
         {
@@ -918,11 +1076,23 @@ public class BossController : MonoBehaviour
 
             if (isFinalDive)
             {
+                if (animator != null)
+                {
+                    animator.SetBool("IsJumpAttacking", false);
+                    animator.SetBool("IsIdle", true);
+                }
+
                 yield return new WaitForSeconds(groundImpactShakeDuration);
                 yield return StartCoroutine(StaggerRoutine());
                 yield break;
             }
             yield return new WaitForSeconds(Mathf.Lerp(jumpPause, jumpPause * 0.4f, progressFactor));
+        }
+
+        if (animator != null)
+        {
+            animator.SetBool("IsJumpAttacking", false);
+            animator.SetBool("IsIdle", true);
         }
     }
 
@@ -998,8 +1168,23 @@ public class BossController : MonoBehaviour
     private IEnumerator StaggerRoutine()
     {
         isStaggered = true;
+
+        if (animator != null)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsStaggered", true);
+        }
+
         yield return new WaitForSeconds(staggerDuration);
+
         isStaggered = false;
+
+        if (animator != null)
+        {
+            animator.SetBool("IsStaggered", false);
+            animator.SetBool("IsIdle", true);
+        }
+
         transform.rotation = Quaternion.identity;
         UpdateSpriteRotation();
     }

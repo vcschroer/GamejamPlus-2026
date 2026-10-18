@@ -98,6 +98,14 @@ public class Bomb : MonoBehaviour
         HandleTimerAndVisuals();
     }
 
+    private void PlayCountdownSound()
+    {
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySound("bomb coutdown");
+        }
+    }
+
     private IEnumerator RandomizeTargetRoutine()
     {
         isRandomizing = true;
@@ -138,6 +146,7 @@ public class Bomb : MonoBehaviour
         if (alivePlayers.Length == 1)
         {
             currentTimer = bombDuration;
+            PlayCountdownSound(); 
             isRandomizing = false;
             PickUp(alivePlayers[0].transform);
             yield break;
@@ -225,6 +234,7 @@ public class Bomb : MonoBehaviour
         }
 
         currentTimer = bombDuration;
+        PlayCountdownSound();
         isRandomizing = false;
 
         PickUp(finalTarget);
@@ -309,6 +319,9 @@ public class Bomb : MonoBehaviour
             }
             else
             {
+                if (SoundManager.Instance != null)
+                    SoundManager.Instance.PlaySound("Bomba rebate boss");
+
                 boss.OnBombBounce();
 
                 if (collision.contactCount > 0)
@@ -396,7 +409,10 @@ public class Bomb : MonoBehaviour
             return;
 
         if (playerTransform != lastHolder)
+        {
             currentTimer = bombDuration;
+            PlayCountdownSound();
+        }
 
         if (currentHolder != null)
         {

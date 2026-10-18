@@ -1,4 +1,3 @@
-
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -21,7 +20,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private float waitBeforeContinue = 3f;
 
     [Header("Cena do Menu Principal")]
-    [SerializeField] private string menuSceneName = "MainMenu";
+    [SerializeField] private string menuSceneName = "Menu";
 
     private bool isPaused;
     private bool gameOverStarted;
@@ -77,14 +76,12 @@ public class PauseMenu : MonoBehaviour
 
     private bool WasAnyInputPressed()
     {
-        // Teclado
         if (Keyboard.current != null &&
             Keyboard.current.anyKey.wasPressedThisFrame)
         {
             return true;
         }
 
-        // Mouse
         if (Mouse.current != null &&
             (Mouse.current.leftButton.wasPressedThisFrame ||
              Mouse.current.rightButton.wasPressedThisFrame ||
@@ -93,7 +90,6 @@ public class PauseMenu : MonoBehaviour
             return true;
         }
 
-        // Tela de toque / celular
         if (Touchscreen.current != null)
         {
             foreach (var touch in Touchscreen.current.touches)
@@ -103,7 +99,6 @@ public class PauseMenu : MonoBehaviour
             }
         }
 
-        // Controle
         if (Gamepad.current != null &&
             Gamepad.current.allControls.Count > 0)
         {
@@ -155,7 +150,6 @@ public class PauseMenu : MonoBehaviour
         if (pauseMenuUI != null)
             pauseMenuUI.SetActive(false);
 
-        // O Game Over precisa continuar animando com o jogo parado.
         Time.timeScale = 0f;
 
         if (gameOverPanel != null)
@@ -172,15 +166,12 @@ public class PauseMenu : MonoBehaviour
 
     private IEnumerator GameOverSequence()
     {
-        // Primeiro: fade-in do painel preto.
         yield return StartCoroutine(
             FadeImage(blackPanelImage, 0f, 1f, blackFadeDuration));
 
-        // Depois: fade-in das letras GAME OVER.
         yield return StartCoroutine(
             FadeImage(gameOverTextImage, 0f, 1f, textFadeDuration));
 
-        // Aguarda três segundos antes de aceitar a continuação.
         yield return new WaitForSecondsRealtime(waitBeforeContinue);
 
         waitingForContinue = true;
@@ -228,6 +219,8 @@ public class PauseMenu : MonoBehaviour
 
     public void LoadMenuWithTransition(string targetSceneName)
     {
+        PlayUIClick();
+
         if (SceneTransition.Instance == null)
         {
             Time.timeScale = 1f;
@@ -254,7 +247,20 @@ public class PauseMenu : MonoBehaviour
 
     public void QuitGame()
     {
+        PlayUIClick();
         Time.timeScale = 1f;
         Application.Quit();
+    }
+
+    public void PlayUIHover()
+    {
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("ui hover");
+    }
+
+    public void PlayUIClick()
+    {
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("ui click");
     }
 }

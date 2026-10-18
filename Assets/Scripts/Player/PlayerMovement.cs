@@ -188,12 +188,10 @@ public class PlayerMovement : MonoBehaviour
 
         if (removePlayerFriction && playerCollider != null)
         {
-            PhysicsMaterial2D noFriction =
-                new PhysicsMaterial2D("Player No Friction");
-
+            Physics2D.IgnoreCollision(playerCollider, playerCollider, false);
+            PhysicsMaterial2D noFriction = new PhysicsMaterial2D("Player No Friction");
             noFriction.friction = 0f;
             noFriction.bounciness = 0f;
-
             playerCollider.sharedMaterial = noFriction;
         }
 
@@ -216,8 +214,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void AutoAssignPlayerID()
     {
-        PlayerMovement[] existingPlayers =
-            FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        PlayerMovement[] existingPlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
         bool hasPlayer1 = false;
 
@@ -292,9 +289,7 @@ public class PlayerMovement : MonoBehaviour
             StartInvulnerability(invulnerabilityDuration);
     }
 
-    public void TakeBossDamage(
-        int damageAmount,
-        Vector2 bossOrProjectilePosition)
+    public void TakeBossDamage(int damageAmount, Vector2 bossOrProjectilePosition)
     {
         if (isDead || isInvulnerable)
             return;
@@ -304,8 +299,7 @@ public class PlayerMovement : MonoBehaviour
         if (isDead)
             return;
 
-        Vector2 direction =
-            (Vector2)transform.position - bossOrProjectilePosition;
+        Vector2 direction = (Vector2)transform.position - bossOrProjectilePosition;
 
         if (direction.sqrMagnitude < 0.001f)
             direction = Vector2.right;
@@ -314,11 +308,7 @@ public class PlayerMovement : MonoBehaviour
         direction.y = Mathf.Max(direction.y, bossKnockbackUpward);
         direction.Normalize();
 
-        StartKnockback(
-            direction,
-            bossKnockbackForce,
-            bossKnockbackDuration
-        );
+        StartKnockback(direction, bossKnockbackForce, bossKnockbackDuration);
 
         StartInvulnerability(invulnerabilityDuration);
     }
@@ -352,8 +342,7 @@ public class PlayerMovement : MonoBehaviour
         if (invulnerabilityCoroutine != null)
             StopCoroutine(invulnerabilityCoroutine);
 
-        invulnerabilityCoroutine =
-            StartCoroutine(InvulnerabilityRoutine(duration));
+        invulnerabilityCoroutine = StartCoroutine(InvulnerabilityRoutine(duration));
     }
 
     private IEnumerator InvulnerabilityRoutine(float duration)
@@ -407,10 +396,7 @@ public class PlayerMovement : MonoBehaviour
         if (instant || healthBlinkTransitionSpeed <= 0f)
             spriteRenderer.color = targetColor;
         else
-            spriteRenderer.color = Color.Lerp(
-                spriteRenderer.color,
-                targetColor,
-                Time.deltaTime * healthBlinkTransitionSpeed);
+            spriteRenderer.color = Color.Lerp(spriteRenderer.color, targetColor, Time.deltaTime * healthBlinkTransitionSpeed);
     }
 
     private void UpdateLifeUI()
@@ -431,6 +417,12 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         isDead = true;
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlaySound("Player morre");
+        }
+
         if (PlayerDeathTracker.Instance != null)
         {
             PlayerDeathTracker.Instance.RegisterPlayerDeath(this);
@@ -479,8 +471,7 @@ public class PlayerMovement : MonoBehaviour
         if (aimArrow != null)
             aimArrow.SetActive(false);
 
-        PlayerMovement[] existingPlayers =
-            FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        PlayerMovement[] existingPlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
         foreach (PlayerMovement p in existingPlayers)
         {
@@ -488,11 +479,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (p != this && otherCollider != null && playerCollider != null)
             {
-                Physics2D.IgnoreCollision(
-                    playerCollider,
-                    otherCollider,
-                    true
-                );
+                Physics2D.IgnoreCollision(playerCollider, otherCollider, true);
             }
         }
 
@@ -506,7 +493,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (spriteRenderer != null)
         {
-            spriteRenderer.sortingOrder = 50; // Mantém a alma visível e na frente
+            spriteRenderer.sortingOrder = 50;
         }
 
         float squashDuration = 0.25f;
@@ -533,19 +520,11 @@ public class PlayerMovement : MonoBehaviour
 
             if (t < 0.5f)
             {
-                transform.localScale = Vector3.Lerp(
-                    originalDeathScale,
-                    squashedScale,
-                    t * 2f
-                );
+                transform.localScale = Vector3.Lerp(originalDeathScale, squashedScale, t * 2f);
             }
             else
             {
-                transform.localScale = Vector3.Lerp(
-                    squashedScale,
-                    stretchedScale,
-                    (t - 0.5f) * 2f
-                );
+                transform.localScale = Vector3.Lerp(squashedScale, stretchedScale, (t - 0.5f) * 2f);
             }
 
             yield return null;
@@ -554,9 +533,7 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = originalDeathScale;
 
         float elapsedGhost = 0f;
-        Color startColor = spriteRenderer != null
-            ? spriteRenderer.color
-            : Color.white;
+        Color startColor = spriteRenderer != null ? spriteRenderer.color : Color.white;
 
         Vector3 startPosition = transform.position;
 
@@ -578,14 +555,9 @@ public class PlayerMovement : MonoBehaviour
             elapsedGhost += Time.deltaTime;
             float progress = elapsedGhost / ghostDuration;
 
-            float horizontalWobble =
-                Mathf.Sin(elapsedGhost * ghostWobbleFrequency)
-                * ghostWobbleAmount;
+            float horizontalWobble = Mathf.Sin(elapsedGhost * ghostWobbleFrequency) * ghostWobbleAmount;
 
-            float verticalOffset =
-                elapsedGhost * ghostFloatSpeed
-                + Mathf.Cos(elapsedGhost * ghostWobbleFrequency * 0.5f)
-                * 0.1f;
+            float verticalOffset = elapsedGhost * ghostFloatSpeed + Mathf.Cos(elapsedGhost * ghostWobbleFrequency * 0.5f) * 0.1f;
 
             Vector3 currentGhostPos = new Vector3(
                 startPosition.x + horizontalWobble,
@@ -630,8 +602,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError(
-                        "PlayerDeathTracker não está presente na cena!");
+                    Debug.LogError("PlayerDeathTracker não está presente na cena!");
                 }
 
                 yield break;
@@ -678,8 +649,7 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerUI.Instance != null)
             PlayerUI.Instance.UpdateHealth(playerID, currentHealth);
 
-        PlayerMovement[] allPlayers =
-            FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        PlayerMovement[] allPlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
         foreach (PlayerMovement p in allPlayers)
         {
@@ -687,11 +657,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (p != this && otherCollider != null && playerCollider != null)
             {
-                Physics2D.IgnoreCollision(
-                    playerCollider,
-                    otherCollider,
-                    false
-                );
+                Physics2D.IgnoreCollision(playerCollider, otherCollider, false);
             }
         }
 
@@ -709,13 +675,11 @@ public class PlayerMovement : MonoBehaviour
         if (isDead)
             return;
 
-        PlayerMovement otherPlayer =
-            collision.collider.GetComponent<PlayerMovement>();
+        PlayerMovement otherPlayer = collision.collider.GetComponent<PlayerMovement>();
 
         if (otherPlayer == null)
         {
-            otherPlayer =
-                collision.collider.GetComponentInParent<PlayerMovement>();
+            otherPlayer = collision.collider.GetComponentInParent<PlayerMovement>();
         }
 
         if (otherPlayer != null && otherPlayer != this)
@@ -726,8 +690,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        BossController boss =
-            collision.collider.GetComponent<BossController>();
+        BossController boss = collision.collider.GetComponent<BossController>();
 
         if (boss == null)
             boss = collision.collider.GetComponentInParent<BossController>();
@@ -738,8 +701,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyContactKnockback(Transform otherTransform)
     {
-        Vector2 pushDir =
-            (Vector2)transform.position - (Vector2)otherTransform.position;
+        Vector2 pushDir = (Vector2)transform.position - (Vector2)otherTransform.position;
 
         if (pushDir.sqrMagnitude < 0.001f)
             pushDir = Vector2.right;
@@ -748,17 +710,10 @@ public class PlayerMovement : MonoBehaviour
         pushDir.y = 0.4f;
         pushDir.Normalize();
 
-        StartKnockback(
-            pushDir,
-            playerKnockbackForce,
-            playerKnockbackDuration
-        );
+        StartKnockback(pushDir, playerKnockbackForce, playerKnockbackDuration);
     }
 
-    private void StartKnockback(
-        Vector2 direction,
-        float force,
-        float duration)
+    private void StartKnockback(Vector2 direction, float force, float duration)
     {
         if (isDead)
             return;
@@ -766,9 +721,7 @@ public class PlayerMovement : MonoBehaviour
         if (knockbackCoroutine != null)
             StopCoroutine(knockbackCoroutine);
 
-        knockbackCoroutine = StartCoroutine(
-            KnockbackRoutine(direction, force, duration)
-        );
+        knockbackCoroutine = StartCoroutine(KnockbackRoutine(direction, force, duration));
     }
 
     private void OnEnable()
@@ -801,9 +754,7 @@ public class PlayerMovement : MonoBehaviour
         if (isAiming)
             return;
 
-        Vector2 moveInput = moveAction != null
-            ? moveAction.ReadValue<Vector2>()
-            : Vector2.zero;
+        Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
 
         horizontalInput = Mathf.Round(moveInput.x);
 
@@ -848,8 +799,7 @@ public class PlayerMovement : MonoBehaviour
         if (aimArrow != null)
         {
             aimArrow.SetActive(true);
-            aimArrow.transform.position =
-                transform.position + (Vector3)(currentAimDir * aimOrbitRadius);
+            aimArrow.transform.position = transform.position + (Vector3)(currentAimDir * aimOrbitRadius);
         }
     }
 
@@ -861,63 +811,40 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.gravityScale = aimGravityScale;
 
-            float yVel = rb.linearVelocity.y > 0f
-                ? 0f
-                : rb.linearVelocity.y;
+            float yVel = rb.linearVelocity.y > 0f ? 0f : rb.linearVelocity.y;
 
             float clampedY = Mathf.Max(yVel, -maxAimFallSpeed);
             rb.linearVelocity = new Vector2(0f, clampedY);
         }
 
-        bool isKeyboardScheme =
-            playerInput != null &&
-            playerInput.currentControlScheme != null &&
-            (
-                playerInput.currentControlScheme.ToLower().Contains("keyboard") ||
-                playerInput.currentControlScheme.ToLower().Contains("mouse")
-            );
+        bool isKeyboardScheme = playerInput != null && playerInput.currentControlScheme != null && (playerInput.currentControlScheme.ToLower().Contains("keyboard") || playerInput.currentControlScheme.ToLower().Contains("mouse"));
 
         if (isKeyboardScheme && Mouse.current != null && Camera.main != null)
         {
             Vector3 mouseScreenPos = Mouse.current.position.ReadValue();
 
-            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(
-                new Vector3(
-                    mouseScreenPos.x,
-                    mouseScreenPos.y,
-                    -Camera.main.transform.position.z
-                )
-            );
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreenPos.x, mouseScreenPos.y, -Camera.main.transform.position.z));
 
-            Vector2 dirToMouse =
-                (Vector2)mouseWorldPos - (Vector2)transform.position;
+            Vector2 dirToMouse = (Vector2)mouseWorldPos - (Vector2)transform.position;
 
             if (dirToMouse.sqrMagnitude > 0.01f)
                 currentAimDir = dirToMouse.normalized;
         }
         else
         {
-            Vector2 moveInput = moveAction != null
-                ? moveAction.ReadValue<Vector2>()
-                : Vector2.zero;
+            Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
 
             if (moveInput.sqrMagnitude > 0.01f)
                 currentAimDir = moveInput.normalized;
         }
 
-        Vector3 targetPosition =
-            transform.position + (Vector3)(currentAimDir * aimOrbitRadius);
+        Vector3 targetPosition = transform.position + (Vector3)(currentAimDir * aimOrbitRadius);
 
         if (aimArrow != null)
         {
-            aimArrow.transform.position = Vector3.Lerp(
-                aimArrow.transform.position,
-                targetPosition,
-                Time.deltaTime * 20f
-            );
+            aimArrow.transform.position = Vector3.Lerp(aimArrow.transform.position, targetPosition, Time.deltaTime * 20f);
 
-            float angle =
-                Mathf.Atan2(currentAimDir.y, currentAimDir.x) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(currentAimDir.y, currentAimDir.x) * Mathf.Rad2Deg;
 
             aimArrow.transform.rotation = Quaternion.Euler(0f, 0f, angle);
         }
@@ -941,11 +868,7 @@ public class PlayerMovement : MonoBehaviour
         {
             float chargeRatio = Mathf.Clamp01(aimTimer / maxAimTime);
 
-            float finalThrowSpeed = Mathf.Lerp(
-                minThrowSpeed,
-                maxThrowSpeed,
-                chargeRatio
-            );
+            float finalThrowSpeed = Mathf.Lerp(minThrowSpeed, maxThrowSpeed, chargeRatio);
 
             Collider2D playerCol = GetComponent<Collider2D>();
 
@@ -959,33 +882,22 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void ApplyThrowKnockback(
-        Vector2 throwDirection,
-        float chargeRatio)
+    private void ApplyThrowKnockback(Vector2 throwDirection, float chargeRatio)
     {
         if (throwKnockbackForce <= 0f)
             return;
 
         Vector2 knockbackDir = -throwDirection.normalized;
 
-        float currentKnockbackForce = scaleKnockbackWithCharge
-            ? throwKnockbackForce * Mathf.Lerp(0.5f, 1f, chargeRatio)
-            : throwKnockbackForce;
+        float currentKnockbackForce = scaleKnockbackWithCharge ? throwKnockbackForce * Mathf.Lerp(0.5f, 1f, chargeRatio) : throwKnockbackForce;
 
         if (playerEffects != null)
             playerEffects.TriggerThrow();
 
-        StartKnockback(
-            knockbackDir,
-            currentKnockbackForce,
-            knockbackDuration
-        );
+        StartKnockback(knockbackDir, currentKnockbackForce, knockbackDuration);
     }
 
-    private IEnumerator KnockbackRoutine(
-        Vector2 knockbackDir,
-        float force,
-        float duration)
+    private IEnumerator KnockbackRoutine(Vector2 knockbackDir, float force, float duration)
     {
         isKnockbacked = true;
         isWallSliding = false;
@@ -1021,9 +933,7 @@ public class PlayerMovement : MonoBehaviour
             float targetSpeed = horizontalInput * moveSpeed;
             float speedDif = targetSpeed - rb.linearVelocity.x;
 
-            float accelRate = Mathf.Abs(targetSpeed) > 0.01f
-                ? acceleration
-                : deceleration;
+            float accelRate = Mathf.Abs(targetSpeed) > 0.01f ? acceleration : deceleration;
 
             float movement = speedDif * accelRate;
             rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
@@ -1042,21 +952,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (rb.linearVelocity.y < 0f && !isWallSliding)
         {
-            rb.linearVelocity += Vector2.up
-                * Physics2D.gravity.y
-                * (fallMultiplier - 1f)
-                * Time.fixedDeltaTime;
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1f) * Time.fixedDeltaTime;
         }
-        else if (
-            rb.linearVelocity.y > 0f &&
-            jumpAction != null &&
-            !jumpAction.IsPressed() &&
-            !isWallSliding)
+        else if (rb.linearVelocity.y > 0f && jumpAction != null && !jumpAction.IsPressed() && !isWallSliding)
         {
-            rb.linearVelocity += Vector2.up
-                * Physics2D.gravity.y
-                * (lowJumpMultiplier - 1f)
-                * Time.fixedDeltaTime;
+            rb.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1f) * Time.fixedDeltaTime;
         }
     }
 
@@ -1066,11 +966,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (groundCheck != null)
         {
-            isGrounded = Physics2D.OverlapCircle(
-                groundCheck.position,
-                groundCheckRadius,
-                groundLayer
-            );
+            isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
         }
         else
         {
@@ -1093,16 +989,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (wallCheck != null)
         {
-            Vector2 direction = facingRight
-                ? Vector2.right
-                : Vector2.left;
+            Vector2 direction = facingRight ? Vector2.right : Vector2.left;
 
-            isTouchingWall = Physics2D.Raycast(
-                wallCheck.position,
-                direction,
-                wallCheckDistance,
-                wallLayer
-            );
+            isTouchingWall = Physics2D.Raycast(wallCheck.position, direction, wallCheckDistance, wallLayer);
         }
         else
         {
@@ -1121,16 +1010,22 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("Pulo");
+        {
+            int randomJump = Random.Range(0, 3);
+            string jumpSoundName = "Pulo";
+            if (randomJump == 1)
+                jumpSoundName = "Pulo 2";
+            else if (randomJump == 2)
+                jumpSoundName = "Pulo 3";
+
+            SoundManager.Instance.PlaySound(jumpSoundName);
+        }
 
         if (isWallSliding || (isTouchingWall && !isGrounded))
         {
             int wallDir = facingRight ? -1 : 1;
 
-            rb.linearVelocity = new Vector2(
-                wallJumpForce.x * wallDir,
-                wallJumpForce.y
-            );
+            rb.linearVelocity = new Vector2(wallJumpForce.x * wallDir, wallJumpForce.y);
 
             isWallSliding = false;
 
@@ -1148,10 +1043,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isGrounded)
         {
-            rb.linearVelocity = new Vector2(
-                rb.linearVelocity.x,
-                jumpForce
-            );
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
             if (playerEffects != null)
                 playerEffects.TriggerJump();
@@ -1160,10 +1052,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (extraJumps > 0)
         {
-            rb.linearVelocity = new Vector2(
-                rb.linearVelocity.x,
-                jumpForce
-            );
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
 
             extraJumps--;
 
@@ -1176,13 +1065,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleWallSlide()
     {
-        bool shouldWallSlide =
-            isTouchingWall &&
-            !isGrounded &&
-            !isKnockbacked &&
-            !isDashing &&
-            !isAiming &&
-            rb.linearVelocity.y <= 0f;
+        bool shouldWallSlide = isTouchingWall && !isGrounded && !isKnockbacked && !isDashing && !isAiming && rb.linearVelocity.y <= 0f;
 
         if (shouldWallSlide)
         {
@@ -1223,9 +1106,7 @@ public class PlayerMovement : MonoBehaviour
 
         PlayDust();
 
-        Vector2 moveInput = moveAction != null
-            ? moveAction.ReadValue<Vector2>()
-            : Vector2.zero;
+        Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
 
         Vector2 dashDir;
 
@@ -1304,8 +1185,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector3 pos = wallCheckInitialLocalPosition;
 
-            pos.x = Mathf.Abs(wallCheckInitialLocalPosition.x) *
-                    (facingRight ? 1f : -1f);
+            pos.x = Mathf.Abs(wallCheckInitialLocalPosition.x) * (facingRight ? 1f : -1f);
 
             wallCheck.localPosition = pos;
         }
@@ -1316,24 +1196,16 @@ public class PlayerMovement : MonoBehaviour
         if (groundCheck != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(
-                groundCheck.position,
-                groundCheckRadius
-            );
+            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
 
         if (wallCheck != null)
         {
             Gizmos.color = Color.blue;
 
-            Vector3 direction = facingRight
-                ? Vector3.right
-                : Vector3.left;
+            Vector3 direction = facingRight ? Vector3.right : Vector3.left;
 
-            Gizmos.DrawRay(
-                wallCheck.position,
-                direction * wallCheckDistance
-            );
+            Gizmos.DrawRay(wallCheck.position, direction * wallCheckDistance);
         }
     }
 }
