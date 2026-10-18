@@ -991,7 +991,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.3499756, y: -11.220001}
+  m_AnchoredPosition: {x: 1.3499756, y: -11.219971}
   m_SizeDelta: {x: 31.41, y: 40.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &250640334
@@ -1227,7 +1227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bomb
   bombDuration: 8
-  bombGravityScale: 4
+  bombGravityScale: 3
   headOffset: {x: 0, y: 1.2, z: 0}
   groundSlowdownFactor: 0.6
   shuffleCount: 1
@@ -1236,7 +1236,7 @@ MonoBehaviour:
   respawnDelay: 3
   spriteRenderer: {fileID: 1274724615}
   bombLightObject: {fileID: 1146270364}
-  startColor: {r: 0.7783019, g: 1, b: 0.7783019, a: 1}
+  startColor: {r: 0.27589875, g: 0.9433962, b: 0.27589875, a: 1}
   middleColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   endColor: {r: 1, g: 0, b: 0, a: 1}
   bombSortingOrder: 10
@@ -1649,11 +1649,11 @@ MonoBehaviour:
   maxHealth: 3
   normalAttacksBeforeDash: 5
   isStaggered: 0
-  staggerChargeDuration: 1.2
+  staggerChargeDuration: 3
   staggerChargeShakeIntensity: 0.05
   staggerChargeBlinkColor: {r: 1, g: 0, b: 0, a: 1}
   staggerChargeBlinkInterval: 0.05
-  staggerDuration: 3.5
+  staggerDuration: 5
   staggerKnockbackForce: 3
   staggerKnockbackDuration: 0.35
   staggerKnockbackHeight: 0.5
@@ -4127,7 +4127,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 16.01001, y: -11.220001}
+  m_AnchoredPosition: {x: 16.01001, y: -11.219971}
   m_SizeDelta: {x: 60.72, y: 40.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &708897137
@@ -5622,7 +5622,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 16.01001, y: -11.220001}
+  m_AnchoredPosition: {x: 16.01001, y: -11.219971}
   m_SizeDelta: {x: 60.72, y: 40.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1203566464
