@@ -196,12 +196,15 @@ public class BossController : MonoBehaviour
     [SerializeField] private float finalDiveDuration = 0.18f;
     [SerializeField] private float groundImpactShakeDuration = 0.35f;
 
-    [Header("Referências Visuais & Partículas de Dano")]
+    [Header("Referências Visuais & Partículas")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
     [SerializeField] private BossEffects bossEffects;
     [SerializeField] private ParticleSystem damageParticleSystemPrefab;
+    [SerializeField] private int damageParticleCount = 1;
     [SerializeField] private ParticleSystem deathBatParticlesPrefab;
+    [SerializeField] private int deathBatParticleCount = 5;
+    [SerializeField] private float particleSpawnRadius = 1.5f;
 
     [Header("Piscar Conforme a Vida")]
     [SerializeField] private Color lowHealthBlinkColor = Color.red;
@@ -527,23 +530,24 @@ public class BossController : MonoBehaviour
     {
         if (damageParticleSystemPrefab != null)
         {
-            Vector3 spawnPos = transform.position;
-
-            if (spriteRenderer != null)
+            for (int i = 0; i < damageParticleCount; i++)
             {
-                Bounds spriteBounds = spriteRenderer.bounds;
+                Vector3 spawnPos = transform.position + (Vector3)(Random.insideUnitCircle * particleSpawnRadius);
 
-                float randomX = Random.Range(spriteBounds.min.x, spriteBounds.max.x);
-                float randomY = Random.Range(spriteBounds.min.y, spriteBounds.max.y);
+                if (spriteRenderer != null)
+                {
+                    Bounds spriteBounds = spriteRenderer.bounds;
+                    float randomX = Random.Range(spriteBounds.min.x, spriteBounds.max.x);
+                    float randomY = Random.Range(spriteBounds.min.y, spriteBounds.max.y);
+                    spawnPos = new Vector3(randomX, randomY, transform.position.z);
+                }
 
-                spawnPos = new Vector3(randomX, randomY, transform.position.z);
+                ParticleSystem ps = Instantiate(damageParticleSystemPrefab, spawnPos, Quaternion.identity);
+                ps.Play();
+
+                float totalDuration = ps.main.duration + ps.main.startLifetime.constantMax;
+                Destroy(ps.gameObject, totalDuration);
             }
-
-            ParticleSystem ps = Instantiate(damageParticleSystemPrefab, spawnPos, Quaternion.identity);
-            ps.Play();
-
-            float totalDuration = ps.main.duration + ps.main.startLifetime.constantMax;
-            Destroy(ps.gameObject, totalDuration);
         }
     }
 
@@ -629,10 +633,23 @@ public class BossController : MonoBehaviour
 
         if (deathBatParticlesPrefab != null)
         {
-            ParticleSystem batParticles = Instantiate(deathBatParticlesPrefab, transform.position, Quaternion.identity);
-            batParticles.Play();
-            float totalDuration = batParticles.main.duration + batParticles.main.startLifetime.constantMax;
-            Destroy(batParticles.gameObject, totalDuration);
+            for (int i = 0; i < deathBatParticleCount; i++)
+            {
+                Vector3 spawnPos = transform.position + (Vector3)(Random.insideUnitCircle * particleSpawnRadius);
+
+                if (spriteRenderer != null)
+                {
+                    Bounds spriteBounds = spriteRenderer.bounds;
+                    float randomX = Random.Range(spriteBounds.min.x, spriteBounds.max.x);
+                    float randomY = Random.Range(spriteBounds.min.y, spriteBounds.max.y);
+                    spawnPos = new Vector3(randomX, randomY, transform.position.z);
+                }
+
+                ParticleSystem batParticles = Instantiate(deathBatParticlesPrefab, spawnPos, Quaternion.identity);
+                batParticles.Play();
+                float totalDuration = batParticles.main.duration + batParticles.main.startLifetime.constantMax;
+                Destroy(batParticles.gameObject, totalDuration);
+            }
         }
 
         if (animator != null)
@@ -765,6 +782,12 @@ public class BossController : MonoBehaviour
     {
         if (staggerChargeDuration <= 0f) yield break;
 
+        if (animator != null)
+        {
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsRangedAttacking", true);
+        }
+
         if (bossEffects != null)
             bossEffects.TriggerAttack();
 
@@ -779,6 +802,11 @@ public class BossController : MonoBehaviour
             yield return null;
         }
         transform.position = originalPos;
+
+        if (animator != null)
+        {
+            animator.SetBool("IsRangedAttacking", false);
+        }
     }
 
     private IEnumerator ArcProjectileAttack()
