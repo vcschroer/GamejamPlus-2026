@@ -71,7 +71,7 @@ public class PauseMenu : MonoBehaviour
         if (WasAnyInputPressed())
         {
             waitingForContinue = false;
-            LoadMenuWithTransition(menuSceneName);
+            ReloadSceneWithTransition();
         }
     }
 
@@ -241,6 +241,38 @@ public class PauseMenu : MonoBehaviour
         Color color = image.color;
         color.a = alpha;
         image.color = color;
+    }
+
+    public void ReloadSceneWithTransition()
+    {
+        PlayUIClick();
+
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        if (SceneTransition.Instance == null)
+        {
+            Time.timeScale = 1f;
+            AudioListener.pause = false;
+            SceneManager.LoadScene(currentSceneName);
+            return;
+        }
+
+        StartCoroutine(ReloadSceneSequence(currentSceneName));
+    }
+
+    private IEnumerator ReloadSceneSequence(string targetSceneName)
+    {
+        Time.timeScale = 1f;
+        AudioListener.pause = false;
+
+        if (gameOverCoroutine != null)
+            StopCoroutine(gameOverCoroutine);
+
+        yield return StartCoroutine(
+            SceneTransition.Instance.PlayOutroAndDoAction(() =>
+            {
+                SceneManager.LoadScene(targetSceneName);
+            }));
     }
 
     public void LoadMenuWithTransition(string targetSceneName)

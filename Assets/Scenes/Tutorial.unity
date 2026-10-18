@@ -686,7 +686,7 @@ MonoBehaviour:
   - {fileID: 1916527855}
   - {fileID: 1851967190}
   fadeDuration: 0.5
-  cooldownTime: 1
+  cooldownTime: 2
   nextSceneName: Game
 --- !u!4 &1590035746
 Transform:
