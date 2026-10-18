@@ -905,7 +905,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.3499756, y: -11.219971}
+  m_AnchoredPosition: {x: 1.3499756, y: -11.219986}
   m_SizeDelta: {x: 31.41, y: 40.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &250640334
@@ -2273,7 +2273,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1558
+  m_SortingOrder: 1999
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2343846114117275788, guid: 79cfe21dfc042d5409e2c47e983c5b5e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -4552,7 +4552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 530992691}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &1023399428
@@ -7707,7 +7707,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 1998
   m_MaskInteraction: 0
   m_Sprite: {fileID: 8694332959099841089, guid: 1ff57e10e8595204ba5b3f9835b803ec, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

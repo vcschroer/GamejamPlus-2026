@@ -909,7 +909,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 1429995095}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &793123761
@@ -1046,7 +1046,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -3.101}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -9.45949, y: 2.99318}
+  m_AnchoredPosition: {x: -9.68, y: 2.89}
   m_SizeDelta: {x: 9.7042, y: 5.6285}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &948134338

@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class UIButtonSound : MonoBehaviour, IPointerEnterHandler
+public class UIButtonSound : MonoBehaviour, IPointerEnterHandler, ISelectHandler
 {
     private Button button;
 
@@ -13,8 +13,17 @@ public class UIButtonSound : MonoBehaviour, IPointerEnterHandler
         button.onClick.AddListener(PlayClickSound);
     }
 
-    // Corrigido para PointerEventData
     public void OnPointerEnter(PointerEventData eventData)
+    {
+        PlayHoverSound();
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        PlayHoverSound();
+    }
+
+    private void PlayHoverSound()
     {
         if (SoundManager.Instance != null)
         {

@@ -37,18 +37,53 @@ public class PauseMenu : MonoBehaviour
             gameOverPanel.SetActive(false);
 
         Time.timeScale = 1f;
+        AudioListener.pause = false;
     }
 
     private void OnEnable()
     {
-        pauseAction.performed += OnPausePerformed;
-        pauseAction.Enable();
+        if (pauseAction != null)
+        {
+            pauseAction.performed += OnPausePerformed;
+            pauseAction.Enable();
+        }
     }
 
     private void OnDisable()
     {
-        pauseAction.performed -= OnPausePerformed;
-        pauseAction.Disable();
+        if (pauseAction != null)
+        {
+            pauseAction.performed -= OnPausePerformed;
+            pauseAction.Disable();
+        }
+    }
+
+    private void Update()
+    {
+        if (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame)
+        {
+            TogglePauseFromGamepad();
+        }
+
+        if (!waitingForContinue || gameOverStarted == false)
+            return;
+
+        if (WasAnyInputPressed())
+        {
+            waitingForContinue = false;
+            LoadMenuWithTransition(menuSceneName);
+        }
+    }
+
+    private void TogglePauseFromGamepad()
+    {
+        if (gameOverStarted)
+            return;
+
+        if (isPaused)
+            Resume();
+        else
+            Pause();
     }
 
     private void OnPausePerformed(InputAction.CallbackContext context)
@@ -60,18 +95,6 @@ public class PauseMenu : MonoBehaviour
             Resume();
         else
             Pause();
-    }
-
-    private void Update()
-    {
-        if (!waitingForContinue || gameOverStarted == false)
-            return;
-
-        if (WasAnyInputPressed())
-        {
-            waitingForContinue = false;
-            LoadMenuWithTransition(menuSceneName);
-        }
     }
 
     private bool WasAnyInputPressed()
@@ -124,6 +147,7 @@ public class PauseMenu : MonoBehaviour
             pauseMenuUI.SetActive(false);
 
         Time.timeScale = 1f;
+        AudioListener.pause = false;
         isPaused = false;
     }
 
@@ -136,6 +160,7 @@ public class PauseMenu : MonoBehaviour
             pauseMenuUI.SetActive(true);
 
         Time.timeScale = 0f;
+        AudioListener.pause = true;
         isPaused = true;
     }
 
@@ -151,6 +176,7 @@ public class PauseMenu : MonoBehaviour
             pauseMenuUI.SetActive(false);
 
         Time.timeScale = 0f;
+        AudioListener.pause = true;
 
         if (gameOverPanel != null)
             gameOverPanel.SetActive(true);
@@ -224,6 +250,7 @@ public class PauseMenu : MonoBehaviour
         if (SceneTransition.Instance == null)
         {
             Time.timeScale = 1f;
+            AudioListener.pause = false;
             SceneManager.LoadScene(targetSceneName);
             return;
         }
@@ -234,6 +261,7 @@ public class PauseMenu : MonoBehaviour
     private IEnumerator LoadMenuSequence(string targetSceneName)
     {
         Time.timeScale = 1f;
+        AudioListener.pause = false;
 
         if (gameOverCoroutine != null)
             StopCoroutine(gameOverCoroutine);
@@ -249,6 +277,7 @@ public class PauseMenu : MonoBehaviour
     {
         PlayUIClick();
         Time.timeScale = 1f;
+        AudioListener.pause = false;
         Application.Quit();
     }
 

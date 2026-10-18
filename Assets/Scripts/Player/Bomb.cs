@@ -87,6 +87,9 @@ public class Bomb : MonoBehaviour
 
     private void Update()
     {
+        if (Time.timeScale == 0f)
+            return;
+
         if (isRandomizing || isExploded)
             return;
 
@@ -135,7 +138,7 @@ public class Bomb : MonoBehaviour
 
         while (players == null || players.Length < 2)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSecondsRealtime(0.1f);
 
             players = FindObjectsByType<PlayerMovement>(
                 FindObjectsSortMode.None);
@@ -146,7 +149,7 @@ public class Bomb : MonoBehaviour
         if (alivePlayers.Length == 1)
         {
             currentTimer = bombDuration;
-            PlayCountdownSound(); 
+            PlayCountdownSound();
             isRandomizing = false;
             PickUp(alivePlayers[0].transform);
             yield break;
@@ -186,10 +189,13 @@ public class Bomb : MonoBehaviour
 
             while (elapsed < currentInterval)
             {
+                while (Time.timeScale == 0f)
+                    yield return null;
+
                 if (targetTransform != null)
                     transform.position = targetTransform.position + headOffset;
 
-                elapsed += Time.deltaTime;
+                elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
 
@@ -212,7 +218,7 @@ public class Bomb : MonoBehaviour
 
         if (finalAlivePlayers == null || finalAlivePlayers.Length == 0)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSecondsRealtime(0.5f);
             StartCoroutine(RandomizeTargetRoutine());
             yield break;
         }
@@ -226,10 +232,13 @@ public class Bomb : MonoBehaviour
 
         while (finalElapsed < currentInterval)
         {
+            while (Time.timeScale == 0f)
+                yield return null;
+
             if (finalTarget != null)
                 transform.position = finalTarget.position + headOffset;
 
-            finalElapsed += Time.deltaTime;
+            finalElapsed += Time.unscaledDeltaTime;
             yield return null;
         }
 
@@ -297,6 +306,9 @@ public class Bomb : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (Time.timeScale == 0f)
+            return;
+
         if (isRandomizing || isExploded)
             return;
 
@@ -385,6 +397,9 @@ public class Bomb : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (Time.timeScale == 0f)
+            return;
+
         if (isRandomizing || isExploded)
             return;
 
@@ -459,7 +474,10 @@ public class Bomb : MonoBehaviour
 
         while (elapsed < duration)
         {
-            elapsed += Time.deltaTime;
+            while (Time.timeScale == 0f)
+                yield return null;
+
+            elapsed += Time.unscaledDeltaTime;
             float t = elapsed / duration;
 
             transform.localScale = Vector3.Lerp(
@@ -550,7 +568,7 @@ public class Bomb : MonoBehaviour
     private IEnumerator EnableTrailAfterDelay(float delay)
     {
         ToggleTrail(false);
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSecondsRealtime(delay);
         ToggleTrail(true);
     }
 
@@ -574,7 +592,7 @@ public class Bomb : MonoBehaviour
     {
         Physics2D.IgnoreCollision(col, throwerCol, true);
 
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSecondsRealtime(0.25f);
 
         if (throwerCol != null)
             Physics2D.IgnoreCollision(col, throwerCol, false);
@@ -703,7 +721,7 @@ public class Bomb : MonoBehaviour
         if (spriteRenderer != null)
             spriteRenderer.enabled = false;
 
-        yield return new WaitForSeconds(respawnDelay);
+        yield return new WaitForSecondsRealtime(respawnDelay);
 
         StartCoroutine(RandomizeTargetRoutine());
     }
@@ -720,7 +738,7 @@ public class Bomb : MonoBehaviour
         if (spriteRenderer != null)
             spriteRenderer.enabled = false;
 
-        yield return new WaitForSeconds(respawnDelay);
+        yield return new WaitForSecondsRealtime(respawnDelay);
 
         StartCoroutine(RandomizeTargetRoutine());
     }

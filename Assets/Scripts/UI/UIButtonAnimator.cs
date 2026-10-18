@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 
 [RequireComponent(typeof(RectTransform))]
-public class UIElementEffects : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+public class UIElementEffects : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, ISelectHandler, IDeselectHandler
 {
     [Header("Wobble")]
     [SerializeField] private bool usarWobble = false;
@@ -34,6 +34,7 @@ public class UIElementEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
     private TMP_Text textComponent;
 
     private bool isHovered = false;
+    private bool isSelected = false;
     private bool isPressed = false;
 
     private void Awake()
@@ -104,7 +105,37 @@ public class UIElementEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
     {
         isHovered = false;
         if (!usarHoverScale || isPressed) return;
-        MudarEscala(escalaOriginal);
+
+        if (isSelected)
+        {
+            MudarEscala(escalaOriginal * escalaHover);
+        }
+        else
+        {
+            MudarEscala(escalaOriginal);
+        }
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        isSelected = true;
+        if (!usarHoverScale || isPressed) return;
+        MudarEscala(escalaOriginal * escalaHover);
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        isSelected = false;
+        if (!usarHoverScale || isPressed) return;
+
+        if (isHovered)
+        {
+            MudarEscala(escalaOriginal * escalaHover);
+        }
+        else
+        {
+            MudarEscala(escalaOriginal);
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -121,7 +152,7 @@ public class UIElementEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
         isPressed = false;
         if (!usarHoverScale && !usarSquashNoClique) return;
 
-        if (isHovered && usarHoverScale)
+        if ((isHovered || isSelected) && usarHoverScale)
         {
             MudarEscala(escalaOriginal * escalaHover);
         }
@@ -155,6 +186,10 @@ public class UIElementEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
     private void OnDisable()
     {
         if (coroutineEscala != null) StopCoroutine(coroutineEscala);
+
+        isSelected = false;
+        isHovered = false;
+        isPressed = false;
 
         if (rectTransform != null)
         {

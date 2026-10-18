@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameEffectsManager : MonoBehaviour
 {
@@ -14,19 +15,19 @@ public class GameEffectsManager : MonoBehaviour
     [Header("Configuração das Árvores")]
     [SerializeField] private List<Transform> trees = new List<Transform>();
     [SerializeField] private float treeWindSpeed = 2f;
-    [SerializeField] private float treeWindAngle = 3f; 
+    [SerializeField] private float treeWindAngle = 3f;
 
     [Header("Configuração das Cortinas ")]
     [SerializeField] private List<Transform> curtains = new List<Transform>();
     [SerializeField] private float curtainWindSpeed = 1.5f;
-    [SerializeField] private float curtainWindAngle = 2.5f; 
+    [SerializeField] private float curtainWindAngle = 2.5f;
 
     [Header("Configuração das Lápides")]
     [SerializeField] private List<Transform> tombstones = new List<Transform>();
-    [SerializeField] private float tombstoneSinkDepth = 1.5f; 
+    [SerializeField] private float tombstoneSinkDepth = 1.5f;
     [SerializeField] private float tombstoneSinkDuration = 0.15f;
-    [SerializeField] private float tombstoneUndergroundWaitTime = 2f; 
-    [SerializeField] private float tombstoneRiseDuration = 0.5f; 
+    [SerializeField] private float tombstoneUndergroundWaitTime = 2f;
+    [SerializeField] private float tombstoneRiseDuration = 0.5f;
     [SerializeField] private float bombEffectRadius = 4f;
 
     [Header("Configuração de Camera Shake")]
@@ -84,6 +85,14 @@ public class GameEffectsManager : MonoBehaviour
         MoveCloudsBackAndForth();
         AnimateTreesWind();
         AnimateCurtainsWind();
+    }
+
+    private void OnDisable()
+    {
+        if (Gamepad.current != null)
+        {
+            Gamepad.current.SetMotorSpeeds(0f, 0f);
+        }
     }
 
     private void MoveCloudsBackAndForth()
@@ -197,6 +206,12 @@ public class GameEffectsManager : MonoBehaviour
     {
         if (mainCameraTransform == null) yield break;
 
+        if (Gamepad.current != null)
+        {
+            float rumbleIntensity = Mathf.Clamp01(magnitude * 2.5f);
+            Gamepad.current.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
+        }
+
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -211,7 +226,13 @@ public class GameEffectsManager : MonoBehaviour
         }
 
         mainCameraTransform.localPosition = cameraInitialPosition;
+
+        if (Gamepad.current != null)
+        {
+            Gamepad.current.SetMotorSpeeds(0f, 0f);
+        }
     }
+
     public void TriggerPlayerDamageShake()
     {
         TriggerCameraShake(0.2f, 0.15f);
