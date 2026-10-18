@@ -1684,8 +1684,8 @@ MonoBehaviour:
   circleWaveCount: 3
   circleWaveInterval: 0.45
   circleWaveRotationOffset: 10
-  minQueenBeeDashSpeed: 25
-  maxQueenBeeDashSpeed: 45
+  minQueenBeeDashSpeed: 10
+  maxQueenBeeDashSpeed: 25
   jumpPointCount: 5
   jumpDuration: 0.45
   jumpHeight: 12
