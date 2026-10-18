@@ -1,0 +1,559 @@
+fileFormatVersion: 2
+guid: 68ee45e35335ca2489f6d7cb3ed493b5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6971332041994040494
+    second: Boss_Atordoado2_20480000-Sheet_0
+  - first:
+      213: -1924436907946447538
+    second: Boss_Atordoado2_20480000-Sheet_1
+  - first:
+      213: 8660778616941262271
+    second: Boss_Atordoado2_20480000-Sheet_2
+  - first:
+      213: -8381343772246849905
+    second: Boss_Atordoado2_20480000-Sheet_3
+  - first:
+      213: -5740003509488809814
+    second: Boss_Atordoado2_20480000-Sheet_4
+  - first:
+      213: -4592002713494775143
+    second: Boss_Atordoado2_20480000-Sheet_5
+  - first:
+      213: 5029362003547053035
+    second: Boss_Atordoado2_20480000-Sheet_6
+  - first:
+      213: 4251767011335347193
+    second: Boss_Atordoado2_20480000-Sheet_7
+  - first:
+      213: -1106649496959261552
+    second: Boss_Atordoado2_20480000-Sheet_8
+  - first:
+      213: -1954479198377841248
+    second: Boss_Atordoado2_20480000-Sheet_9
+  - first:
+      213: -2831034878559852639
+    second: Boss_Atordoado2_20480000-Sheet_10
+  - first:
+      213: 5075427689100874926
+    second: Boss_Atordoado2_20480000-Sheet_11
+  - first:
+      213: -5624720084988111959
+    second: Boss_Atordoado2_20480000-Sheet_12
+  - first:
+      213: 3087912536039272942
+    second: Boss_Atordoado2_20480000-Sheet_13
+  - first:
+      213: -2615997378793541869
+    second: Boss_Atordoado2_20480000-Sheet_14
+  - first:
+      213: -7356136754736238486
+    second: Boss_Atordoado2_20480000-Sheet_15
+  - first:
+      213: 5413519048726040376
+    second: Boss_Atordoado2_20480000-Sheet_16
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 4578
+        width: 1533
+        height: 1295
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea47a567e852fb060800000000000000
+      internalID: 6971332041994040494
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 2291
+        y: 4578
+        width: 1533
+        height: 1296
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4d633d04d60b45e0800000000000000
+      internalID: -1924436907946447538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 4339
+        y: 4578
+        width: 1533
+        height: 1296
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb5351de344413870800000000000000
+      internalID: 8660778616941262271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 6387
+        y: 4578
+        width: 1533
+        height: 1297
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f864bc2de3c7fab80800000000000000
+      internalID: -8381343772246849905
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 8435
+        y: 4578
+        width: 1533
+        height: 1297
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa88c6f48396750b0800000000000000
+      internalID: -5740003509488809814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 10483
+        y: 4578
+        width: 1533
+        height: 1295
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99a938e8cdde540c0800000000000000
+      internalID: -4592002713494775143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 2530
+        width: 1533
+        height: 1293
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bebd4447812ebc540800000000000000
+      internalID: 5029362003547053035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 2291
+        y: 2530
+        width: 1533
+        height: 1290
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fb1e5ae19f410b30800000000000000
+      internalID: 4251767011335347193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 4339
+        y: 2530
+        width: 1533
+        height: 1285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 094e0e2552464a0f0800000000000000
+      internalID: -1106649496959261552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 6387
+        y: 2530
+        width: 1533
+        height: 1287
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ad6ccb368b40e4e0800000000000000
+      internalID: -1954479198377841248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 8435
+        y: 2530
+        width: 1533
+        height: 1288
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a7e2b407c426b8d0800000000000000
+      internalID: -2831034878559852639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 10483
+        y: 2530
+        width: 1533
+        height: 1290
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea41a0ca79a8f6640800000000000000
+      internalID: 5075427689100874926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 243
+        y: 482
+        width: 1533
+        height: 1291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a3574d32eaf0f1b0800000000000000
+      internalID: -5624720084988111959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_13
+      rect:
+        serializedVersion: 2
+        x: 2291
+        y: 482
+        width: 1533
+        height: 1292
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee1b81057187ada20800000000000000
+      internalID: 3087912536039272942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_14
+      rect:
+        serializedVersion: 2
+        x: 4339
+        y: 482
+        width: 1533
+        height: 1293
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31f68af7e3c12bbd0800000000000000
+      internalID: -2615997378793541869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_15
+      rect:
+        serializedVersion: 2
+        x: 6387
+        y: 482
+        width: 1533
+        height: 1294
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6070c69890c9e990800000000000000
+      internalID: -7356136754736238486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Atordoado2_20480000-Sheet_16
+      rect:
+        serializedVersion: 2
+        x: 8435
+        y: 482
+        width: 1533
+        height: 1295
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83f402c84eea02b40800000000000000
+      internalID: 5413519048726040376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Boss_Atordoado2_20480000-Sheet_0: 6971332041994040494
+      Boss_Atordoado2_20480000-Sheet_1: -1924436907946447538
+      Boss_Atordoado2_20480000-Sheet_10: -2831034878559852639
+      Boss_Atordoado2_20480000-Sheet_11: 5075427689100874926
+      Boss_Atordoado2_20480000-Sheet_12: -5624720084988111959
+      Boss_Atordoado2_20480000-Sheet_13: 3087912536039272942
+      Boss_Atordoado2_20480000-Sheet_14: -2615997378793541869
+      Boss_Atordoado2_20480000-Sheet_15: -7356136754736238486
+      Boss_Atordoado2_20480000-Sheet_16: 5413519048726040376
+      Boss_Atordoado2_20480000-Sheet_2: 8660778616941262271
+      Boss_Atordoado2_20480000-Sheet_3: -8381343772246849905
+      Boss_Atordoado2_20480000-Sheet_4: -5740003509488809814
+      Boss_Atordoado2_20480000-Sheet_5: -4592002713494775143
+      Boss_Atordoado2_20480000-Sheet_6: 5029362003547053035
+      Boss_Atordoado2_20480000-Sheet_7: 4251767011335347193
+      Boss_Atordoado2_20480000-Sheet_8: -1106649496959261552
+      Boss_Atordoado2_20480000-Sheet_9: -1954479198377841248
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

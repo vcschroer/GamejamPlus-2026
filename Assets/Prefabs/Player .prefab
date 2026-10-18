@@ -190,7 +190,7 @@ MonoBehaviour:
   ghostWobbleAmount: 0.4
   restrictGhostArea: 1
   ghostMinBounds: {x: -16, y: -14}
-  ghostMaxBounds: {x: 16, y: 1}
+  ghostMaxBounds: {x: 16, y: 10.9}
   mainMenuSceneName: Menu
   playerEffects: {fileID: 3147281079116911758}
   Dust: {fileID: 2253887310452113078}

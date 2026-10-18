@@ -201,6 +201,7 @@ public class BossController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private BossEffects bossEffects;
     [SerializeField] private ParticleSystem damageParticleSystemPrefab;
+    [SerializeField] private ParticleSystem deathBatParticlesPrefab;
 
     [Header("Piscar Conforme a Vida")]
     [SerializeField] private Color lowHealthBlinkColor = Color.red;
@@ -263,7 +264,7 @@ public class BossController : MonoBehaviour
     private IEnumerator BossIntroRoutine()
     {
         if (animator != null)
-            animator.SetBool("IsIdle", true);
+            animator.SetBool("IsIntro", true);
 
         while (GameObject.FindGameObjectsWithTag("Player").Length < 2)
         {
@@ -285,7 +286,7 @@ public class BossController : MonoBehaviour
 
         if (animator != null)
         {
-            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsIntro", false);
             animator.SetBool("IsRangedAttacking", true);
         }
 
@@ -554,7 +555,15 @@ public class BossController : MonoBehaviour
         if (puppetStrings != null)
         {
             puppetStrings.SetHealth(currentHealth, safeMaxHealth);
-            currentLeanAngle = puppetStrings.LeftStringLost ? leftLeanAngle : 0f;
+
+            if (puppetStrings.LeftStringLost)
+            {
+                currentLeanAngle = leftLeanAngle * 2f;
+            }
+            else
+            {
+                currentLeanAngle = 0f;
+            }
         }
         else
         {
@@ -618,8 +627,17 @@ public class BossController : MonoBehaviour
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("boss morte");
 
+        if (deathBatParticlesPrefab != null)
+        {
+            ParticleSystem batParticles = Instantiate(deathBatParticlesPrefab, transform.position, Quaternion.identity);
+            batParticles.Play();
+            float totalDuration = batParticles.main.duration + batParticles.main.startLifetime.constantMax;
+            Destroy(batParticles.gameObject, totalDuration);
+        }
+
         if (animator != null)
         {
+            animator.SetBool("IsIntro", false);
             animator.SetBool("IsIdle", false);
             animator.SetBool("IsRangedAttacking", false);
             animator.SetBool("IsDashAttacking", false);
@@ -1185,10 +1203,7 @@ public class BossController : MonoBehaviour
         isStaggered = false;
 
         if (animator != null)
-        {
             animator.SetBool("IsStaggered", false);
-            animator.SetBool("IsIdle", true);
-        }
 
         transform.rotation = Quaternion.identity;
         UpdateSpriteRotation();
