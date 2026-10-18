@@ -1561,7 +1561,7 @@ MonoBehaviour:
   hoverAmountY: 0.5
   chasePlayerChance: 0.5
   maxHealth: 3
-  normalAttacksBeforeDash: 5
+  normalAttacksBeforeDash: 0
   isStaggered: 0
   staggerChargeDuration: 1.2
   staggerChargeShakeIntensity: 0.05
@@ -1610,10 +1610,10 @@ MonoBehaviour:
   animator: {fileID: 0}
   bossEffects: {fileID: 339243442}
   damageParticleSystemPrefab: {fileID: 8879693362172605645, guid: 72cfccc989639c741b07f8f65bcfc7e5, type: 3}
-  damageParticleCount: 15
+  damageParticleCount: 0
   deathBatParticlesPrefab: {fileID: 8879693362172605645, guid: 72cfccc989639c741b07f8f65bcfc7e5, type: 3}
   deathBatParticleCount: 30
-  particleSpawnRadius: 0.6
+  particleSpawnRadius: 0
   lowHealthBlinkColor: {r: 1, g: 0.7122642, b: 0.7122642, a: 1}
   mediumHealthBlinkInterval: 0.65
   lowHealthBlinkInterval: 0.15
