@@ -89,10 +89,6 @@ public class GameEffectsManager : MonoBehaviour
 
     private void OnDisable()
     {
-        if (Gamepad.current != null)
-        {
-            Gamepad.current.SetMotorSpeeds(0f, 0f);
-        }
     }
 
     private void MoveCloudsBackAndForth()
@@ -206,12 +202,6 @@ public class GameEffectsManager : MonoBehaviour
     {
         if (mainCameraTransform == null) yield break;
 
-        if (Gamepad.current != null)
-        {
-            float rumbleIntensity = Mathf.Clamp01(magnitude * 2.5f);
-            Gamepad.current.SetMotorSpeeds(rumbleIntensity, rumbleIntensity);
-        }
-
         float elapsed = 0f;
 
         while (elapsed < duration)
@@ -226,11 +216,6 @@ public class GameEffectsManager : MonoBehaviour
         }
 
         mainCameraTransform.localPosition = cameraInitialPosition;
-
-        if (Gamepad.current != null)
-        {
-            Gamepad.current.SetMotorSpeeds(0f, 0f);
-        }
     }
 
     public void TriggerPlayerDamageShake()
