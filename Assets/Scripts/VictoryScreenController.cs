@@ -15,6 +15,9 @@ public class VictoryScreenController : MonoBehaviour
     [SerializeField] private float textMoveSpeed = 100f;
     [SerializeField] private float targetPosY = 400f;
 
+    [Header("Tempo de Espera na Tela de Vitória")]
+    [SerializeField] private float displayDuration = 3.0f;
+
     [Header("Cena do Menu")]
     [SerializeField] private string menuSceneName = "MainMenu";
 
@@ -52,9 +55,15 @@ public class VictoryScreenController : MonoBehaviour
             if (anchoredPos.y >= targetPosY)
             {
                 canStartVictory = false;
-                StartCoroutine(FadeAndLoadMenuRoutine());
+                StartCoroutine(DisplayDurationAndFadeRoutine());
             }
         }
+    }
+
+    private IEnumerator DisplayDurationAndFadeRoutine()
+    {
+        yield return new WaitForSecondsRealtime(displayDuration);
+        yield return StartCoroutine(FadeAndLoadMenuRoutine());
     }
 
     private IEnumerator FadeAndLoadMenuRoutine()

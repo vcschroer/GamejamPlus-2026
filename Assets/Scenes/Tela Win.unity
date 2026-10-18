@@ -578,6 +578,7 @@ MonoBehaviour:
   victoryTextRect: {fileID: 724522561}
   textMoveSpeed: 100
   targetPosY: 300
+  displayDuration: 20
   menuSceneName: Menu
 --- !u!4 &805583702
 Transform:
