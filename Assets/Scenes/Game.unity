@@ -1541,7 +1541,7 @@ MonoBehaviour:
   attacksStage2Of3: 00000000010000000200000003000000
   attacksStage1Of3: 0000000001000000020000000300000004000000
   staggerAttacksStage3Of3: 00000000
-  staggerAttacksStage2Of3: 00000000
+  staggerAttacksStage2Of3: 01000000
   staggerAttacksStage1Of3: 0000000001000000
   flightAreaCollider: {fileID: 1881601372}
   minFlySpeed: 0.5
@@ -1610,10 +1610,10 @@ MonoBehaviour:
   animator: {fileID: 0}
   bossEffects: {fileID: 339243442}
   damageParticleSystemPrefab: {fileID: 8879693362172605645, guid: 72cfccc989639c741b07f8f65bcfc7e5, type: 3}
-  damageParticleCount: 5
+  damageParticleCount: 8
   deathBatParticlesPrefab: {fileID: 8879693362172605645, guid: 72cfccc989639c741b07f8f65bcfc7e5, type: 3}
   deathBatParticleCount: 15
-  particleSpawnRadius: 2.5
+  particleSpawnRadius: 1.5
   lowHealthBlinkColor: {r: 1, g: 0.7122642, b: 0.7122642, a: 1}
   mediumHealthBlinkInterval: 0.65
   lowHealthBlinkInterval: 0.15
