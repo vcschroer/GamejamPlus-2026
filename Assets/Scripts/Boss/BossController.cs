@@ -1038,6 +1038,9 @@ public class BossController : MonoBehaviour
         {
             if (isStaggered || currentHealth <= 0) yield break;
 
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("boss meelee");
+
             float currentY = Mathf.Clamp(yHeights[i], bounds.min.y + padding, bounds.max.y - padding);
             float startX = startFromLeft ? bounds.min.x + padding : bounds.max.x - padding;
             float targetX = startFromLeft ? bounds.max.x - padding : bounds.min.x + padding;
@@ -1098,6 +1101,10 @@ public class BossController : MonoBehaviour
         for (int i = 0; i < totalPoints; i++)
         {
             if (currentHealth <= 0 || isStaggered) yield break;
+
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("boss meelee");
+
             bool isFinalDive = i == totalPoints - 1;
 
             PlayerMovement targetPlayer = GetNearestPlayer();
