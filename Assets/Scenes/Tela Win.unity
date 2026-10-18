@@ -572,13 +572,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ee4dd8ff58609d4bb733cb7a1a0f5ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VictoryScreenController
-  initialCooldown: 2
   fadePanel: {fileID: 192935814}
   fadeDuration: 1.5
   victoryTextRect: {fileID: 724522561}
   textMoveSpeed: 100
+  startPosY: -400
   targetPosY: 300
-  displayDuration: 20
+  waitTimeOnScreen: 4
   menuSceneName: Menu
 --- !u!4 &805583702
 Transform:

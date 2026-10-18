@@ -5,69 +5,76 @@ using UnityEngine.SceneManagement;
 
 public class VictoryScreenController : MonoBehaviour
 {
-    [Header("Configuração de Cooldown e Painel")]
-    [SerializeField] private float initialCooldown = 2.0f;
+    [Header("Configuração de Painel e Fade")]
     [SerializeField] private Image fadePanel;
-    [SerializeField] private float fadeDuration = 1.5f;
+    [SerializeField] private float fadeDuration = 1.0f;
 
-    [Header("Configuração do Texto")]
+    [Header("Configuração do Texto/Imagem")]
     [SerializeField] private RectTransform victoryTextRect;
-    [SerializeField] private float textMoveSpeed = 100f;
-    [SerializeField] private float targetPosY = 400f;
+    [SerializeField] private float textMoveSpeed = 400f;
+    [SerializeField] private float startPosY = -150f;
+    [SerializeField] private float targetPosY = 300f;
 
-    [Header("Tempo de Espera na Tela de Vitória")]
-    [SerializeField] private float displayDuration = 3.0f;
+    [Header("TEMPO DE ESPERA (Ajuste aqui o tempo na tela)")]
+    [SerializeField] private float waitTimeOnScreen = 5.0f;
 
     [Header("Cena do Menu")]
-    [SerializeField] private string menuSceneName = "MainMenu";
-
-    private bool canStartVictory = false;
+    [SerializeField] private string menuSceneName = "Menu";
 
     private void Start()
     {
+        if (victoryTextRect != null)
+        {
+            Vector2 pos = victoryTextRect.anchoredPosition;
+            pos.y = startPosY;
+            victoryTextRect.anchoredPosition = pos;
+        }
+
         if (fadePanel != null)
         {
+            fadePanel.gameObject.SetActive(true);
             Color c = fadePanel.color;
+            c.a = 1f;
+            fadePanel.color = c;
+        }
+
+        StartCoroutine(VictorySequence());
+    }
+
+    private IEnumerator VictorySequence()
+    {
+        if (fadePanel != null)
+        {
+            float elapsed = 0f;
+            Color c = fadePanel.color;
+
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                c.a = Mathf.Clamp01(1f - (elapsed / fadeDuration));
+                fadePanel.color = c;
+                yield return null;
+            }
+
             c.a = 0f;
             fadePanel.color = c;
             fadePanel.gameObject.SetActive(false);
         }
 
-        StartCoroutine(CooldownRoutine());
-    }
-
-    private IEnumerator CooldownRoutine()
-    {
-        yield return new WaitForSeconds(initialCooldown);
-        canStartVictory = true;
-    }
-
-    private void Update()
-    {
-        if (!canStartVictory) return;
-
         if (victoryTextRect != null)
         {
-            Vector2 anchoredPos = victoryTextRect.anchoredPosition;
-            anchoredPos.y += textMoveSpeed * Time.unscaledDeltaTime;
-            victoryTextRect.anchoredPosition = anchoredPos;
-
-            if (anchoredPos.y >= targetPosY)
+            Vector2 pos = victoryTextRect.anchoredPosition;
+            while (pos.y < targetPosY)
             {
-                canStartVictory = false;
-                StartCoroutine(DisplayDurationAndFadeRoutine());
+                pos.y += textMoveSpeed * Time.unscaledDeltaTime;
+                if (pos.y > targetPosY) pos.y = targetPosY;
+                victoryTextRect.anchoredPosition = pos;
+                yield return null;
             }
         }
-    }
 
-    private IEnumerator DisplayDurationAndFadeRoutine()
-    {
-        yield return new WaitForSecondsRealtime(displayDuration);
-        yield return StartCoroutine(FadeAndLoadMenuRoutine());
-    }
+        yield return new WaitForSecondsRealtime(waitTimeOnScreen);
 
-    private IEnumerator FadeAndLoadMenuRoutine()
-    {
         if (fadePanel != null)
         {
             fadePanel.gameObject.SetActive(true);
@@ -76,7 +83,7 @@ public class VictoryScreenController : MonoBehaviour
 
             while (elapsed < fadeDuration)
             {
-                elapsed += UnityEngine.Time.unscaledDeltaTime;
+                elapsed += Time.unscaledDeltaTime;
                 c.a = Mathf.Clamp01(elapsed / fadeDuration);
                 fadePanel.color = c;
                 yield return null;
@@ -86,21 +93,6 @@ public class VictoryScreenController : MonoBehaviour
             fadePanel.color = c;
         }
 
-        SceneTransition transition = SceneTransition.Instance;
-        if (transition == null)
-        {
-            transition = Object.FindFirstObjectByType<SceneTransition>();
-        }
-
-        if (transition != null)
-        {
-            yield return StartCoroutine(transition.PlayOutroAndDoAction(() => {
-                SceneManager.LoadScene(menuSceneName);
-            }));
-        }
-        else
-        {
-            SceneManager.LoadScene(menuSceneName);
-        }
+        SceneManager.LoadScene(menuSceneName);
     }
 }
