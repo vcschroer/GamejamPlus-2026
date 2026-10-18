@@ -101,6 +101,21 @@ public class Bomb : MonoBehaviour
         HandleTimerAndVisuals();
     }
 
+    private void SetVisualsActive(bool active)
+    {
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = active;
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            if (bombTrail != null && child == bombTrail.transform)
+                continue;
+
+            child.gameObject.SetActive(active);
+        }
+    }
+
     private void PlayCountdownSound()
     {
         if (SoundManager.Instance != null)
@@ -122,14 +137,12 @@ public class Bomb : MonoBehaviour
 
         transform.localScale = Vector3.one;
 
+        SetVisualsActive(true);
+
         if (spriteRenderer != null)
         {
-            spriteRenderer.enabled = true;
             spriteRenderer.color = startColor;
         }
-
-        if (bombLightObject != null)
-            bombLightObject.SetActive(true);
 
         ToggleTrail(false);
 
@@ -500,8 +513,7 @@ public class Bomb : MonoBehaviour
         rb.simulated = false;
         col.isTrigger = true;
 
-        if (spriteRenderer != null)
-            spriteRenderer.enabled = false;
+        SetVisualsActive(false);
 
         ToggleTrail(false);
     }
@@ -517,8 +529,7 @@ public class Bomb : MonoBehaviour
         transform.position =
             (Vector2)transform.position + new Vector2(0f, 0.5f);
 
-        if (spriteRenderer != null)
-            spriteRenderer.enabled = true;
+        SetVisualsActive(true);
 
         rb.simulated = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
@@ -605,9 +616,6 @@ public class Bomb : MonoBehaviour
 
         isExploded = true;
         ToggleTrail(false);
-
-        if (bombLightObject != null)
-            bombLightObject.SetActive(false);
 
         if (explosionParticlesPrefab != null)
         {
@@ -718,8 +726,7 @@ public class Bomb : MonoBehaviour
         rb.simulated = false;
         col.isTrigger = true;
 
-        if (spriteRenderer != null)
-            spriteRenderer.enabled = false;
+        SetVisualsActive(false);
 
         yield return new WaitForSecondsRealtime(respawnDelay);
 
@@ -735,8 +742,7 @@ public class Bomb : MonoBehaviour
         rb.simulated = false;
         col.isTrigger = true;
 
-        if (spriteRenderer != null)
-            spriteRenderer.enabled = false;
+        SetVisualsActive(false);
 
         yield return new WaitForSecondsRealtime(respawnDelay);
 
