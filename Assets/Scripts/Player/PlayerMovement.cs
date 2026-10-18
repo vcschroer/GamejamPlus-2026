@@ -449,23 +449,30 @@ public class PlayerMovement : MonoBehaviour
 
         if (heldBomb != null)
         {
-            Vector2 throwDir = facingRight ? Vector2.right : Vector2.left;
+            Bomb bombToTransfer = heldBomb;
+            heldBomb = null;
+
             PlayerMovement[] allPlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+            PlayerMovement targetPlayer = null;
+
             foreach (PlayerMovement p in allPlayers)
             {
                 if (p != this && !p.IsDead)
                 {
-                    Vector2 dirToOther = (p.transform.position - transform.position);
-                    if (dirToOther.sqrMagnitude > 0.001f)
-                    {
-                        throwDir = dirToOther.normalized;
-                    }
+                    targetPlayer = p;
                     break;
                 }
             }
 
-            heldBomb.DropByDeadPlayerToward(throwDir, 12f);
-            heldBomb = null;
+            if (targetPlayer != null)
+            {
+                bombToTransfer.PickUp(targetPlayer.transform);
+            }
+            else
+            {
+                Vector2 throwDir = facingRight ? Vector2.right : Vector2.left;
+                bombToTransfer.DropByDeadPlayerToward(throwDir, 12f);
+            }
         }
 
         if (aimArrow != null)

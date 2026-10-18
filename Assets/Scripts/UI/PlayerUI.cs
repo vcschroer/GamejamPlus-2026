@@ -15,12 +15,15 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Color p2Color = new Color(1f, 0.2f, 0.3f);
 
     [Header("Configuração da Animação Wave")]
-    [SerializeField] private float waveSpeed = 4f;     
-    [SerializeField] private float waveHeight = 8f;     
-    [SerializeField] private float waveFrequency = 0.5f;  
+    [SerializeField] private float waveSpeed = 4f;
+    [SerializeField] private float waveHeight = 8f;
+    [SerializeField] private float waveFrequency = 0.5f;
 
     private Vector3[] p1OriginalPositions;
     private Vector3[] p2OriginalPositions;
+
+    private bool p1SpawnPopUpPlayed = false;
+    private bool p2SpawnPopUpPlayed = false;
 
     private void Awake()
     {
@@ -40,11 +43,75 @@ public class PlayerUI : MonoBehaviour
     private void Start()
     {
         ApplyColors();
+        HideAllIconsInitially();
     }
 
     private void Update()
     {
+        CheckPlayersAndTriggerSpawnPopUps();
         ApplyWaveAnimation();
+    }
+
+    private void HideAllIconsInitially()
+    {
+        if (p1LifeIcons != null)
+        {
+            foreach (var img in p1LifeIcons)
+            {
+                if (img != null)
+                {
+                    img.gameObject.SetActive(false);
+                    img.transform.localScale = Vector3.zero;
+                }
+            }
+        }
+
+        if (p2LifeIcons != null)
+        {
+            foreach (var img in p2LifeIcons)
+            {
+                if (img != null)
+                {
+                    img.gameObject.SetActive(false);
+                    img.transform.localScale = Vector3.zero;
+                }
+            }
+        }
+    }
+
+    private void CheckPlayersAndTriggerSpawnPopUps()
+    {
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+
+        if (!p1SpawnPopUpPlayed && players.Length >= 1)
+        {
+            p1SpawnPopUpPlayed = true;
+            StartCoroutine(SpawnPopUpSequence(p1LifeIcons, reverseOrder: false));
+        }
+
+        if (!p2SpawnPopUpPlayed && players.Length >= 2)
+        {
+            p2SpawnPopUpPlayed = true;
+            StartCoroutine(SpawnPopUpSequence(p2LifeIcons, reverseOrder: true));
+        }
+    }
+
+    private IEnumerator SpawnPopUpSequence(Image[] icons, bool reverseOrder)
+    {
+        if (icons == null || icons.Length == 0)
+            yield break;
+
+        for (int i = 0; i < icons.Length; i++)
+        {
+            int index = reverseOrder ? (icons.Length - 1 - i) : i;
+
+            if (icons[index] != null)
+            {
+                icons[index].gameObject.SetActive(true);
+                yield return StartCoroutine(PopUpInAnimation(icons[index].transform));
+                yield return new WaitForSeconds(0.08f);
+            }
+        }
     }
 
     private void CacheOriginalPositions()
@@ -103,7 +170,7 @@ public class PlayerUI : MonoBehaviour
 
     private void UpdatePlayer1Icons(int currentHealth)
     {
-        if (p1LifeIcons == null) return;
+        if (p1LifeIcons == null || !p1SpawnPopUpPlayed) return;
 
         for (int i = 0; i < p1LifeIcons.Length; i++)
         {
@@ -125,7 +192,7 @@ public class PlayerUI : MonoBehaviour
 
     private void UpdatePlayer2Icons(int currentHealth)
     {
-        if (p2LifeIcons == null) return;
+        if (p2LifeIcons == null || !p2SpawnPopUpPlayed) return;
 
         int totalIcons = p2LifeIcons.Length;
 
@@ -154,7 +221,7 @@ public class PlayerUI : MonoBehaviour
         {
             for (int i = 0; i < p1LifeIcons.Length; i++)
             {
-                if (p1LifeIcons[i] != null && p1LifeIcons[i].gameObject.activeSelf)
+                if (p1LifeIcons[i] != null && p1LifeIcons[i].gameObject.activeSelf && p1LifeIcons[i].transform.localScale.x > 0.9f)
                 {
                     float waveOffset = Mathf.Sin((Time.time * waveSpeed) + (i * waveFrequency)) * waveHeight;
                     Vector3 pos = p1OriginalPositions[i];
@@ -168,7 +235,7 @@ public class PlayerUI : MonoBehaviour
         {
             for (int i = 0; i < p2LifeIcons.Length; i++)
             {
-                if (p2LifeIcons[i] != null && p2LifeIcons[i].gameObject.activeSelf)
+                if (p2LifeIcons[i] != null && p2LifeIcons[i].gameObject.activeSelf && p2LifeIcons[i].transform.localScale.x > 0.9f)
                 {
                     float waveOffset = Mathf.Sin((Time.time * waveSpeed) + (i * waveFrequency)) * waveHeight;
                     Vector3 pos = p2OriginalPositions[i];

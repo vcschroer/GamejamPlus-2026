@@ -265,6 +265,11 @@ public class BossController : MonoBehaviour
         if (animator != null)
             animator.SetBool("IsIdle", true);
 
+        while (GameObject.FindGameObjectsWithTag("Player").Length < 2)
+        {
+            yield return null;
+        }
+
         yield return new WaitForSeconds(introDelay);
 
         float elapsed = 0f;

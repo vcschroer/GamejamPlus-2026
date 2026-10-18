@@ -743,7 +743,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PLAY
+  m_text: JOGAR
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bbd3f3c0828b06f4a96915d068d62df9, type: 2}
   m_sharedMaterial: {fileID: 8966610394176850432, guid: bbd3f3c0828b06f4a96915d068d62df9, type: 2}
@@ -1288,7 +1288,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: QUIT
+  m_text: SAIR
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bbd3f3c0828b06f4a96915d068d62df9, type: 2}
   m_sharedMaterial: {fileID: 8966610394176850432, guid: bbd3f3c0828b06f4a96915d068d62df9, type: 2}
@@ -1315,8 +1315,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35.23
-  m_fontSizeBase: 35.23
+  m_fontSize: 45.59
+  m_fontSizeBase: 45.59
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
