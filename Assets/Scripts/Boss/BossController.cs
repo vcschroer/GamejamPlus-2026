@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class BossController : MonoBehaviour
@@ -129,14 +131,16 @@ public class BossController : MonoBehaviour
     [SerializeField] private bool isStaggered;
     public bool IsStaggered => isStaggered;
 
-    [SerializeField] public float staggerChargeDuration = 2.4f;
-    [SerializeField] private float staggerChargeShakeIntensity = 0.15f;
+    [SerializeField] public float staggerChargeDuration = 1.2f;
+    [SerializeField] private float staggerChargeShakeIntensity = 0.05f;
+    [SerializeField] private Color staggerChargeBlinkColor = Color.red;
+    [SerializeField, Min(0.001f)] private float staggerChargeBlinkInterval = 0.05f;
     [SerializeField] private float staggerDuration = 3.5f;
-    [SerializeField] private float staggerKnockbackForce = 1.5f;
+    [SerializeField] private float staggerKnockbackForce = 3f;
     [SerializeField] private float staggerKnockbackDuration = 0.35f;
     [SerializeField] private float staggerKnockbackHeight = 0.5f;
-    [SerializeField] private float staggerWobbleAngle = 6f;
-    [SerializeField] private float staggerWobbleSpeed = 10f;
+    [SerializeField] private float staggerWobbleAngle = 5f;
+    [SerializeField] private float staggerWobbleSpeed = 5f;
 
     [Header("Debug / Teste de Stagger")]
     [SerializeField] private bool forceStaggerTest;
@@ -206,6 +210,11 @@ public class BossController : MonoBehaviour
     [SerializeField] private int deathBatParticleCount = 5;
     [SerializeField] private float particleSpawnRadius = 1.5f;
 
+    [Header("Tela de Vitória")]
+    [SerializeField] private Image victoryFadePanel;
+    [SerializeField] private float victoryFadeDuration = 1.5f;
+    [SerializeField] private string victorySceneName = "VictoryScene";
+
     [Header("Piscar Conforme a Vida")]
     [SerializeField] private Color lowHealthBlinkColor = Color.red;
     [SerializeField, Min(0.01f)] private float mediumHealthBlinkInterval = 0.65f;
@@ -251,6 +260,14 @@ public class BossController : MonoBehaviour
 
         if (puppetStrings == null)
             puppetStrings = GetComponent<PuppetStringsController>();
+
+        if (victoryFadePanel != null)
+        {
+            Color c = victoryFadePanel.color;
+            c.a = 0f;
+            victoryFadePanel.color = c;
+            victoryFadePanel.gameObject.SetActive(false);
+        }
     }
 
     private void Start()
@@ -678,7 +695,34 @@ public class BossController : MonoBehaviour
             StopCoroutine(behaviorCoroutine);
 
         StopAllCoroutines();
-        Destroy(gameObject);
+        StartCoroutine(VictoryFadeAndLoadSceneRoutine());
+    }
+
+    private IEnumerator VictoryFadeAndLoadSceneRoutine()
+    {
+        if (victoryFadePanel != null)
+        {
+            victoryFadePanel.gameObject.SetActive(true);
+            float elapsed = 0f;
+            Color c = victoryFadePanel.color;
+
+            while (elapsed < victoryFadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                c.a = Mathf.Clamp01(elapsed / victoryFadeDuration);
+                victoryFadePanel.color = c;
+                yield return null;
+            }
+
+            c.a = 1f;
+            victoryFadePanel.color = c;
+        }
+        else
+        {
+            yield return new WaitForSeconds(1f);
+        }
+
+        SceneManager.LoadScene(victorySceneName);
     }
 
     private List<BossAttackType> GetCurrentStageAttacks()
@@ -793,15 +837,36 @@ public class BossController : MonoBehaviour
 
         Vector3 originalPos = transform.position;
         float elapsed = 0f;
+        float blinkTimer = 0f;
+        bool useBlink = false;
 
         while (elapsed < staggerChargeDuration)
         {
             if (currentHealth <= 0) yield break;
-            elapsed += Time.deltaTime;
+
+            float deltaTime = Time.deltaTime;
+            elapsed += deltaTime;
+            blinkTimer += deltaTime;
+
             transform.position = (Vector2)originalPos + (Random.insideUnitCircle * staggerChargeShakeIntensity);
+
+            if (blinkTimer >= staggerChargeBlinkInterval)
+            {
+                blinkTimer = 0f;
+                useBlink = !useBlink;
+                if (spriteRenderer != null)
+                {
+                    spriteRenderer.color = useBlink ? staggerChargeBlinkColor : originalSpriteColor;
+                }
+            }
+
             yield return null;
         }
+
         transform.position = originalPos;
+
+        if (spriteRenderer != null)
+            spriteRenderer.color = originalSpriteColor;
 
         if (animator != null)
         {
@@ -1021,7 +1086,7 @@ public class BossController : MonoBehaviour
     {
         if (flightAreaCollider == null) yield break;
         Bounds bounds = flightAreaCollider.bounds;
-        float padding = 1f;
+        float padding = 0.5f;
 
         float[] yHeights = { bounds.min.y + 3f, bounds.min.y + 2f, bounds.min.y + 1f };
         bool startFromLeft = true;
@@ -1042,14 +1107,17 @@ public class BossController : MonoBehaviour
                 SoundManager.Instance.PlaySound("boss meelee");
 
             float currentY = Mathf.Clamp(yHeights[i], bounds.min.y + padding, bounds.max.y - padding);
-            float startX = startFromLeft ? bounds.min.x + padding : bounds.max.x - padding;
-            float targetX = startFromLeft ? bounds.max.x - padding : bounds.min.x + padding;
+            float startX = startFromLeft ? bounds.min.x - padding : bounds.max.x + padding;
+            float targetX = startFromLeft ? bounds.max.x + padding : bounds.min.x - padding;
 
-            yield return MoveSmoothlyToPosition(new Vector2(startX, currentY), 0.4f);
+            yield return MoveSmoothlyToPosition(new Vector2(startX, currentY), 0.3f);
 
             if (spriteRenderer != null) spriteRenderer.flipX = !startFromLeft;
-            if (bossEffects != null) bossEffects.TriggerDash();
-            yield return new WaitForSeconds(0.12f);
+
+            if (animator != null)
+            {
+                animator.Play("Dash Attack", -1, 0f);
+            }
 
             float currentDashSpeed = Mathf.Lerp(baseDashSpeed, maxQueenBeeDashSpeed, (float)i / (yHeights.Length - 1));
             yield return MoveSmoothlyToPositionWithSpeed(new Vector2(targetX, currentY), currentDashSpeed);
@@ -1060,7 +1128,6 @@ public class BossController : MonoBehaviour
         if (animator != null)
         {
             animator.SetBool("IsDashAttacking", false);
-            animator.SetBool("IsIdle", true);
         }
 
         if (bossEffects != null) bossEffects.TriggerImpact();
@@ -1115,7 +1182,6 @@ public class BossController : MonoBehaviour
 
             float landingY = GetGroundLandingY(targetX);
             if (spriteRenderer != null) spriteRenderer.flipX = targetX < transform.position.x;
-            if (bossEffects != null) bossEffects.TriggerDash();
 
             float apexY = landingY + Mathf.Max(1f, isFinalDive ? finalDivePreparationHeight : jumpHeight);
             if (flightAreaCollider != null) apexY = Mathf.Min(apexY, flightAreaCollider.bounds.max.y - 0.5f);
@@ -1137,7 +1203,6 @@ public class BossController : MonoBehaviour
                 if (animator != null)
                 {
                     animator.SetBool("IsJumpAttacking", false);
-                    animator.SetBool("IsIdle", true);
                 }
 
                 yield return new WaitForSeconds(groundImpactShakeDuration);

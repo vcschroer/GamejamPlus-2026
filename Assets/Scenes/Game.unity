@@ -1565,6 +1565,8 @@ MonoBehaviour:
   isStaggered: 0
   staggerChargeDuration: 1.2
   staggerChargeShakeIntensity: 0.05
+  staggerChargeBlinkColor: {r: 1, g: 0, b: 0, a: 1}
+  staggerChargeBlinkInterval: 0.05
   staggerDuration: 3.5
   staggerKnockbackForce: 3
   staggerKnockbackDuration: 0.35
@@ -1614,6 +1616,9 @@ MonoBehaviour:
   deathBatParticlesPrefab: {fileID: 8879693362172605645, guid: 72cfccc989639c741b07f8f65bcfc7e5, type: 3}
   deathBatParticleCount: 30
   particleSpawnRadius: 0
+  victoryFadePanel: {fileID: 1047538296}
+  victoryFadeDuration: 1.5
+  victorySceneName: Tela Win
   lowHealthBlinkColor: {r: 1, g: 0.7122642, b: 0.7122642, a: 1}
   mediumHealthBlinkInterval: 0.65
   lowHealthBlinkInterval: 0.15
@@ -2388,6 +2393,7 @@ RectTransform:
   - {fileID: 149064192}
   - {fileID: 250640333}
   - {fileID: 1802593630}
+  - {fileID: 1047538295}
   m_Father: {fileID: 1175850180}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2538,7 +2544,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 3.8609734, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2548,7 +2554,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 8.721947, y: 1}
   m_EdgeRadius: 0
 --- !u!212 &461876010
 SpriteRenderer:
@@ -3382,7 +3388,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -2.9097195, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -3392,7 +3398,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 6.819439, y: 1}
   m_EdgeRadius: 0
 --- !u!212 &600444026
 SpriteRenderer:
@@ -3692,7 +3698,7 @@ Transform:
   m_GameObject: {fileID: 631571186}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.017707983, y: 2.64219, z: 0}
+  m_LocalPosition: {x: -0.017707983, y: 2.39, z: 0}
   m_LocalScale: {x: 0.24242423, y: 0.24691355, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4743,6 +4749,81 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1047538294
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1047538295}
+  - component: {fileID: 1047538297}
+  - component: {fileID: 1047538296}
+  m_Layer: 5
+  m_Name: Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1047538295
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047538294}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 420981610}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 16.01001, y: -11.220001}
+  m_SizeDelta: {x: 60.72, y: 40.4}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1047538296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047538294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1e+11
+--- !u!222 &1047538297
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047538294}
+  m_CullTransparentMesh: 1
 --- !u!1 &1061829810
 GameObject:
   m_ObjectHideFlags: 0
@@ -5375,6 +5456,10 @@ PrefabInstance:
     - target: {fileID: 8112577301832105812, guid: 7548e4894b241e549b47254a1cf2ba72, type: 3}
       propertyPath: m_Name
       value: Trail
+      objectReference: {fileID: 0}
+    - target: {fileID: 8112577301832105812, guid: 7548e4894b241e549b47254a1cf2ba72, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6037,7 +6122,7 @@ Transform:
   m_GameObject: {fileID: 1517203939}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.202, y: 2.544, z: 0}
+  m_LocalPosition: {x: 0.202, y: 2.496, z: 0}
   m_LocalScale: {x: 0.24242423, y: 0.24691355, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6259,7 +6344,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.27975512}
+  m_Offset: {x: 0, y: -2.7418761}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -6269,7 +6354,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 0.44048977}
+  m_Size: {x: 1, y: 6.4837523}
   m_EdgeRadius: 0
 --- !u!1 &1535020670
 GameObject:
@@ -8259,7 +8344,7 @@ Transform:
   m_GameObject: {fileID: 2021399832}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.222, y: 2.625, z: 0}
+  m_LocalPosition: {x: -0.222, y: 2.472, z: 0}
   m_LocalScale: {x: 0.24242423, y: 0.24691355, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []

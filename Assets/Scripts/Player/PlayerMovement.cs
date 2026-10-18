@@ -758,14 +758,18 @@ public class PlayerMovement : MonoBehaviour
 
         HandleBombAiming();
 
-        if (isAiming)
-            return;
-
         Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
 
-        horizontalInput = Mathf.Round(moveInput.x);
+        if (isAiming && isGrounded)
+        {
+            horizontalInput = 0f;
+        }
+        else
+        {
+            horizontalInput = Mathf.Round(moveInput.x);
+        }
 
-        if (!isKnockbacked)
+        if (!isKnockbacked && !isAiming)
         {
             if (horizontalInput > 0 && !facingRight)
                 SetFacing(true);
@@ -822,6 +826,10 @@ public class PlayerMovement : MonoBehaviour
 
             float clampedY = Mathf.Max(yVel, -maxAimFallSpeed);
             rb.linearVelocity = new Vector2(0f, clampedY);
+        }
+        else
+        {
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         }
 
         bool isKeyboardScheme = playerInput != null && playerInput.currentControlScheme != null && (playerInput.currentControlScheme.ToLower().Contains("keyboard") || playerInput.currentControlScheme.ToLower().Contains("mouse"));
@@ -922,11 +930,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDead || isDashing || isAiming)
+        if (isDead || isDashing)
             return;
 
         if (isKnockbacked)
         {
+            ApplyCustomGravity();
+            return;
+        }
+
+        if (isAiming)
+        {
+            if (isGrounded)
+            {
+                rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+            }
             ApplyCustomGravity();
             return;
         }
