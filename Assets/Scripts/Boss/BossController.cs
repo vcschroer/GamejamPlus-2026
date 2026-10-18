@@ -207,9 +207,10 @@ public class BossController : MonoBehaviour
 
     [SerializeField] private float groundImpactShakeDuration = 0.35f;
 
-    [Header("Referências Visuais")]
+    [Header("Referências Visuais & Partículas de Dano")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private BossEffects bossEffects;
+    [SerializeField] private ParticleSystem damageParticleSystemPrefab; 
 
     [Header("Piscar Conforme a Vida")]
     [SerializeField] private Color lowHealthBlinkColor = Color.red;
@@ -482,10 +483,36 @@ public class BossController : MonoBehaviour
         if (bossEffects != null)
             bossEffects.TriggerDamage();
 
+        SpawnDamageParticleSystemRandomlyOnSprite();
+
         UpdateHealthVisuals();
 
         if (currentHealth <= 0)
             Die();
+    }
+
+    private void SpawnDamageParticleSystemRandomlyOnSprite()
+    {
+        if (damageParticleSystemPrefab != null)
+        {
+            Vector3 spawnPos = transform.position;
+
+            if (spriteRenderer != null)
+            {
+                Bounds spriteBounds = spriteRenderer.bounds;
+
+                float randomX = Random.Range(spriteBounds.min.x, spriteBounds.max.x);
+                float randomY = Random.Range(spriteBounds.min.y, spriteBounds.max.y);
+
+                spawnPos = new Vector3(randomX, randomY, transform.position.z);
+            }
+
+            ParticleSystem ps = Instantiate(damageParticleSystemPrefab, spawnPos, Quaternion.identity);
+            ps.Play();
+
+            float totalDuration = ps.main.duration + ps.main.startLifetime.constantMax;
+            Destroy(ps.gameObject, totalDuration);
+        }
     }
 
     private void UpdateHealthVisuals(bool forceUpdate = false)

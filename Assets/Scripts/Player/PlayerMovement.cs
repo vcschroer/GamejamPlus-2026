@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -36,6 +37,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float ghostFloatSpeed = 0.8f;
     [SerializeField] private float ghostWobbleFrequency = 3f;
     [SerializeField] private float ghostWobbleAmount = 0.4f;
+
+    [Header("Delimitação da Área do Fantasma/Alma")]
+    [SerializeField] private bool restrictGhostArea = true;
+    [SerializeField] private Vector2 ghostMinBounds = new Vector2(-10f, -4f);
+    [SerializeField] private Vector2 ghostMaxBounds = new Vector2(10f, 6f);
+
     [SerializeField] private string mainMenuSceneName = "MainMenu";
 
     private bool isDead = false;
@@ -318,15 +325,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyDamage(int damageAmount)
     {
-        if (GameEffectsManager.Instance != null)
-        {
-            GameEffectsManager.Instance.TriggerPlayerDamageShake();
-        }
         currentHealth -= damageAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("Player dano");
+
+        if (GameEffectsManager.Instance != null)
+        {
+            GameEffectsManager.Instance.TriggerPlayerDamageShake();
+        }
 
         if (PlayerUI.Instance != null)
             PlayerUI.Instance.UpdateHealth(playerID, currentHealth);
@@ -498,7 +506,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (spriteRenderer != null)
         {
-            spriteRenderer.sortingOrder = 50;
+            spriteRenderer.sortingOrder = 50; // Mantém a alma visível e na frente
         }
 
         float squashDuration = 0.25f;
@@ -584,6 +592,12 @@ public class PlayerMovement : MonoBehaviour
                 startPosition.y + verticalOffset,
                 startPosition.z
             );
+
+            if (restrictGhostArea)
+            {
+                currentGhostPos.x = Mathf.Clamp(currentGhostPos.x, ghostMinBounds.x, ghostMaxBounds.x);
+                currentGhostPos.y = Mathf.Clamp(currentGhostPos.y, ghostMinBounds.y, ghostMaxBounds.y);
+            }
 
             if (boss != null)
             {

@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -51,11 +50,13 @@ public class Bomb : MonoBehaviour
     private Rigidbody2D rb;
     private Collider2D col;
     private Coroutine popUpCoroutine;
+    private TrailRenderer bombTrail;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
+        bombTrail = GetComponentInChildren<TrailRenderer>();
 
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -118,6 +119,8 @@ public class Bomb : MonoBehaviour
 
         if (bombLightObject != null)
             bombLightObject.SetActive(true);
+
+        ToggleTrail(false);
 
         PlayerMovement[] players =
             FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
@@ -418,6 +421,7 @@ public class Bomb : MonoBehaviour
         rb.simulated = false;
         col.isTrigger = true;
 
+        ToggleTrail(false);
         TriggerPopUp();
     }
 
@@ -464,6 +468,8 @@ public class Bomb : MonoBehaviour
 
         if (spriteRenderer != null)
             spriteRenderer.enabled = false;
+
+        ToggleTrail(false);
     }
 
     public void DropByDeadPlayerToward(Vector2 throwDirection, float speed)
@@ -490,6 +496,8 @@ public class Bomb : MonoBehaviour
             throwDirection = Vector2.right;
 
         rb.linearVelocity = throwDirection.normalized * speed;
+
+        StartCoroutine(EnableTrailAfterDelay(0.1f));
     }
 
     public void Throw(
@@ -519,6 +527,31 @@ public class Bomb : MonoBehaviour
 
         if (throwerCol != null)
             StartCoroutine(IgnoreThrowerTemporarily(throwerCol));
+
+        StartCoroutine(EnableTrailAfterDelay(0.5f));
+    }
+
+    private IEnumerator EnableTrailAfterDelay(float delay)
+    {
+        ToggleTrail(false);
+        yield return new WaitForSeconds(delay);
+        ToggleTrail(true);
+    }
+
+    private void ToggleTrail(bool active)
+    {
+        if (bombTrail != null)
+        {
+            if (active)
+            {
+                bombTrail.Clear();
+                bombTrail.enabled = true;
+            }
+            else
+            {
+                bombTrail.enabled = false;
+            }
+        }
     }
 
     private IEnumerator IgnoreThrowerTemporarily(Collider2D throwerCol)
@@ -537,6 +570,7 @@ public class Bomb : MonoBehaviour
             return;
 
         isExploded = true;
+        ToggleTrail(false);
 
         if (bombLightObject != null)
             bombLightObject.SetActive(false);
