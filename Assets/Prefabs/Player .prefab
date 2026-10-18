@@ -232,6 +232,10 @@ MonoBehaviour:
   bossKnockbackUpward: 0.75
   invulnerabilityDuration: 1
   invulnerabilityBlinkInterval: 0.08
+  lowHealthBlinkColor: {r: 1, g: 0.3915094, b: 0.3915094, a: 1}
+  mediumHealthBlinkInterval: 0.65
+  lowHealthBlinkInterval: 0.15
+  healthBlinkTransitionSpeed: 12
 --- !u!61 &8596883016011477456
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -691,6 +695,14 @@ PrefabInstance:
       value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 2282438384830233658, guid: 7697a49ea05824642b45a2fab61c81c4, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2282438384830233658, guid: 7697a49ea05824642b45a2fab61c81c4, type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2282438384830233658, guid: 7697a49ea05824642b45a2fab61c81c4, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
       value: 150
       objectReference: {fileID: 0}
@@ -710,6 +722,10 @@ PrefabInstance:
       propertyPath: InitialModule.startColor.maxColor.r
       value: 0.764151
       objectReference: {fileID: 0}
+    - target: {fileID: 2282438384830233659, guid: 7697a49ea05824642b45a2fab61c81c4, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 292bd3528db885b40be8885d2b98f148, type: 2}
     - target: {fileID: 2282438384830233660, guid: 7697a49ea05824642b45a2fab61c81c4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.023

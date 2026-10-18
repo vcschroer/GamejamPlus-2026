@@ -137,6 +137,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float invulnerabilityDuration = 1f;
     [SerializeField] private float invulnerabilityBlinkInterval = 0.08f;
 
+    [Header("Piscar Conforme a Vida")]
+    [SerializeField] private Color lowHealthBlinkColor = Color.red;
+    [Min(0.01f)][SerializeField] private float mediumHealthBlinkInterval = 0.65f;
+    [Min(0.01f)][SerializeField] private float lowHealthBlinkInterval = 0.15f;
+    [Min(0f)][SerializeField] private float healthBlinkTransitionSpeed = 12f;
+
+    private float healthBlinkTimer;
+    private bool healthBlinkOn;
+    private Color originalSpriteColor = Color.white;
+
     private bool isInvulnerable = false;
     private Coroutine invulnerabilityCoroutine;
     private Coroutine knockbackCoroutine;
@@ -258,9 +268,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (spriteRenderer != null)
         {
-            Color c = PlayerColor;
-            c.a = spriteRenderer.color.a;
-            spriteRenderer.color = c;
+            originalSpriteColor = PlayerColor;
+            originalSpriteColor.a = 1f;
+            ApplyHealthBlinkVisual(true);
         }
     }
 
@@ -317,6 +327,8 @@ public class PlayerMovement : MonoBehaviour
         if (PlayerUI.Instance != null)
             PlayerUI.Instance.UpdateHealth(playerID, currentHealth);
 
+        healthBlinkTimer = 0f;
+        healthBlinkOn = false;
         UpdateLifeUI();
 
         if (currentHealth <= 0)
@@ -336,32 +348,57 @@ public class PlayerMovement : MonoBehaviour
     {
         isInvulnerable = true;
 
-        float elapsed = 0f;
-        bool dimAlpha = false;
-
-        while (elapsed < duration && !isDead)
-        {
-            if (spriteRenderer != null)
-            {
-                dimAlpha = !dimAlpha;
-                Color c = PlayerColor;
-                c.a = dimAlpha ? 0.5f : 1f;
-                spriteRenderer.color = c;
-            }
-
-            yield return new WaitForSeconds(invulnerabilityBlinkInterval);
-            elapsed += invulnerabilityBlinkInterval;
-        }
-
-        if (spriteRenderer != null)
-        {
-            Color c = PlayerColor;
-            c.a = 1f;
-            spriteRenderer.color = c;
-        }
+        yield return new WaitForSeconds(duration);
 
         isInvulnerable = false;
         invulnerabilityCoroutine = null;
+        ApplyHealthBlinkVisual(true);
+    }
+
+    private void UpdateHealthBlink()
+    {
+        if (spriteRenderer == null || isDead)
+            return;
+
+        if (currentHealth >= maxHealth || currentHealth <= 0)
+        {
+            healthBlinkOn = false;
+            healthBlinkTimer = 0f;
+            ApplyHealthBlinkVisual(true);
+            return;
+        }
+
+        float interval = currentHealth == 1
+            ? lowHealthBlinkInterval
+            : mediumHealthBlinkInterval;
+
+        healthBlinkTimer += Time.deltaTime;
+        if (healthBlinkTimer >= interval)
+        {
+            healthBlinkTimer = 0f;
+            healthBlinkOn = !healthBlinkOn;
+        }
+
+        ApplyHealthBlinkVisual(false);
+    }
+
+    private void ApplyHealthBlinkVisual(bool instant)
+    {
+        if (spriteRenderer == null || isDead)
+            return;
+
+        Color targetColor = (currentHealth < maxHealth && currentHealth > 0 && healthBlinkOn)
+            ? lowHealthBlinkColor
+            : PlayerColor;
+        targetColor.a = 1f;
+
+        if (instant || healthBlinkTransitionSpeed <= 0f)
+            spriteRenderer.color = targetColor;
+        else
+            spriteRenderer.color = Color.Lerp(
+                spriteRenderer.color,
+                targetColor,
+                Time.deltaTime * healthBlinkTransitionSpeed);
     }
 
     private void UpdateLifeUI()
@@ -382,6 +419,10 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         isDead = true;
+        if (PlayerDeathTracker.Instance != null)
+        {
+            PlayerDeathTracker.Instance.RegisterPlayerDeath(this);
+        }
         isWallSliding = false;
         isKnockbacked = false;
 
@@ -565,7 +606,16 @@ public class PlayerMovement : MonoBehaviour
 
             if (progress >= 1f || currentAlpha <= 0f)
             {
-                SceneManager.LoadScene(mainMenuSceneName);
+                if (PlayerDeathTracker.Instance != null)
+                {
+                    PlayerDeathTracker.Instance.RegisterGhostTimeExpired(this);
+                }
+                else
+                {
+                    Debug.LogError(
+                        "PlayerDeathTracker não está presente na cena!");
+                }
+
                 yield break;
             }
 
@@ -579,6 +629,11 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         isDead = false;
+
+        if (PlayerDeathTracker.Instance != null)
+        {
+            PlayerDeathTracker.Instance.RegisterPlayerRevive(this);
+        }
         isWallSliding = false;
         isKnockbacked = false;
 
@@ -597,7 +652,9 @@ public class PlayerMovement : MonoBehaviour
             spriteRenderer.sortingOrder = 0;
         }
 
-        currentHealth = 3;
+        currentHealth = maxHealth;
+        healthBlinkTimer = 0f;
+        healthBlinkOn = false;
         UpdateLifeUI();
 
         if (PlayerUI.Instance != null)
@@ -716,6 +773,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        UpdateHealthBlink();
+
         if (isDead || isDashing)
             return;
 

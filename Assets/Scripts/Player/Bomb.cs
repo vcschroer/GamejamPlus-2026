@@ -1,4 +1,6 @@
+
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -22,21 +24,30 @@ public class Bomb : MonoBehaviour
     [Header("Efeitos Visuais & Cores do Temporizador")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject bombLightObject;
-    [SerializeField] private Color startColor = Color.green;  
+    [SerializeField] private Color startColor = Color.green;
     [SerializeField] private Color middleColor = Color.yellow;
-    [SerializeField] private Color endColor = Color.red;     
+    [SerializeField] private Color endColor = Color.red;
     [SerializeField] private int bombSortingOrder = 10;
 
     [Header("Efeitos de Explosão")]
     [SerializeField] private GameObject explosionParticlesPrefab;
+
+    [Min(0)]
+    [SerializeField] private int explosionParticleCount = 1;
+
+    [Min(0f)]
+    [SerializeField] private float explosionDestroyDelay = 2f;
 
     private float currentTimer;
     private bool isHeld = false;
     private bool isThrown = false;
     private bool isRandomizing = false;
     private bool isExploded = false;
+    private bool groundSoundPlayed = false;
+
     private Transform currentHolder;
     private Transform lastHolder = null;
+
     private Rigidbody2D rb;
     private Collider2D col;
     private Coroutine popUpCoroutine;
@@ -45,18 +56,20 @@ public class Bomb : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
-        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
 
         if (bombLightObject == null && transform.childCount > 0)
         {
             Transform lightChild = transform.GetChild(0);
-            if (lightChild != null) bombLightObject = lightChild.gameObject;
+
+            if (lightChild != null)
+                bombLightObject = lightChild.gameObject;
         }
 
         if (spriteRenderer != null)
-        {
             spriteRenderer.sortingOrder = bombSortingOrder;
-        }
 
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = bombGravityScale;
@@ -73,14 +86,12 @@ public class Bomb : MonoBehaviour
 
     private void Update()
     {
-        if (isRandomizing || isExploded) return;
+        if (isRandomizing || isExploded)
+            return;
 
-        if (isHeld)
+        if (isHeld && currentHolder != null)
         {
-            if (currentHolder != null)
-            {
-                transform.position = currentHolder.position + headOffset;
-            }
+            transform.position = currentHolder.position + headOffset;
         }
 
         HandleTimerAndVisuals();
@@ -92,10 +103,13 @@ public class Bomb : MonoBehaviour
         isExploded = false;
         isHeld = false;
         isThrown = false;
+        groundSoundPlayed = false;
+
         rb.simulated = false;
         col.isTrigger = true;
 
         transform.localScale = Vector3.one;
+
         if (spriteRenderer != null)
         {
             spriteRenderer.enabled = true;
@@ -103,15 +117,17 @@ public class Bomb : MonoBehaviour
         }
 
         if (bombLightObject != null)
-        {
             bombLightObject.SetActive(true);
-        }
 
-        PlayerMovement[] players = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        PlayerMovement[] players =
+            FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+
         while (players == null || players.Length < 2)
         {
             yield return new WaitForSeconds(0.1f);
-            players = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+
+            players = FindObjectsByType<PlayerMovement>(
+                FindObjectsSortMode.None);
         }
 
         PlayerMovement[] alivePlayers = GetAlivePlayers();
@@ -130,9 +146,11 @@ public class Bomb : MonoBehaviour
         for (int i = 0; i < shuffleCount; i++)
         {
             PlayerMovement[] activePlayers = GetAlivePlayers();
+
             if (activePlayers == null || activePlayers.Length == 0)
             {
-                activePlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+                activePlayers = FindObjectsByType<PlayerMovement>(
+                    FindObjectsSortMode.None);
             }
 
             if (activePlayers == null || activePlayers.Length == 0)
@@ -142,36 +160,42 @@ public class Bomb : MonoBehaviour
             }
 
             int randomIndex = Random.Range(0, activePlayers.Length);
+
             if (activePlayers.Length > 1 && randomIndex == lastIndex)
-            {
                 randomIndex = (randomIndex + 1) % activePlayers.Length;
-            }
+
             lastIndex = randomIndex;
+
             Transform targetTransform = activePlayers[randomIndex].transform;
 
             TriggerPopUp();
 
             float elapsed = 0f;
+
             while (elapsed < currentInterval)
             {
                 if (targetTransform != null)
-                {
                     transform.position = targetTransform.position + headOffset;
-                }
+
                 elapsed += Time.deltaTime;
                 yield return null;
             }
 
             if (decelerateShuffle)
             {
-                currentInterval = Mathf.Lerp(shuffleInterval, shuffleInterval * 2f, (float)i / shuffleCount);
+                currentInterval = Mathf.Lerp(
+                    shuffleInterval,
+                    shuffleInterval * 2f,
+                    (float)i / shuffleCount);
             }
         }
 
         PlayerMovement[] finalAlivePlayers = GetAlivePlayers();
+
         if (finalAlivePlayers == null || finalAlivePlayers.Length == 0)
         {
-            finalAlivePlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+            finalAlivePlayers = FindObjectsByType<PlayerMovement>(
+                FindObjectsSortMode.None);
         }
 
         if (finalAlivePlayers == null || finalAlivePlayers.Length == 0)
@@ -187,12 +211,12 @@ public class Bomb : MonoBehaviour
         TriggerPopUp();
 
         float finalElapsed = 0f;
+
         while (finalElapsed < currentInterval)
         {
             if (finalTarget != null)
-            {
                 transform.position = finalTarget.position + headOffset;
-            }
+
             finalElapsed += Time.deltaTime;
             yield return null;
         }
@@ -205,16 +229,17 @@ public class Bomb : MonoBehaviour
 
     private PlayerMovement[] GetAlivePlayers()
     {
-        PlayerMovement[] allPlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
-        System.Collections.Generic.List<PlayerMovement> aliveList = new System.Collections.Generic.List<PlayerMovement>();
+        PlayerMovement[] allPlayers =
+            FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
-        foreach (PlayerMovement p in allPlayers)
+        List<PlayerMovement> aliveList = new List<PlayerMovement>();
+
+        foreach (PlayerMovement player in allPlayers)
         {
-            if (p != null && !p.IsDead)
-            {
-                aliveList.Add(p);
-            }
+            if (player != null && !player.IsDead)
+                aliveList.Add(player);
         }
+
         return aliveList.ToArray();
     }
 
@@ -226,14 +251,14 @@ public class Bomb : MonoBehaviour
         float currentPeriod = Mathf.Lerp(0.2f, 1.0f, timeRatio);
         float speed = 1f / currentPeriod;
 
-        float scaleAmount = Mathf.Sin(Time.time * (speed * Mathf.PI * 2f)) * 0.15f + 1f;
+        float scaleAmount =
+            Mathf.Sin(Time.time * (speed * Mathf.PI * 2f)) * 0.15f + 1f;
 
         if (popUpCoroutine == null)
-        {
             transform.localScale = Vector3.one * scaleAmount;
-        }
 
         Color targetFlashColor;
+
         if (timeRatio > 0.5f)
         {
             float t = (timeRatio - 0.5f) * 2f;
@@ -246,26 +271,32 @@ public class Bomb : MonoBehaviour
         }
 
         float pingPong = Mathf.PingPong(Time.time * speed, 1f);
+
         if (spriteRenderer != null)
-            spriteRenderer.color = Color.Lerp(Color.white, targetFlashColor, pingPong);
+        {
+            spriteRenderer.color =
+                Color.Lerp(Color.white, targetFlashColor, pingPong);
+        }
 
         if (currentTimer <= 0f && !isExploded)
-        {
             Explode();
-        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isRandomizing || isExploded) return;
+        if (isRandomizing || isExploded)
+            return;
 
-        if (collision.collider.CompareTag("Projectile") || collision.collider.GetComponent("Projectile") != null)
+        if (collision.collider.CompareTag("Projectile") ||
+            collision.collider.GetComponent("Projectile") != null)
         {
             return;
         }
 
         BossController boss = collision.collider.GetComponent<BossController>();
-        if (boss == null) boss = collision.collider.GetComponentInParent<BossController>();
+
+        if (boss == null)
+            boss = collision.collider.GetComponentInParent<BossController>();
 
         if (boss != null)
         {
@@ -280,31 +311,48 @@ public class Bomb : MonoBehaviour
                 if (collision.contactCount > 0)
                 {
                     Vector2 normal = collision.contacts[0].normal;
-                    Vector2 pushAwayDir = (transform.position - boss.transform.position).normalized;
-                    if (pushAwayDir.sqrMagnitude < 0.1f) pushAwayDir = Vector2.up;
 
-                    rb.linearVelocity = (Vector2.Reflect(rb.linearVelocity, normal) + pushAwayDir * 5f) * 1.2f;
+                    Vector2 pushAwayDir =
+                        (transform.position - boss.transform.position).normalized;
+
+                    if (pushAwayDir.sqrMagnitude < 0.1f)
+                        pushAwayDir = Vector2.up;
+
+                    rb.linearVelocity =
+                        (Vector2.Reflect(rb.linearVelocity, normal)
+                        + pushAwayDir * 5f) * 1.2f;
                 }
             }
+
             return;
         }
 
-        if (!isThrown) return;
+        if (!isThrown)
+            return;
 
         if (collision.contactCount > 0)
         {
             ContactPoint2D contact = collision.contacts[0];
+
             if (contact.normal.y > 0.5f)
             {
-                if (SoundManager.Instance != null)
-                    SoundManager.Instance.PlaySound("Bomba cai no cho");
+                if (!groundSoundPlayed)
+                {
+                    if (SoundManager.Instance != null)
+                        SoundManager.Instance.PlaySound("Bomba cai no cho");
+
+                    groundSoundPlayed = true;
+                }
 
                 rb.linearVelocity *= groundSlowdownFactor;
             }
         }
 
-        PlayerMovement hitPlayer = collision.collider.GetComponent<PlayerMovement>();
-        if (hitPlayer == null) hitPlayer = collision.collider.GetComponentInParent<PlayerMovement>();
+        PlayerMovement hitPlayer =
+            collision.collider.GetComponent<PlayerMovement>();
+
+        if (hitPlayer == null)
+            hitPlayer = collision.collider.GetComponentInParent<PlayerMovement>();
 
         if (hitPlayer != null)
         {
@@ -316,42 +364,44 @@ public class Bomb : MonoBehaviour
             }
 
             PickUp(hitPlayer.transform);
-            return;
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (isRandomizing || isExploded) return;
+        if (isRandomizing || isExploded)
+            return;
 
-        if (collision.CompareTag("Projectile") || collision.GetComponent("Projectile") != null)
+        if (collision.CompareTag("Projectile") ||
+            collision.GetComponent("Projectile") != null)
         {
             return;
         }
 
         BossController boss = collision.GetComponent<BossController>();
-        if (boss == null) boss = collision.GetComponentInParent<BossController>();
 
-        if (boss != null)
-        {
-            if (boss.IsStaggered)
-            {
-                Explode(boss);
-            }
-        }
+        if (boss == null)
+            boss = collision.GetComponentInParent<BossController>();
+
+        if (boss != null && boss.IsStaggered)
+            Explode(boss);
     }
 
     public void PickUp(Transform playerTransform)
     {
+        if (playerTransform == null)
+            return;
+
         if (playerTransform != lastHolder)
-        {
             currentTimer = bombDuration;
-        }
 
         if (currentHolder != null)
         {
-            PlayerMovement prevPlayer = currentHolder.GetComponent<PlayerMovement>();
-            if (prevPlayer != null) prevPlayer.DropBomb();
+            PlayerMovement previousPlayer =
+                currentHolder.GetComponent<PlayerMovement>();
+
+            if (previousPlayer != null)
+                previousPlayer.DropBomb();
         }
 
         isHeld = true;
@@ -359,8 +409,11 @@ public class Bomb : MonoBehaviour
         currentHolder = playerTransform;
         lastHolder = playerTransform;
 
-        PlayerMovement newPlayer = playerTransform.GetComponent<PlayerMovement>();
-        if (newPlayer != null) newPlayer.HoldBomb(this);
+        PlayerMovement newPlayer =
+            playerTransform.GetComponent<PlayerMovement>();
+
+        if (newPlayer != null)
+            newPlayer.HoldBomb(this);
 
         rb.simulated = false;
         col.isTrigger = true;
@@ -370,7 +423,9 @@ public class Bomb : MonoBehaviour
 
     private void TriggerPopUp()
     {
-        if (popUpCoroutine != null) StopCoroutine(popUpCoroutine);
+        if (popUpCoroutine != null)
+            StopCoroutine(popUpCoroutine);
+
         popUpCoroutine = StartCoroutine(AnimatePopUp());
     }
 
@@ -386,7 +441,12 @@ public class Bomb : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
-            transform.localScale = Vector3.Lerp(startScale, maxScale, Mathf.Sin(t * Mathf.PI));
+
+            transform.localScale = Vector3.Lerp(
+                startScale,
+                maxScale,
+                Mathf.Sin(t * Mathf.PI));
+
             yield return null;
         }
 
@@ -398,18 +458,24 @@ public class Bomb : MonoBehaviour
     {
         isHeld = false;
         currentHolder = null;
+
         rb.simulated = false;
         col.isTrigger = true;
-        if (spriteRenderer != null) spriteRenderer.enabled = false;
+
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = false;
     }
 
     public void DropByDeadPlayerToward(Vector2 throwDirection, float speed)
     {
         isHeld = false;
         isThrown = true;
+
+        groundSoundPlayed = false;
         currentHolder = null;
 
-        transform.position = (Vector2)transform.position + new Vector2(0f, 0.5f);
+        transform.position =
+            (Vector2)transform.position + new Vector2(0f, 0.5f);
 
         if (spriteRenderer != null)
             spriteRenderer.enabled = true;
@@ -417,6 +483,7 @@ public class Bomb : MonoBehaviour
         rb.simulated = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = bombGravityScale;
+
         col.isTrigger = false;
 
         if (throwDirection == Vector2.zero)
@@ -425,17 +492,24 @@ public class Bomb : MonoBehaviour
         rb.linearVelocity = throwDirection.normalized * speed;
     }
 
-    public void Throw(Vector2 direction, Collider2D throwerCol, float customSpeed)
+    public void Throw(
+        Vector2 direction,
+        Collider2D throwerCol,
+        float customSpeed)
     {
-        if (!isHeld || isRandomizing || isExploded) return;
+        if (!isHeld || isRandomizing || isExploded)
+            return;
 
         isHeld = false;
         isThrown = true;
+
+        groundSoundPlayed = false;
         currentHolder = null;
 
         rb.simulated = true;
         rb.bodyType = RigidbodyType2D.Dynamic;
         rb.gravityScale = bombGravityScale;
+
         col.isTrigger = false;
 
         if (direction == Vector2.zero)
@@ -444,34 +518,42 @@ public class Bomb : MonoBehaviour
         rb.linearVelocity = direction.normalized * customSpeed;
 
         if (throwerCol != null)
-        {
             StartCoroutine(IgnoreThrowerTemporarily(throwerCol));
-        }
     }
 
     private IEnumerator IgnoreThrowerTemporarily(Collider2D throwerCol)
     {
         Physics2D.IgnoreCollision(col, throwerCol, true);
+
         yield return new WaitForSeconds(0.25f);
+
         if (throwerCol != null)
-        {
             Physics2D.IgnoreCollision(col, throwerCol, false);
-        }
     }
 
     private void Explode(BossController directBoss = null)
     {
-        if (isExploded) return;
+        if (isExploded)
+            return;
+
         isExploded = true;
 
         if (bombLightObject != null)
-        {
             bombLightObject.SetActive(false);
-        }
 
         if (explosionParticlesPrefab != null)
         {
-            Instantiate(explosionParticlesPrefab, transform.position, Quaternion.identity);
+            for (int i = 0; i < explosionParticleCount; i++)
+            {
+                GameObject explosion = Instantiate(
+                    explosionParticlesPrefab,
+                    transform.position,
+                    Quaternion.identity
+                );
+
+                if (explosion != null)
+                    Destroy(explosion, explosionDestroyDelay);
+            }
         }
 
         if (SoundManager.Instance != null)
@@ -479,28 +561,33 @@ public class Bomb : MonoBehaviour
 
         if (GameEffectsManager.Instance != null)
         {
-            GameEffectsManager.Instance.TriggerBombExplosionEffects(transform.position);
+            GameEffectsManager.Instance.TriggerBombExplosionEffects(
+                transform.position
+            );
         }
 
-        bool hitBoss = false;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1.5f);
+        float explosionRadius = 1.5f;
 
-        if (directBoss != null)
+        Collider2D[] hits = Physics2D.OverlapCircleAll(
+            transform.position,
+            explosionRadius
+        );
+
+        bool hitBoss = false;
+
+        if (directBoss != null && directBoss.IsStaggered)
         {
-            if (directBoss.IsStaggered)
-            {
-                directBoss.TakeDamage(1);
-                hitBoss = true;
-            }
+            directBoss.TakeDamage(1);
+            hitBoss = true;
         }
         else
         {
             foreach (Collider2D hit in hits)
             {
-                if (!hit.CompareTag("Boss")) continue;
-
                 BossController boss = hit.GetComponent<BossController>();
-                if (boss == null) boss = hit.GetComponentInParent<BossController>();
+
+                if (boss == null)
+                    boss = hit.GetComponentInParent<BossController>();
 
                 if (boss != null && boss.IsStaggered)
                 {
@@ -515,35 +602,40 @@ public class Bomb : MonoBehaviour
         {
             if (currentHolder != null)
             {
-                PlayerMovement holder = currentHolder.GetComponent<PlayerMovement>();
-                if (holder != null) holder.DropBomb();
+                PlayerMovement holder =
+                    currentHolder.GetComponent<PlayerMovement>();
+
+                if (holder != null)
+                    holder.DropBomb();
             }
 
             StartCoroutine(RespawnAndShuffleRoutine());
             return;
         }
-        else
-        {
-            if (currentHolder != null)
-            {
-                PlayerMovement holder = currentHolder.GetComponent<PlayerMovement>();
-                if (holder != null)
-                {
-                    holder.DropBomb();
-                    holder.TakeDamage(1);
-                }
-            }
-            else
-            {
-                foreach (Collider2D hit in hits)
-                {
-                    if (!hit.CompareTag("Player")) continue;
 
-                    PlayerMovement player = hit.GetComponent<PlayerMovement>();
-                    if (player != null && !player.IsDead)
-                        player.TakeDamage(1);
-                }
-            }
+
+        PlayerMovement[] players =
+            FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+
+        HashSet<PlayerMovement> damagedPlayers =
+            new HashSet<PlayerMovement>();
+
+        foreach (PlayerMovement player in players)
+        {
+            if (player == null || player.IsDead)
+                continue;
+
+            if (damagedPlayers.Add(player))
+                player.TakeDamage(1);
+        }
+
+        if (currentHolder != null)
+        {
+            PlayerMovement holder =
+                currentHolder.GetComponent<PlayerMovement>();
+
+            if (holder != null)
+                holder.DropBomb();
         }
 
         StartCoroutine(RespawnRoutine());
@@ -554,10 +646,12 @@ public class Bomb : MonoBehaviour
         isHeld = false;
         isThrown = false;
         currentHolder = null;
+
         rb.simulated = false;
         col.isTrigger = true;
 
-        if (spriteRenderer != null) spriteRenderer.enabled = false;
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = false;
 
         yield return new WaitForSeconds(respawnDelay);
 
@@ -569,10 +663,12 @@ public class Bomb : MonoBehaviour
         isHeld = false;
         isThrown = false;
         currentHolder = null;
+
         rb.simulated = false;
         col.isTrigger = true;
 
-        if (spriteRenderer != null) spriteRenderer.enabled = false;
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = false;
 
         yield return new WaitForSeconds(respawnDelay);
 
