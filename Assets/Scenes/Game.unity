@@ -1561,7 +1561,7 @@ MonoBehaviour:
   hoverAmountY: 0.5
   chasePlayerChance: 0.5
   maxHealth: 3
-  normalAttacksBeforeDash: 0
+  normalAttacksBeforeDash: 5
   isStaggered: 0
   staggerChargeDuration: 1.2
   staggerChargeShakeIntensity: 0.05
