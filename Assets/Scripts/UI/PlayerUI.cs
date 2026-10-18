@@ -14,6 +14,14 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Image[] p2LifeIcons;
     [SerializeField] private Color p2Color = new Color(1f, 0.2f, 0.3f);
 
+    [Header("Configuração da Animação Wave")]
+    [SerializeField] private float waveSpeed = 4f;     
+    [SerializeField] private float waveHeight = 8f;     
+    [SerializeField] private float waveFrequency = 0.5f;  
+
+    private Vector3[] p1OriginalPositions;
+    private Vector3[] p2OriginalPositions;
+
     private void Awake()
     {
         if (Instance == null)
@@ -23,12 +31,43 @@ public class PlayerUI : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
+
+        CacheOriginalPositions();
     }
 
     private void Start()
     {
         ApplyColors();
+    }
+
+    private void Update()
+    {
+        ApplyWaveAnimation();
+    }
+
+    private void CacheOriginalPositions()
+    {
+        if (p1LifeIcons != null)
+        {
+            p1OriginalPositions = new Vector3[p1LifeIcons.Length];
+            for (int i = 0; i < p1LifeIcons.Length; i++)
+            {
+                if (p1LifeIcons[i] != null)
+                    p1OriginalPositions[i] = p1LifeIcons[i].rectTransform.localPosition;
+            }
+        }
+
+        if (p2LifeIcons != null)
+        {
+            p2OriginalPositions = new Vector3[p2LifeIcons.Length];
+            for (int i = 0; i < p2LifeIcons.Length; i++)
+            {
+                if (p2LifeIcons[i] != null)
+                    p2OriginalPositions[i] = p2LifeIcons[i].rectTransform.localPosition;
+            }
+        }
     }
 
     private void ApplyColors()
@@ -105,6 +144,37 @@ public class PlayerUI : MonoBehaviour
             else if (!shouldBeActive && p2LifeIcons[i].gameObject.activeSelf)
             {
                 StartCoroutine(PopUpOutAnimation(p2LifeIcons[i].gameObject));
+            }
+        }
+    }
+
+    private void ApplyWaveAnimation()
+    {
+        if (p1LifeIcons != null && p1OriginalPositions != null)
+        {
+            for (int i = 0; i < p1LifeIcons.Length; i++)
+            {
+                if (p1LifeIcons[i] != null && p1LifeIcons[i].gameObject.activeSelf)
+                {
+                    float waveOffset = Mathf.Sin((Time.time * waveSpeed) + (i * waveFrequency)) * waveHeight;
+                    Vector3 pos = p1OriginalPositions[i];
+                    pos.y += waveOffset;
+                    p1LifeIcons[i].rectTransform.localPosition = pos;
+                }
+            }
+        }
+
+        if (p2LifeIcons != null && p2OriginalPositions != null)
+        {
+            for (int i = 0; i < p2LifeIcons.Length; i++)
+            {
+                if (p2LifeIcons[i] != null && p2LifeIcons[i].gameObject.activeSelf)
+                {
+                    float waveOffset = Mathf.Sin((Time.time * waveSpeed) + (i * waveFrequency)) * waveHeight;
+                    Vector3 pos = p2OriginalPositions[i];
+                    pos.y += waveOffset;
+                    p2LifeIcons[i].rectTransform.localPosition = pos;
+                }
             }
         }
     }

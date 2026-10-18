@@ -212,4 +212,8 @@ public class GameEffectsManager : MonoBehaviour
 
         mainCameraTransform.localPosition = cameraInitialPosition;
     }
+    public void TriggerPlayerDamageShake()
+    {
+        TriggerCameraShake(0.2f, 0.15f);
+    }
 }

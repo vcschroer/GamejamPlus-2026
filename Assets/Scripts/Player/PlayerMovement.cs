@@ -318,6 +318,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyDamage(int damageAmount)
     {
+        if (GameEffectsManager.Instance != null)
+        {
+            GameEffectsManager.Instance.TriggerPlayerDamageShake();
+        }
         currentHealth -= damageAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
 
