@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ae4e823015b4f4049825b4c8877db8d9
+guid: d88d2c19ec2655c46b69614f403efcac
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7784734481333431320
-    second: badmoth_studios_logo-Photoroom_0
+      213: -4411226427367307643
+    second: Prancheta 1@4x 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 16384
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: badmoth_studios_logo-Photoroom_0
+      name: Prancheta 1@4x 1_0
       rect:
         serializedVersion: 2
-        x: 18
-        y: 35
-        width: 161
-        height: 122
+        x: 754
+        y: 1442
+        width: 6341
+        height: 4781
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 81c2d96f3cee80c60800000000000000
-      internalID: 7784734481333431320
+      spriteID: 586c4fc9fec28c2c0800000000000000
+      internalID: -4411226427367307643
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      badmoth_studios_logo-Photoroom_0: 7784734481333431320
+      Prancheta 1@4x 1_0: -4411226427367307643
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

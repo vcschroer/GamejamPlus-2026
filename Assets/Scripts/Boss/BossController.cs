@@ -129,7 +129,7 @@ public class BossController : MonoBehaviour
     [SerializeField] private bool isStaggered;
     public bool IsStaggered => isStaggered;
 
-    [SerializeField] private float staggerChargeDuration = 1.2f;
+    [SerializeField] public float staggerChargeDuration = 2.4f;
     [SerializeField] private float staggerChargeShakeIntensity = 0.15f;
     [SerializeField] private float staggerDuration = 3.5f;
     [SerializeField] private float staggerKnockbackForce = 1.5f;
