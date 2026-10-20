@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(PlayerInputManager))]
 public class CoopLobbyManager : MonoBehaviour
@@ -9,6 +10,9 @@ public class CoopLobbyManager : MonoBehaviour
     [Header("Pontos de Spawn")]
     [SerializeField] private Transform player1Spawn;
     [SerializeField] private Transform player2Spawn;
+
+    [Header("Configuração de Tutorial")]
+    [SerializeField] private string tutorialSceneName = "Tutorial Game";
 
     private PlayerInputManager inputManager;
     private List<PlayerInput> joinedPlayers = new List<PlayerInput>();
@@ -50,6 +54,15 @@ public class CoopLobbyManager : MonoBehaviour
         else if (playerIndex == 2 && player2Spawn != null)
         {
             playerInput.transform.position = player2Spawn.position;
+        }
+
+        if (SceneManager.GetActiveScene().name == tutorialSceneName)
+        {
+            PlayerMovement playerMovement = playerInput.GetComponent<PlayerMovement>();
+            if (playerMovement != null)
+            {
+                playerMovement.isTutorialMode = true;
+            }
         }
 
         if (joinedPlayers.Count >= 2)

@@ -33,6 +33,7 @@ public class BossController : MonoBehaviour
 
     private bool isIntroFinished = false;
     public bool IsIntroFinished => isIntroFinished;
+    private Coroutine introRoutineInstance;
 
     [Header("Estágios de Ataques Normais por Vida")]
     [SerializeField]
@@ -66,7 +67,6 @@ public class BossController : MonoBehaviour
     };
 
     [Header("Estágios de Ataques de Stagger por Vida")]
-
     [SerializeField]
     private List<BossStaggerAttackType> staggerAttacksStage3Of3 = new List<BossStaggerAttackType>
     {
@@ -93,6 +93,15 @@ public class BossController : MonoBehaviour
     [SerializeField] private float minFlySpeed = 3f;
     [SerializeField] private float maxFlySpeed = 8f;
     [SerializeField] private float waypointReachDistance = 0.8f;
+
+    [Header("Colliders Específicos de Ataque")]
+    [SerializeField] private Collider2D defaultCollider;
+    [SerializeField] private Collider2D dashCollider;
+    [SerializeField] private Collider2D jumpCollider;
+
+    [Header("Materiais de Outline")]
+    [SerializeField] private Material normalOutlineMaterial;
+    [SerializeField] private Material thinOutlineMaterial;
 
     [Header("Referência do Chão")]
     [SerializeField] private Transform groundPoint;
@@ -189,6 +198,12 @@ public class BossController : MonoBehaviour
     [Header("Ataque de Stagger 1: Queen Bee Dash")]
     [SerializeField] private float minQueenBeeDashSpeed = 14f;
     [SerializeField] private float maxQueenBeeDashSpeed = 24f;
+    [SerializeField] private TrailRenderer dashTrailRenderer;
+    [SerializeField] private float dashWaveAmplitude = 0.6f;
+    [SerializeField] private ParticleSystem dashImpactParticlesPrefab;
+    [SerializeField] private int dashImpactParticleCount = 3;
+    [SerializeField] private float dashParticleVerticalOffset = 0.5f;
+    [SerializeField] private float dashParticleLineSpacing = 0.6f;
 
     [Header("Ataque de Stagger 2: Saltos e Mergulho")]
     [SerializeField] private int jumpPointCount = 5;
@@ -199,6 +214,10 @@ public class BossController : MonoBehaviour
     [SerializeField] private float finalDivePreparationDuration = 0.3f;
     [SerializeField] private float finalDiveDuration = 0.18f;
     [SerializeField] private float groundImpactShakeDuration = 0.35f;
+    [SerializeField] private ParticleSystem jumpImpactParticlesPrefab;
+    [SerializeField] private int jumpImpactParticleCount = 3;
+    [SerializeField] private float jumpParticleVerticalOffset = 0.5f;
+    [SerializeField] private float jumpParticleLineSpacing = 0.6f;
 
     [Header("Referências Visuais & Partículas")]
     [SerializeField] private SpriteRenderer spriteRenderer;
@@ -227,6 +246,7 @@ public class BossController : MonoBehaviour
 
     private Coroutine behaviorCoroutine;
     private Coroutine healthBlinkCoroutine;
+    private Coroutine staggerRoutineInstance;
     private Color originalSpriteColor = Color.white;
     private Transform spriteVisualTransform;
     private Quaternion spriteBaseLocalRotation = Quaternion.identity;
@@ -256,6 +276,7 @@ public class BossController : MonoBehaviour
             originalSpriteColor = spriteRenderer.color;
             spriteVisualTransform = spriteRenderer.transform;
             spriteBaseLocalRotation = spriteVisualTransform.localRotation;
+            if (normalOutlineMaterial == null) normalOutlineMaterial = spriteRenderer.material;
         }
 
         if (puppetStrings == null)
@@ -268,9 +289,44 @@ public class BossController : MonoBehaviour
             victoryFadePanel.color = c;
             victoryFadePanel.gameObject.SetActive(false);
         }
+
+        SetActiveCollider(defaultCollider);
+        if (dashTrailRenderer != null) dashTrailRenderer.enabled = false;
     }
 
-    private void Start()
+    private void SetActiveCollider(Collider2D targetCollider)
+    {
+        if (defaultCollider != null) defaultCollider.enabled = (defaultCollider == targetCollider);
+        if (dashCollider != null) dashCollider.enabled = (dashCollider == targetCollider);
+        if (jumpCollider != null) jumpCollider.enabled = (jumpCollider == targetCollider);
+    }
+
+    private void SetSpriteMaterial(Material targetMaterial)
+    {
+        if (spriteRenderer != null && targetMaterial != null)
+        {
+            spriteRenderer.material = targetMaterial;
+        }
+    }
+
+    private void SpawnImpactParticlesLine(ParticleSystem prefab, int count, Vector3 centerPos, float verticalOffset, float spacing)
+    {
+        if (prefab == null || count <= 0) return;
+
+        float totalWidth = (count - 1) * spacing;
+        float startX = centerPos.x - (totalWidth * 0.5f);
+        float spawnY = centerPos.y - verticalOffset;
+
+        for (int i = 0; i < count; i++)
+        {
+            Vector3 spawnPos = new Vector3(startX + (i * spacing), spawnY, centerPos.z);
+            ParticleSystem ps = Instantiate(prefab, spawnPos, Quaternion.identity);
+            ps.Play();
+            Destroy(ps.gameObject, 2f);
+        }
+    }
+
+    private void OnEnable()
     {
         currentHealth = maxHealth;
         isIntroFinished = false;
@@ -278,7 +334,18 @@ public class BossController : MonoBehaviour
 
         transform.position = startIntroPosition;
 
-        StartCoroutine(BossIntroRoutine());
+        if (introRoutineInstance != null)
+            StopCoroutine(introRoutineInstance);
+
+        if (behaviorCoroutine != null)
+            StopCoroutine(behaviorCoroutine);
+
+        introRoutineInstance = StartCoroutine(BossIntroRoutine());
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
 
     private IEnumerator BossIntroRoutine()
@@ -286,8 +353,10 @@ public class BossController : MonoBehaviour
         if (animator != null)
             animator.SetBool("IsIntro", true);
 
-        while (GameObject.FindGameObjectsWithTag("Player").Length < 2)
+        float safetyTimer = 0f;
+        while (FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None).Length < 2 && safetyTimer < 3f)
         {
+            safetyTimer += Time.deltaTime;
             yield return null;
         }
 
@@ -355,7 +424,9 @@ public class BossController : MonoBehaviour
         if (forceStaggerTest && !isStaggered)
         {
             forceStaggerTest = false;
-            StartCoroutine(StaggerRoutine());
+            if (staggerRoutineInstance != null)
+                StopCoroutine(staggerRoutineInstance);
+            staggerRoutineInstance = StartCoroutine(StaggerRoutine());
         }
     }
 
@@ -539,6 +610,20 @@ public class BossController : MonoBehaviour
 
         UpdateHealthVisuals();
 
+        if (staggerRoutineInstance != null)
+        {
+            StopCoroutine(staggerRoutineInstance);
+            staggerRoutineInstance = null;
+        }
+
+        isStaggered = false;
+
+        if (animator != null)
+            animator.SetBool("IsStaggered", false);
+
+        transform.rotation = Quaternion.identity;
+        UpdateSpriteRotation();
+
         if (currentHealth <= 0)
             Die();
     }
@@ -669,6 +754,12 @@ public class BossController : MonoBehaviour
             }
         }
 
+        if (SceneManager.GetActiveScene().name == "Tutorial Game")
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         if (animator != null)
         {
             animator.SetBool("IsIntro", false);
@@ -677,6 +768,7 @@ public class BossController : MonoBehaviour
             animator.SetBool("IsDashAttacking", false);
             animator.SetBool("IsJumpAttacking", false);
             animator.SetBool("IsStaggered", false);
+            animator.SetBool("IsStaggerCharging", false);
         }
 
         if (healthBlinkCoroutine != null)
@@ -685,8 +777,9 @@ public class BossController : MonoBehaviour
             healthBlinkCoroutine = null;
         }
 
-        Collider2D col = GetComponent<Collider2D>();
-        if (col != null) col.enabled = false;
+        SetActiveCollider(null);
+        if (dashTrailRenderer != null) dashTrailRenderer.enabled = false;
+        SetSpriteMaterial(normalOutlineMaterial);
 
         Rigidbody2D rbBody = GetComponent<Rigidbody2D>();
         if (rbBody != null) rbBody.simulated = false;
@@ -829,11 +922,14 @@ public class BossController : MonoBehaviour
         if (animator != null)
         {
             animator.SetBool("IsIdle", false);
-            animator.SetBool("IsRangedAttacking", true);
+            animator.SetBool("IsStaggerCharging", true);
         }
 
         if (bossEffects != null)
             bossEffects.TriggerAttack();
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("boss morte");
 
         Vector3 originalPos = transform.position;
         float elapsed = 0f;
@@ -870,7 +966,7 @@ public class BossController : MonoBehaviour
 
         if (animator != null)
         {
-            animator.SetBool("IsRangedAttacking", false);
+            animator.SetBool("IsStaggerCharging", false);
         }
     }
 
@@ -1093,44 +1189,63 @@ public class BossController : MonoBehaviour
         float healthRatio = (float)currentHealth / Mathf.Max(1, maxHealth);
         float baseDashSpeed = Mathf.Lerp(minQueenBeeDashSpeed, maxQueenBeeDashSpeed, 1f - healthRatio);
 
+        SetActiveCollider(dashCollider);
+        if (dashTrailRenderer != null) dashTrailRenderer.enabled = true;
+
+        SetSpriteMaterial(thinOutlineMaterial);
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("boss meelee");
+
         if (animator != null)
         {
-            animator.SetBool("IsIdle", false);
-            animator.SetBool("IsDashAttacking", true);
+            animator.speed = 1f;
+            animator.ResetTrigger("TriggerDash");
+            animator.SetTrigger("TriggerDash");
         }
 
         for (int i = 0; i < yHeights.Length; i++)
         {
-            if (isStaggered || currentHealth <= 0) yield break;
-
-            if (SoundManager.Instance != null)
-                SoundManager.Instance.PlaySound("boss meelee");
+            if (isStaggered || currentHealth <= 0)
+            {
+                SetSpriteMaterial(normalOutlineMaterial);
+                yield break;
+            }
 
             float currentY = Mathf.Clamp(yHeights[i], bounds.min.y + padding, bounds.max.y - padding);
             float startX = startFromLeft ? bounds.min.x - padding : bounds.max.x + padding;
             float targetX = startFromLeft ? bounds.max.x + padding : bounds.min.x - padding;
 
-            yield return MoveSmoothlyToPosition(new Vector2(startX, currentY), 0.3f);
+            yield return MoveSmoothlyToPosition(new Vector2(startX, currentY), 0.25f);
 
             if (spriteRenderer != null) spriteRenderer.flipX = !startFromLeft;
 
-            if (animator != null)
-            {
-                animator.Play("Dash Attack", -1, 0f);
-            }
-
             float currentDashSpeed = Mathf.Lerp(baseDashSpeed, maxQueenBeeDashSpeed, (float)i / (yHeights.Length - 1));
-            yield return MoveSmoothlyToPositionWithSpeed(new Vector2(targetX, currentY), currentDashSpeed);
+
+            yield return MoveDynamicDash(new Vector2(targetX, currentY), currentDashSpeed, i);
 
             startFromLeft = !startFromLeft;
         }
 
-        if (animator != null)
-        {
-            animator.SetBool("IsDashAttacking", false);
-        }
+        if (dashTrailRenderer != null) dashTrailRenderer.enabled = false;
+        SetActiveCollider(defaultCollider);
+
+        SetSpriteMaterial(normalOutlineMaterial);
 
         if (bossEffects != null) bossEffects.TriggerImpact();
+
+        SpawnImpactParticlesLine(dashImpactParticlesPrefab, dashImpactParticleCount, transform.position, dashParticleVerticalOffset, dashParticleLineSpacing);
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("boss dano");
+
+        if (animator != null)
+        {
+            animator.speed = 1f;
+            animator.SetBool("IsIdle", false);
+            animator.SetBool("IsDashAttacking", false);
+            animator.SetBool("IsStaggered", true);
+        }
 
         Vector2 knockbackDir = startFromLeft ? Vector2.right : Vector2.left;
         Vector3 initialPos = transform.position;
@@ -1151,7 +1266,38 @@ public class BossController : MonoBehaviour
             yield return null;
         }
         transform.position = targetKnockbackPos;
-        yield return StartCoroutine(StaggerRoutine());
+
+        if (staggerRoutineInstance != null)
+            StopCoroutine(staggerRoutineInstance);
+        staggerRoutineInstance = StartCoroutine(StaggerRoutine());
+    }
+
+    private IEnumerator MoveDynamicDash(Vector2 targetPosition, float speed, int dashIndex)
+    {
+        Vector2 startPos = transform.position;
+        float distance = Vector2.Distance(startPos, targetPosition);
+        float duration = distance / speed;
+        float elapsed = 0f;
+
+        duration = Mathf.Max(0.01f, duration);
+
+        while (elapsed < duration)
+        {
+            if (isStaggered || currentHealth <= 0) yield break;
+
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+
+            float smoothT = Mathf.SmoothStep(0f, 1f, t);
+            Vector2 basePos = Vector2.Lerp(startPos, targetPosition, smoothT);
+
+            float waveOffset = Mathf.Sin(t * Mathf.PI * 2f + dashIndex) * dashWaveAmplitude * (1f - t);
+            transform.position = new Vector2(basePos.x, basePos.y + waveOffset);
+
+            yield return null;
+        }
+
+        transform.position = targetPosition;
     }
 
     private IEnumerator FivePointJumpAttack()
@@ -1165,9 +1311,17 @@ public class BossController : MonoBehaviour
             animator.SetBool("IsJumpAttacking", true);
         }
 
+        SetActiveCollider(jumpCollider);
+
+        SetSpriteMaterial(thinOutlineMaterial);
+
         for (int i = 0; i < totalPoints; i++)
         {
-            if (currentHealth <= 0 || isStaggered) yield break;
+            if (currentHealth <= 0 || isStaggered)
+            {
+                SetSpriteMaterial(normalOutlineMaterial);
+                yield break;
+            }
 
             if (SoundManager.Instance != null)
                 SoundManager.Instance.PlaySound("boss meelee");
@@ -1189,14 +1343,31 @@ public class BossController : MonoBehaviour
             float progressFactor = (float)i / Mathf.Max(1, totalPoints - 1);
             float ascentDuration = isFinalDive ? finalDivePreparationDuration : Mathf.Lerp(jumpDuration, jumpDuration * 0.45f, progressFactor);
 
+            if (animator != null)
+            {
+                animator.speed = 1f;
+                animator.ResetTrigger("TriggerJump");
+                animator.SetTrigger("TriggerJump");
+            }
+
             yield return MoveBossToPosition(new Vector2(targetX, apexY), ascentDuration);
-            if (currentHealth <= 0) yield break;
+            if (currentHealth <= 0)
+            {
+                SetSpriteMaterial(normalOutlineMaterial);
+                yield break;
+            }
 
             float diveDuration = isFinalDive ? finalDiveDuration : Mathf.Max(0.12f, Mathf.Lerp(jumpDuration * 0.65f, jumpDuration * 0.3f, progressFactor));
             yield return DiveBossToGround(new Vector2(targetX, landingY), diveDuration);
-            if (currentHealth <= 0) yield break;
+            if (currentHealth <= 0)
+            {
+                SetSpriteMaterial(normalOutlineMaterial);
+                yield break;
+            }
 
             if (bossEffects != null) bossEffects.TriggerImpact();
+
+            SpawnImpactParticlesLine(jumpImpactParticlesPrefab, jumpImpactParticleCount, new Vector2(targetX, landingY), jumpParticleVerticalOffset, jumpParticleLineSpacing);
 
             if (isFinalDive)
             {
@@ -1205,8 +1376,14 @@ public class BossController : MonoBehaviour
                     animator.SetBool("IsJumpAttacking", false);
                 }
 
+                SetActiveCollider(defaultCollider);
+
+                SetSpriteMaterial(normalOutlineMaterial);
+
                 yield return new WaitForSeconds(groundImpactShakeDuration);
-                yield return StartCoroutine(StaggerRoutine());
+                if (staggerRoutineInstance != null)
+                    StopCoroutine(staggerRoutineInstance);
+                staggerRoutineInstance = StartCoroutine(StaggerRoutine());
                 yield break;
             }
             yield return new WaitForSeconds(Mathf.Lerp(jumpPause, jumpPause * 0.4f, progressFactor));
@@ -1217,6 +1394,10 @@ public class BossController : MonoBehaviour
             animator.SetBool("IsJumpAttacking", false);
             animator.SetBool("IsIdle", true);
         }
+
+        SetActiveCollider(defaultCollider);
+
+        SetSpriteMaterial(normalOutlineMaterial);
     }
 
     private float GetGroundLandingY(float targetX)
@@ -1259,17 +1440,6 @@ public class BossController : MonoBehaviour
         yield return MoveBossToPosition(targetPos, duration);
     }
 
-    private IEnumerator MoveSmoothlyToPositionWithSpeed(Vector2 targetPosition, float speed)
-    {
-        while (Vector2.Distance(transform.position, targetPosition) > 0.05f)
-        {
-            if (isStaggered || currentHealth <= 0) yield break;
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-            yield return null;
-        }
-        transform.position = targetPosition;
-    }
-
     private IEnumerator DiveBossToGround(Vector2 landingPosition, float duration)
     {
         Vector2 startPosition = transform.position;
@@ -1291,9 +1461,11 @@ public class BossController : MonoBehaviour
     private IEnumerator StaggerRoutine()
     {
         isStaggered = true;
+        SetActiveCollider(defaultCollider);
 
         if (animator != null)
         {
+            animator.speed = 1f;
             animator.SetBool("IsIdle", false);
             animator.SetBool("IsStaggered", true);
         }
@@ -1307,5 +1479,6 @@ public class BossController : MonoBehaviour
 
         transform.rotation = Quaternion.identity;
         UpdateSpriteRotation();
+        staggerRoutineInstance = null;
     }
 }

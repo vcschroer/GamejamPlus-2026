@@ -10,25 +10,25 @@ public class PlayerMovement : MonoBehaviour
 {
     public enum PlayerID { Player1, Player2 }
 
-    [Header("Configurações do Jogador (ID & Cor)")]
     [SerializeField] private PlayerID playerID = PlayerID.Player1;
     [SerializeField] private Color player1Color = new Color(0.2f, 0.6f, 1f);
     [SerializeField] private Color player2Color = new Color(1f, 0.2f, 0.3f);
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
 
-    [Header("Customização Visual por Jogador")]
+    public bool isTutorialMode = false;
+    public bool tutorialMoved = false;
+    public bool tutorialJumped = false;
+    public bool tutorialDashed = false;
+
     [SerializeField] private Sprite player1Sprite;
     [SerializeField] private RuntimeAnimatorController player1AnimatorController;
-
     [SerializeField] private Sprite player2Sprite;
     [SerializeField] private RuntimeAnimatorController player2AnimatorController;
 
     public PlayerID ID => playerID;
-    public Color PlayerColor =>
-        playerID == PlayerID.Player1 ? player1Color : player2Color;
+    public Color PlayerColor => playerID == PlayerID.Player1 ? player1Color : player2Color;
 
-    [Header("Sistema de Vidas & Espírito")]
     [SerializeField] private int maxHealth = 3;
     private int currentHealth;
 
@@ -38,7 +38,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float ghostWobbleFrequency = 3f;
     [SerializeField] private float ghostWobbleAmount = 0.4f;
 
-    [Header("Delimitação da Área do Fantasma/Alma")]
     [SerializeField] private bool restrictGhostArea = true;
     [SerializeField] private Vector2 ghostMinBounds = new Vector2(-10f, -4f);
     [SerializeField] private Vector2 ghostMaxBounds = new Vector2(10f, 6f);
@@ -48,18 +47,15 @@ public class PlayerMovement : MonoBehaviour
     private bool isDead = false;
     public bool IsDead => isDead;
 
-    [Header("Componentes")]
     private Rigidbody2D rb;
     private PlayerInput playerInput;
     private Collider2D playerCollider;
 
-    [Header("Efeitos Visuais & Mira")]
     [SerializeField] private PlayerEffects playerEffects;
     [SerializeField] public ParticleSystem Dust;
     [SerializeField] private GameObject aimArrow;
     [SerializeField] private float aimOrbitRadius = 1.2f;
 
-    [Header("Movimentação Básica")]
     [SerializeField] private float moveSpeed = 12f;
     [SerializeField] private float acceleration = 60f;
     [SerializeField] private float deceleration = 60f;
@@ -69,7 +65,6 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 initialScale;
     private Vector3 wallCheckInitialLocalPosition;
 
-    [Header("Pulo, Pulo Duplo & Gravidade")]
     [SerializeField] private float jumpForce = 14f;
     [SerializeField] private float baseGravity = 4f;
     [SerializeField] private float fallMultiplier = 2.5f;
@@ -78,7 +73,6 @@ public class PlayerMovement : MonoBehaviour
     private int extraJumps;
     [SerializeField] private int maxExtraJumps = 1;
 
-    [Header("Mecânicas de Parede")]
     [SerializeField] private Transform wallCheck;
     [SerializeField] private float wallCheckDistance = 0.4f;
     [SerializeField] private LayerMask wallLayer;
@@ -88,10 +82,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isTouchingWall;
     private bool isWallSliding;
 
-    [Header("Material de Física")]
     [SerializeField] private bool removePlayerFriction = true;
 
-    [Header("Dash")]
     [SerializeField] private float dashPower = 24f;
     [SerializeField] private float dashTime = 0.15f;
     [SerializeField] private float dashCooldown = 0.4f;
@@ -99,14 +91,12 @@ public class PlayerMovement : MonoBehaviour
     private bool canDash = true;
     private bool isDashing;
 
-    [Header("Checagem de Chão")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private LayerMask groundLayer;
 
     private bool isGrounded;
 
-    [Header("Mecânica da Bomba & Mira")]
     private Bomb heldBomb = null;
     public bool IsHoldingBomb => heldBomb != null;
 
@@ -118,33 +108,27 @@ public class PlayerMovement : MonoBehaviour
     private float originalGravity;
     private Vector2 currentAimDir;
 
-    [Header("Configurações de Planagem ao Mirar")]
     [SerializeField] private float aimGravityScale = 0.2f;
     [SerializeField] private float maxAimFallSpeed = 0.6f;
 
-    [Header("Configurações de Arremesso")]
     [SerializeField] private float minThrowSpeed = 18f;
     [SerializeField] private float maxThrowSpeed = 36f;
 
-    [Header("Knockback do Arremesso")]
     [SerializeField] private float throwKnockbackForce = 12f;
     [SerializeField] private float knockbackDuration = 0.2f;
     [SerializeField] private bool scaleKnockbackWithCharge = true;
 
     private bool isKnockbacked = false;
 
-    [Header("Knockback entre Jogadores")]
     [SerializeField] private float playerKnockbackForce = 10f;
     [SerializeField] private float playerKnockbackDuration = 0.15f;
 
-    [Header("Dano do Boss: Knockback e Invulnerabilidade")]
     [SerializeField] private float bossKnockbackForce = 26f;
     [SerializeField] private float bossKnockbackDuration = 0.3f;
     [SerializeField] private float bossKnockbackUpward = 0.75f;
     [SerializeField] private float invulnerabilityDuration = 1f;
     [SerializeField] private float invulnerabilityBlinkInterval = 0.08f;
 
-    [Header("Piscar Conforme a Vida")]
     [SerializeField] private Color lowHealthBlinkColor = Color.red;
     [Min(0.01f)][SerializeField] private float mediumHealthBlinkInterval = 0.65f;
     [Min(0.01f)][SerializeField] private float lowHealthBlinkInterval = 0.15f;
@@ -197,6 +181,11 @@ public class PlayerMovement : MonoBehaviour
 
         AutoAssignPlayerID();
 
+        if (isTutorialMode)
+        {
+            maxHealth = 9999;
+        }
+
         currentHealth = maxHealth;
         UpdateLifeUI();
 
@@ -210,6 +199,16 @@ public class PlayerMovement : MonoBehaviour
 
         if (aimArrow != null)
             aimArrow.SetActive(false);
+    }
+
+    public void SetTutorialHealth(int health)
+    {
+        isTutorialMode = true;
+        maxHealth = health;
+        currentHealth = health;
+        UpdateLifeUI();
+        if (PlayerUI.Instance != null)
+            PlayerUI.Instance.UpdateHealth(playerID, currentHealth);
     }
 
     private void AutoAssignPlayerID()
@@ -280,7 +279,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
-        if (isDead || isInvulnerable)
+        if (isTutorialMode || isDead || isInvulnerable)
             return;
 
         ApplyDamage(damageAmount);
@@ -291,7 +290,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void TakeBossDamage(int damageAmount, Vector2 bossOrProjectilePosition)
     {
-        if (isDead || isInvulnerable)
+        if (isTutorialMode || isDead || isInvulnerable)
             return;
 
         ApplyDamage(damageAmount);
@@ -417,6 +416,9 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         isDead = true;
+
+        if (animator != null)
+            animator.SetBool("IsDead", true);
 
         if (SoundManager.Instance != null)
         {
@@ -607,10 +609,6 @@ public class PlayerMovement : MonoBehaviour
                 {
                     PlayerDeathTracker.Instance.RegisterGhostTimeExpired(this);
                 }
-                else
-                {
-                    Debug.LogError("PlayerDeathTracker não está presente na cena!");
-                }
 
                 yield break;
             }
@@ -625,6 +623,9 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         isDead = false;
+
+        if (animator != null)
+            animator.SetBool("IsDead", false);
 
         if (PlayerDeathTracker.Instance != null)
         {
@@ -759,6 +760,11 @@ public class PlayerMovement : MonoBehaviour
         HandleBombAiming();
 
         Vector2 moveInput = moveAction != null ? moveAction.ReadValue<Vector2>() : Vector2.zero;
+
+        if (Mathf.Abs(moveInput.x) > 0.1f || Mathf.Abs(moveInput.y) > 0.1f)
+        {
+            tutorialMoved = true;
+        }
 
         if (isAiming && isGrounded)
         {
@@ -1034,6 +1040,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
+        tutorialJumped = true;
+
         if (SoundManager.Instance != null)
         {
             int randomJump = Random.Range(0, 3);
@@ -1119,6 +1127,8 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator PerformDash()
     {
+        tutorialDashed = true;
+
         canDash = false;
         isDashing = true;
         isWallSliding = false;
@@ -1213,24 +1223,6 @@ public class PlayerMovement : MonoBehaviour
             pos.x = Mathf.Abs(wallCheckInitialLocalPosition.x) * (facingRight ? 1f : -1f);
 
             wallCheck.localPosition = pos;
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (groundCheck != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
-        }
-
-        if (wallCheck != null)
-        {
-            Gizmos.color = Color.blue;
-
-            Vector3 direction = facingRight ? Vector3.right : Vector3.left;
-
-            Gizmos.DrawRay(wallCheck.position, direction * wallCheckDistance);
         }
     }
 }

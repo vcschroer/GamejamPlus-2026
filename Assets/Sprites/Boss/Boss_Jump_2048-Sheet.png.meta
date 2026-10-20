@@ -1,0 +1,583 @@
+fileFormatVersion: 2
+guid: d70e4eae59c86db44b2efd6e9bdfdd7e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4455160209888159724
+    second: Boss_Jump_2048-Sheet_0
+  - first:
+      213: -8693032282257886669
+    second: Boss_Jump_2048-Sheet_1
+  - first:
+      213: 5766565570101348083
+    second: Boss_Jump_2048-Sheet_2
+  - first:
+      213: 7549355674023253148
+    second: Boss_Jump_2048-Sheet_3
+  - first:
+      213: -160980738749365226
+    second: Boss_Jump_2048-Sheet_4
+  - first:
+      213: 4211598410352460989
+    second: Boss_Jump_2048-Sheet_5
+  - first:
+      213: 8066649027482326573
+    second: Boss_Jump_2048-Sheet_6
+  - first:
+      213: -1737816201908079581
+    second: Boss_Jump_2048-Sheet_7
+  - first:
+      213: 7603648848016826761
+    second: Boss_Jump_2048-Sheet_8
+  - first:
+      213: -5082267140609504259
+    second: Boss_Jump_2048-Sheet_9
+  - first:
+      213: -900668196287904088
+    second: Boss_Jump_2048-Sheet_10
+  - first:
+      213: 7382243669189115470
+    second: Boss_Jump_2048-Sheet_11
+  - first:
+      213: 1679548947006210628
+    second: Boss_Jump_2048-Sheet_12
+  - first:
+      213: -3633521878680634864
+    second: Boss_Jump_2048-Sheet_13
+  - first:
+      213: -7299231215790941838
+    second: Boss_Jump_2048-Sheet_14
+  - first:
+      213: -5597551458309015215
+    second: Boss_Jump_2048-Sheet_15
+  - first:
+      213: -509035135609229903
+    second: Boss_Jump_2048-Sheet_16
+  - first:
+      213: 2746847439714433586
+    second: Boss_Jump_2048-Sheet_17
+  - first:
+      213: -2867508659655561704
+    second: Boss_Jump_2048-Sheet_18
+  - first:
+      213: 7158454672720560857
+    second: Boss_Jump_2048-Sheet_19
+  - first:
+      213: 1697024804948335111
+    second: Boss_Jump_2048-Sheet_20
+  - first:
+      213: 6013492985321796971
+    second: Boss_Jump_2048-Sheet_21
+  - first:
+      213: -4379251016062118691
+    second: Boss_Jump_2048-Sheet_22
+  - first:
+      213: -2161896050154906674
+    second: Boss_Jump_2048-Sheet_23
+  - first:
+      213: -2112127180805649112
+    second: Boss_Jump_2048-Sheet_24
+  - first:
+      213: -1856941153176937511
+    second: Boss_Jump_2048-Sheet_25
+  - first:
+      213: -4726815925987474552
+    second: Boss_Jump_2048-Sheet_26
+  - first:
+      213: 3155425210989118590
+    second: Boss_Jump_2048-Sheet_27
+  - first:
+      213: -6081218349913509462
+    second: Boss_Jump_2048-Sheet_28
+  - first:
+      213: -356574264945627577
+    second: Boss_Jump_2048-Sheet_29
+  - first:
+      213: 2741127803380582257
+    second: Boss_Jump_2048-Sheet_30
+  - first:
+      213: -6207982671760319182
+    second: Boss_Jump_2048-Sheet_31
+  - first:
+      213: -7922222796934379590
+    second: Boss_Jump_2048-Sheet_32
+  - first:
+      213: 1964405352984012476
+    second: Boss_Jump_2048-Sheet_33
+  - first:
+      213: 388059269853423508
+    second: Boss_Jump_2048-Sheet_34
+  - first:
+      213: -2359657701714682237
+    second: Boss_Jump_2048-Sheet_35
+  - first:
+      213: 5390739638132942848
+    second: Boss_Jump_2048-Sheet_36
+  - first:
+      213: -2103146045507194750
+    second: Boss_Jump_2048-Sheet_37
+  - first:
+      213: 5137729044652224641
+    second: Boss_Jump_2048-Sheet_38
+  - first:
+      213: -482422606735021906
+    second: Boss_Jump_2048-Sheet_39
+  - first:
+      213: 7991807256271114290
+    second: Boss_Jump_2048-Sheet_40
+  - first:
+      213: -4633522116747578840
+    second: Boss_Jump_2048-Sheet_41
+  - first:
+      213: 1980861482235852971
+    second: Boss_Jump_2048-Sheet_42
+  - first:
+      213: -8615164837917436206
+    second: Boss_Jump_2048-Sheet_43
+  - first:
+      213: -8768053256155571662
+    second: Boss_Jump_2048-Sheet_44
+  - first:
+      213: 2668294816598104590
+    second: Boss_Jump_2048-Sheet_45
+  - first:
+      213: -1576757076167060316
+    second: Boss_Jump_2048-Sheet_46
+  - first:
+      213: 1003757389650801863
+    second: Boss_Jump_2048-Sheet_47
+  - first:
+      213: 2715356733094014389
+    second: Boss_Jump_2048-Sheet_48
+  - first:
+      213: 9222379552916602078
+    second: Boss_Jump_2048-Sheet_49
+  - first:
+      213: -3171813772667215198
+    second: Boss_Jump_2048-Sheet_50
+  - first:
+      213: -833098864800762668
+    second: Boss_Jump_2048-Sheet_51
+  - first:
+      213: 5391247774816862884
+    second: Boss_Jump_2048-Sheet_52
+  - first:
+      213: -2464420928233230262
+    second: Boss_Jump_2048-Sheet_53
+  - first:
+      213: -6127556460743363329
+    second: Boss_Jump_2048-Sheet_54
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 8192
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4185920c4671c22c0800000000000000
+      internalID: -4455160209888159724
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_1
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 8192
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 332f30b62352c5780800000000000000
+      internalID: -8693032282257886669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_2
+      rect:
+        serializedVersion: 2
+        x: 4096
+        y: 8192
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f683eb55d4f60050800000000000000
+      internalID: 5766565570101348083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 6144
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c945c31ccf2b4c860800000000000000
+      internalID: 7549355674023253148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_4
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 6144
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6140a2bfed414cdf0800000000000000
+      internalID: -160980738749365226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_5
+      rect:
+        serializedVersion: 2
+        x: 4096
+        y: 6144
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db488a1b07a927a30800000000000000
+      internalID: 4211598410352460989
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 4096
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2695d23d8e72ff60800000000000000
+      internalID: 8066649027482326573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 4096
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 324b9582f5902e7e0800000000000000
+      internalID: -1737816201908079581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_8
+      rect:
+        serializedVersion: 2
+        x: 4096
+        y: 4096
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 981e9d66756958960800000000000000
+      internalID: 7603648848016826761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2048
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfb845e66f82879b0800000000000000
+      internalID: -5082267140609504259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 2048
+        y: 2048
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a684c32c0f2083f0800000000000000
+      internalID: -900668196287904088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 4096
+        y: 2048
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4eb46b118ff27660800000000000000
+      internalID: 7382243669189115470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Jump_2048-Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 442cf216ed4fe4710800000000000000
+      internalID: 1679548947006210628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 711a465daa731454e96a207fd5355ab1
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":2048.0,"y":2048.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Boss_Jump_2048-Sheet_0: -4455160209888159724
+      Boss_Jump_2048-Sheet_1: -8693032282257886669
+      Boss_Jump_2048-Sheet_10: -900668196287904088
+      Boss_Jump_2048-Sheet_11: 7382243669189115470
+      Boss_Jump_2048-Sheet_12: 1679548947006210628
+      Boss_Jump_2048-Sheet_2: 5766565570101348083
+      Boss_Jump_2048-Sheet_3: 7549355674023253148
+      Boss_Jump_2048-Sheet_4: -160980738749365226
+      Boss_Jump_2048-Sheet_5: 4211598410352460989
+      Boss_Jump_2048-Sheet_6: 8066649027482326573
+      Boss_Jump_2048-Sheet_7: -1737816201908079581
+      Boss_Jump_2048-Sheet_8: 7603648848016826761
+      Boss_Jump_2048-Sheet_9: -5082267140609504259
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

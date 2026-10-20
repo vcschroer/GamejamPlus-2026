@@ -1,0 +1,403 @@
+fileFormatVersion: 2
+guid: 77c57a7fd7322594ca5d65bfef8bd8ef
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5651691583066320525
+    second: Boss_Preparo_20480000_0
+  - first:
+      213: -6678792617374237932
+    second: Boss_Preparo_20480000_1
+  - first:
+      213: 5652027708628035482
+    second: Boss_Preparo_20480000_2
+  - first:
+      213: -7289709826755403192
+    second: Boss_Preparo_20480000_3
+  - first:
+      213: 4938447953019590169
+    second: Boss_Preparo_20480000_4
+  - first:
+      213: 7944574901999224917
+    second: Boss_Preparo_20480000_5
+  - first:
+      213: -7001664111870076551
+    second: Boss_Preparo_20480000_6
+  - first:
+      213: -6914286423829105861
+    second: Boss_Preparo_20480000_7
+  - first:
+      213: -6567384955290939229
+    second: Boss_Preparo_20480000_8
+  - first:
+      213: -1759011246700101212
+    second: Boss_Preparo_20480000_9
+  - first:
+      213: 3715179961564207114
+    second: Boss_Preparo_20480000_10
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 16384
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_0
+      rect:
+        serializedVersion: 2
+        x: 385
+        y: 180
+        width: 1278
+        height: 1868
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8eabb40d87de6e40800000000000000
+      internalID: 5651691583066320525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_1
+      rect:
+        serializedVersion: 2
+        x: 681
+        y: 2039
+        width: 31
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41b38e010892053a0800000000000000
+      internalID: -6678792617374237932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_2
+      rect:
+        serializedVersion: 2
+        x: 1336
+        y: 2039
+        width: 31
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9760795149007e40800000000000000
+      internalID: 5652027708628035482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_3
+      rect:
+        serializedVersion: 2
+        x: 339
+        y: 1353
+        width: 52
+        height: 227
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 842e19cf88fb5da90800000000000000
+      internalID: -7289709826755403192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_4
+      rect:
+        serializedVersion: 2
+        x: 360
+        y: 1203
+        width: 88
+        height: 423
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 916dc7d8f34e88440800000000000000
+      internalID: 4938447953019590169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_5
+      rect:
+        serializedVersion: 2
+        x: 1600
+        y: 1203
+        width: 88
+        height: 423
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 558c52df7ccc04e60800000000000000
+      internalID: 7944574901999224917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_6
+      rect:
+        serializedVersion: 2
+        x: 1657
+        y: 1353
+        width: 52
+        height: 227
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 979126f269715de90800000000000000
+      internalID: -7001664111870076551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_7
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 1231
+        width: 15
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b333c5881258b00a0800000000000000
+      internalID: -6914286423829105861
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_8
+      rect:
+        serializedVersion: 2
+        x: 1686
+        y: 1231
+        width: 15
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a093acbd26fbd4a0800000000000000
+      internalID: -6567384955290939229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_9
+      rect:
+        serializedVersion: 2
+        x: 372
+        y: 1185
+        width: 8
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a1068c379cb697e0800000000000000
+      internalID: -1759011246700101212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Boss_Preparo_20480000_10
+      rect:
+        serializedVersion: 2
+        x: 1668
+        y: 1185
+        width: 8
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a081fadbd78fe8330800000000000000
+      internalID: 3715179961564207114
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Boss_Preparo_20480000_0: 5651691583066320525
+      Boss_Preparo_20480000_1: -6678792617374237932
+      Boss_Preparo_20480000_10: 3715179961564207114
+      Boss_Preparo_20480000_2: 5652027708628035482
+      Boss_Preparo_20480000_3: -7289709826755403192
+      Boss_Preparo_20480000_4: 4938447953019590169
+      Boss_Preparo_20480000_5: 7944574901999224917
+      Boss_Preparo_20480000_6: -7001664111870076551
+      Boss_Preparo_20480000_7: -6914286423829105861
+      Boss_Preparo_20480000_8: -6567384955290939229
+      Boss_Preparo_20480000_9: -1759011246700101212
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

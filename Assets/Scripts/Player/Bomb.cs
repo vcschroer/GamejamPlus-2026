@@ -6,21 +6,17 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Bomb : MonoBehaviour
 {
-    [Header("Configurações da Bomba")]
     [SerializeField] private float bombDuration = 8f;
     [SerializeField] private float bombGravityScale = 4f;
     [SerializeField] private Vector3 headOffset = new Vector3(0f, 1.2f, 0f);
 
-    [Header("Comportamento ao Bater no Chão")]
     [SerializeField] private float groundSlowdownFactor = 0.35f;
 
-    [Header("Configurações da Roleta / Sorteio")]
     [SerializeField] private int shuffleCount = 10;
     [SerializeField] private float shuffleInterval = 0.3f;
     [SerializeField] private bool decelerateShuffle = true;
     [SerializeField] private float respawnDelay = 1f;
 
-    [Header("Efeitos Visuais & Cores do Temporizador")]
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject bombLightObject;
     [SerializeField] private Color startColor = Color.green;
@@ -28,7 +24,6 @@ public class Bomb : MonoBehaviour
     [SerializeField] private Color endColor = Color.red;
     [SerializeField] private int bombSortingOrder = 10;
 
-    [Header("Efeitos de Explosão")]
     [SerializeField] private GameObject explosionParticlesPrefab;
 
     [Min(0)]
@@ -46,6 +41,7 @@ public class Bomb : MonoBehaviour
 
     private Transform currentHolder;
     private Transform lastHolder = null;
+    private Transform lastThrower = null;
 
     private Rigidbody2D rb;
     private Collider2D col;
@@ -131,6 +127,7 @@ public class Bomb : MonoBehaviour
         isHeld = false;
         isThrown = false;
         groundSoundPlayed = false;
+        lastThrower = null;
 
         rb.simulated = false;
         col.isTrigger = true;
@@ -146,15 +143,13 @@ public class Bomb : MonoBehaviour
 
         ToggleTrail(false);
 
-        PlayerMovement[] players =
-            FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        PlayerMovement[] players = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
         while (players == null || players.Length < 2)
         {
             yield return new WaitForSecondsRealtime(0.1f);
 
-            players = FindObjectsByType<PlayerMovement>(
-                FindObjectsSortMode.None);
+            players = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
         }
 
         PlayerMovement[] alivePlayers = GetAlivePlayers();
@@ -177,8 +172,7 @@ public class Bomb : MonoBehaviour
 
             if (activePlayers == null || activePlayers.Length == 0)
             {
-                activePlayers = FindObjectsByType<PlayerMovement>(
-                    FindObjectsSortMode.None);
+                activePlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
             }
 
             if (activePlayers == null || activePlayers.Length == 0)
@@ -214,10 +208,7 @@ public class Bomb : MonoBehaviour
 
             if (decelerateShuffle)
             {
-                currentInterval = Mathf.Lerp(
-                    shuffleInterval,
-                    shuffleInterval * 2f,
-                    (float)i / shuffleCount);
+                currentInterval = Mathf.Lerp(shuffleInterval, shuffleInterval * 2f, (float)i / shuffleCount);
             }
         }
 
@@ -225,8 +216,7 @@ public class Bomb : MonoBehaviour
 
         if (finalAlivePlayers == null || finalAlivePlayers.Length == 0)
         {
-            finalAlivePlayers = FindObjectsByType<PlayerMovement>(
-                FindObjectsSortMode.None);
+            finalAlivePlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
         }
 
         if (finalAlivePlayers == null || finalAlivePlayers.Length == 0)
@@ -264,8 +254,7 @@ public class Bomb : MonoBehaviour
 
     private PlayerMovement[] GetAlivePlayers()
     {
-        PlayerMovement[] allPlayers =
-            FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
+        PlayerMovement[] allPlayers = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
         List<PlayerMovement> aliveList = new List<PlayerMovement>();
 
@@ -286,8 +275,7 @@ public class Bomb : MonoBehaviour
         float currentPeriod = Mathf.Lerp(0.2f, 1.0f, timeRatio);
         float speed = 1f / currentPeriod;
 
-        float scaleAmount =
-            Mathf.Sin(Time.time * (speed * Mathf.PI * 2f)) * 0.15f + 1f;
+        float scaleAmount = Mathf.Sin(Time.time * (speed * Mathf.PI * 2f)) * 0.15f + 1f;
 
         if (popUpCoroutine == null)
             transform.localScale = Vector3.one * scaleAmount;
@@ -305,12 +293,9 @@ public class Bomb : MonoBehaviour
             targetFlashColor = Color.Lerp(endColor, middleColor, t);
         }
 
-        float pingPong = Mathf.PingPong(Time.time * speed, 1f);
-
         if (spriteRenderer != null)
         {
-            spriteRenderer.color =
-                Color.Lerp(Color.white, targetFlashColor, pingPong);
+            spriteRenderer.color = targetFlashColor;
         }
 
         if (currentTimer <= 0f && !isExploded)
@@ -325,8 +310,7 @@ public class Bomb : MonoBehaviour
         if (isRandomizing || isExploded)
             return;
 
-        if (collision.collider.CompareTag("Projectile") ||
-            collision.collider.GetComponent("Projectile") != null)
+        if (collision.collider.CompareTag("Projectile") || collision.collider.GetComponent("Projectile") != null)
         {
             return;
         }
@@ -353,15 +337,12 @@ public class Bomb : MonoBehaviour
                 {
                     Vector2 normal = collision.contacts[0].normal;
 
-                    Vector2 pushAwayDir =
-                        (transform.position - boss.transform.position).normalized;
+                    Vector2 pushAwayDir = (transform.position - boss.transform.position).normalized;
 
                     if (pushAwayDir.sqrMagnitude < 0.1f)
                         pushAwayDir = Vector2.up;
 
-                    rb.linearVelocity =
-                        (Vector2.Reflect(rb.linearVelocity, normal)
-                        + pushAwayDir * 5f) * 1.2f;
+                    rb.linearVelocity = (Vector2.Reflect(rb.linearVelocity, normal) + pushAwayDir * 5f) * 1.2f;
                 }
             }
 
@@ -389,8 +370,7 @@ public class Bomb : MonoBehaviour
             }
         }
 
-        PlayerMovement hitPlayer =
-            collision.collider.GetComponent<PlayerMovement>();
+        PlayerMovement hitPlayer = collision.collider.GetComponent<PlayerMovement>();
 
         if (hitPlayer == null)
             hitPlayer = collision.collider.GetComponentInParent<PlayerMovement>();
@@ -416,8 +396,7 @@ public class Bomb : MonoBehaviour
         if (isRandomizing || isExploded)
             return;
 
-        if (collision.CompareTag("Projectile") ||
-            collision.GetComponent("Projectile") != null)
+        if (collision.CompareTag("Projectile") || collision.GetComponent("Projectile") != null)
         {
             return;
         }
@@ -436,7 +415,12 @@ public class Bomb : MonoBehaviour
         if (playerTransform == null)
             return;
 
-        if (playerTransform != lastHolder)
+        if (lastThrower != null && playerTransform != lastThrower)
+        {
+            FindAnyObjectByType<TutorialManager>()?.NotifyBombPassedBetweenPlayers();
+        }
+
+        if (lastHolder != null && playerTransform != lastHolder)
         {
             currentTimer = bombDuration;
             PlayCountdownSound();
@@ -444,8 +428,7 @@ public class Bomb : MonoBehaviour
 
         if (currentHolder != null)
         {
-            PlayerMovement previousPlayer =
-                currentHolder.GetComponent<PlayerMovement>();
+            PlayerMovement previousPlayer = currentHolder.GetComponent<PlayerMovement>();
 
             if (previousPlayer != null)
                 previousPlayer.DropBomb();
@@ -456,8 +439,7 @@ public class Bomb : MonoBehaviour
         currentHolder = playerTransform;
         lastHolder = playerTransform;
 
-        PlayerMovement newPlayer =
-            playerTransform.GetComponent<PlayerMovement>();
+        PlayerMovement newPlayer = playerTransform.GetComponent<PlayerMovement>();
 
         if (newPlayer != null)
             newPlayer.HoldBomb(this);
@@ -493,10 +475,7 @@ public class Bomb : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / duration;
 
-            transform.localScale = Vector3.Lerp(
-                startScale,
-                maxScale,
-                Mathf.Sin(t * Mathf.PI));
+            transform.localScale = Vector3.Lerp(startScale, maxScale, Mathf.Sin(t * Mathf.PI));
 
             yield return null;
         }
@@ -526,8 +505,7 @@ public class Bomb : MonoBehaviour
         groundSoundPlayed = false;
         currentHolder = null;
 
-        transform.position =
-            (Vector2)transform.position + new Vector2(0f, 0.5f);
+        transform.position = (Vector2)transform.position + new Vector2(0f, 0.5f);
 
         SetVisualsActive(true);
 
@@ -545,13 +523,15 @@ public class Bomb : MonoBehaviour
         StartCoroutine(EnableTrailAfterDelay(0.1f));
     }
 
-    public void Throw(
-        Vector2 direction,
-        Collider2D throwerCol,
-        float customSpeed)
+    public void Throw(Vector2 direction, Collider2D throwerCol, float customSpeed)
     {
         if (!isHeld || isRandomizing || isExploded)
             return;
+
+        if (currentHolder != null)
+        {
+            lastThrower = currentHolder;
+        }
 
         isHeld = false;
         isThrown = true;
@@ -621,11 +601,7 @@ public class Bomb : MonoBehaviour
         {
             for (int i = 0; i < explosionParticleCount; i++)
             {
-                GameObject explosion = Instantiate(
-                    explosionParticlesPrefab,
-                    transform.position,
-                    Quaternion.identity
-                );
+                GameObject explosion = Instantiate(explosionParticlesPrefab, transform.position, Quaternion.identity);
 
                 if (explosion != null)
                     Destroy(explosion, explosionDestroyDelay);
@@ -637,23 +613,19 @@ public class Bomb : MonoBehaviour
 
         if (GameEffectsManager.Instance != null)
         {
-            GameEffectsManager.Instance.TriggerBombExplosionEffects(
-                transform.position
-            );
+            GameEffectsManager.Instance.TriggerBombExplosionEffects(transform.position);
         }
 
         float explosionRadius = 1.5f;
 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(
-            transform.position,
-            explosionRadius
-        );
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
 
         bool hitBoss = false;
 
         if (directBoss != null && directBoss.IsStaggered)
         {
             directBoss.TakeDamage(1);
+            FindAnyObjectByType<TutorialManager>()?.NotifyBossHitByBombInStagger();
             hitBoss = true;
         }
         else
@@ -668,6 +640,7 @@ public class Bomb : MonoBehaviour
                 if (boss != null && boss.IsStaggered)
                 {
                     boss.TakeDamage(1);
+                    FindAnyObjectByType<TutorialManager>()?.NotifyBossHitByBombInStagger();
                     hitBoss = true;
                     break;
                 }
@@ -678,8 +651,7 @@ public class Bomb : MonoBehaviour
         {
             if (currentHolder != null)
             {
-                PlayerMovement holder =
-                    currentHolder.GetComponent<PlayerMovement>();
+                PlayerMovement holder = currentHolder.GetComponent<PlayerMovement>();
 
                 if (holder != null)
                     holder.DropBomb();
@@ -689,12 +661,9 @@ public class Bomb : MonoBehaviour
             return;
         }
 
+        PlayerMovement[] players = FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
 
-        PlayerMovement[] players =
-            FindObjectsByType<PlayerMovement>(FindObjectsSortMode.None);
-
-        HashSet<PlayerMovement> damagedPlayers =
-            new HashSet<PlayerMovement>();
+        HashSet<PlayerMovement> damagedPlayers = new HashSet<PlayerMovement>();
 
         foreach (PlayerMovement player in players)
         {
@@ -707,8 +676,7 @@ public class Bomb : MonoBehaviour
 
         if (currentHolder != null)
         {
-            PlayerMovement holder =
-                currentHolder.GetComponent<PlayerMovement>();
+            PlayerMovement holder = currentHolder.GetComponent<PlayerMovement>();
 
             if (holder != null)
                 holder.DropBomb();
@@ -722,6 +690,7 @@ public class Bomb : MonoBehaviour
         isHeld = false;
         isThrown = false;
         currentHolder = null;
+        lastThrower = null;
 
         rb.simulated = false;
         col.isTrigger = true;
@@ -738,6 +707,7 @@ public class Bomb : MonoBehaviour
         isHeld = false;
         isThrown = false;
         currentHolder = null;
+        lastThrower = null;
 
         rb.simulated = false;
         col.isTrigger = true;
