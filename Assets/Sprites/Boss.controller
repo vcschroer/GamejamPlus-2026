@@ -106,10 +106,7 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions:
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsJumpAttacking
-    m_EventTreshold: 0
+  m_Conditions: []
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 0}
   m_Solo: 0
@@ -132,9 +129,6 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsDashAttacking
-    m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: IsStaggered
     m_EventTreshold: 0
@@ -324,10 +318,10 @@ AnimatorStateMachine:
     m_Position: {x: 350, y: 90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 452893386628021059}
-    m_Position: {x: 440, y: 0, z: 0}
+    m_Position: {x: 410, y: 40, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5025664243459667812}
-    m_Position: {x: 600, y: -40, z: 0}
+    m_Position: {x: 890, y: -80, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1383270654542560748}
     m_Position: {x: 620, y: -130, z: 0}
@@ -608,9 +602,6 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: IsStaggered
-    m_EventTreshold: 0
-  - m_ConditionMode: 2
-    m_ConditionEvent: IsJumpAttacking
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1383270654542560748}
